@@ -1,0 +1,47 @@
+// @format
+import React from 'react';
+import Vertex from './Vertex';
+
+function renderVertex(index, vertex, activity) {
+  var type = 'node';
+  if (activity.location === 'configuration') {
+    type = 'pap';
+  } else if (activity.focus === index) {
+    type = 'card';
+  }
+
+  var component = (
+    <Vertex
+      type={type}
+      id={index}
+      name={vertex.name}
+      sections={vertex.sections}
+      parents={vertex.parents}
+      prepared={activity.prepared}
+    />
+  );
+  return (
+    <div
+      key={index}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        left: `${vertex.position.x}%`,
+        top: `${vertex.position.y}%`,
+        height: `${vertex.position.height}%`,
+        width: `${vertex.position.width}%`,
+      }}>
+      {component}
+    </div>
+  );
+}
+
+export default function Vertices({vertices, activity}) {
+  const vertexDisplay = [];
+  for (const [index, vertex] of vertices.entries()) {
+    vertexDisplay.push(renderVertex(index, vertex, activity));
+  }
+  return <div>{vertexDisplay}</div>;
+}
