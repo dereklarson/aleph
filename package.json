@@ -1,16 +1,14 @@
 {
-  "name": "new",
-  "version": "1.0.0",
-  "description": "",
-  "keywords": [],
-  "main": "src/index.jsx",
+  "name": "interface",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
     "@material-ui/core": "^4.8.3",
     "@material-ui/icons": "^4.5.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
-    "ace-builds": "^1.4.7",
+    "ace-builds": "^1.4.8",
     "axios": "^0.19.1",
     "dagre": "^0.8.5",
     "lodash": "^4.17.15",
@@ -25,19 +23,38 @@
     "reactjs-popup": "^1.5.0",
     "recharts": "^2.0.0-beta.1",
     "redux": "^4.0.5",
-    "redux-thunk": "2.3.0",
+    "redux-thunk": "^2.3.0",
     "typeface-roboto": "0.0.75",
     "typescript": "^3.7.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
-  "browserslist": [
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
       ">0.2%",
       "not dead",
       "not op_mini all"
-  ]
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^5.3.3",
+    "@storybook/addon-links": "^5.3.3",
+    "@storybook/addons": "^5.3.3",
+    "@storybook/preset-create-react-app": "^1.5.1",
+    "@storybook/react": "^5.3.3"
+  }
 }
