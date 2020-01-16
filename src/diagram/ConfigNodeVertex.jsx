@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box';
 import CallMergeIcon from '@material-ui/icons/CallMerge';
 import {propsToStyle} from '../utils/helpers';
 
-export default function NewNodeVertex({name, sections, id, styleProps}) {
+export default function ConfigNodeVertex({name, sections, id, styleProps}) {
   const nodelabel = `${name}(${sections.length})`;
   const icon = <CallMergeIcon />;
   return (

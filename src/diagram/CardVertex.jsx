@@ -8,11 +8,10 @@ import CardContent from '@material-ui/core/CardContent';
 import {Chip, TextField} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import PopupEditor from '../comcom/PopupEditor';
 import {propsToStyle} from '../utils/helpers';
 import {addSection, linkVertex} from '../utils/actions';
 
-export function CardVertex({
+export function PureCardVertex({
   onChange,
   onChipDelete,
   name,
@@ -28,7 +27,7 @@ export function CardVertex({
     chipDisplay.push(<Chip label={section} onDelete={chipDelete} />);
   }
   return (
-    <Card style={propsToStyle(styleProps)}>
+    <Card width={300} style={propsToStyle(styleProps)}>
       <CardActionArea>
         <CardContent>
           <TextField
@@ -41,7 +40,9 @@ export function CardVertex({
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <PopupEditor />
+        <Button size="small" onClick={() => cardActions.onEditor(state)}>
+          Editor
+        </Button>
         <Button size="small" onClick={() => cardActions.onBuild(state)}>
           Build
         </Button>
@@ -76,4 +77,4 @@ function actionDispatch(dispatch) {
 export default connect(
   null,
   actionDispatch,
-)(CardVertex);
+)(PureCardVertex);

@@ -7,7 +7,7 @@ import {prepareBuildFocus} from '../utils/loaders';
 import {addSection, linkVertex, unlinkVertex} from '../utils/actions';
 import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
-import NewNodeVertex from './NewNodeVertex';
+import ConfigNodeVertex from './ConfigNodeVertex';
 
 export function Vertex({
   state,
@@ -64,7 +64,7 @@ export function Vertex({
     ghost: name.charAt(0) === '<',
   };
   const components = {
-    pap: NewNodeVertex,
+    conf: ConfigNodeVertex,
     node: NodeVertex,
     card: CardVertex,
   };
@@ -104,6 +104,7 @@ function actionDispatch(dispatch) {
     cardActions: {
       onBuild: state => prepareBuildFocus(state, dispatch),
       onClear: id => dispatch(removeAllSections(id)),
+      onEditor: () => console.log('TODO add in general editor'),
     },
     dropActions: {
       Vertex: (to, from) => dispatch(linkVertex(to, from)),

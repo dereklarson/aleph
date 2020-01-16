@@ -5,7 +5,7 @@ import Vertex from './Vertex';
 function renderVertex(index, vertex, activity) {
   var type = 'node';
   if (activity.location === 'configuration') {
-    type = 'pap';
+    type = 'conf';
   } else if (activity.focus === index) {
     type = 'card';
   }
