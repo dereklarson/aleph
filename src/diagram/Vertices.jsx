@@ -24,6 +24,7 @@ function renderVertex(index, vertex, activity) {
     <div
       key={index}
       style={{
+        border: '1px dashed red',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

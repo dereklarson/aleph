@@ -98,8 +98,8 @@ function calculateDagre(vertices) {
     vertices[v]['position'] = {
       x: rescale(g.node(v).x, g.node(v).width, hScale, hZoom, h0),
       y: rescale(g.node(v).y, g.node(v).height, vScale, vZoom, v0),
-      width: Math.floor(g.node(v).width * hScale),
-      height: Math.floor(g.node(v).height * vScale),
+      width: Math.min(1, Math.floor(g.node(v).width * hScale)),
+      height: Math.min(1, Math.floor(g.node(v).height * vScale)),
     };
     console.log('Node ' + v + ': ' + JSON.stringify(vertices[v]['position']));
   });

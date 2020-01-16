@@ -39,7 +39,7 @@ export function PureCardVertex({
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" onClick={() => cardActions.onEditor(state)}>
+        <Button size="small" onClick={() => cardActions.onEditor()}>
           Editor
         </Button>
         <Button size="small" onClick={() => cardActions.onBuild(state)}>

@@ -30,7 +30,7 @@ export function Interface({state, onLoad, onPlayTutorial, onSetState}) {
 
   return (
     <div className={classes.root}>
-      <NewEditor open={state.editor} />}
+      <NewEditor open={state.editing} />}
       <CssBaseline />
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar}>

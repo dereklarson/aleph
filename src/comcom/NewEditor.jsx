@@ -1,6 +1,7 @@
 // @format
 import React from 'react';
 import {connect} from 'react-redux';
+import _ from 'lodash';
 import Button from '@material-ui/core/Button';
 import AceEditor from 'react-ace';
 import Popup from 'reactjs-popup';
@@ -9,14 +10,12 @@ import {modifyState} from '../utils/loaders';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
-// Possible this could be simplified with better JSX and state hooks
-// export function NewEditor({open, setOpen, onClose}) {
-export function NewEditor({fulltext, open, onClose}) {
-  var currtext = fulltext; 
+export function NewEditor({editor, text, open, onClose}) {
+  var currtext = text; 
   const onChange = (value, event) => {
     currtext = value;
   };
-  const closeModal = () => onClose(currtext);
+  const closeModal = () => onClose(currtext, editor);
   return (
     <Popup open={open} closeOnDocumentClick onClose={closeModal}>
       <div className="modal">
@@ -24,7 +23,7 @@ export function NewEditor({fulltext, open, onClose}) {
           width="100%"
           mode="yaml"
           theme="monokai"
-          defaultValue={fulltext}
+          defaultValue={text}
           onChange={onChange}
         />
       </div>
@@ -32,21 +31,26 @@ export function NewEditor({fulltext, open, onClose}) {
   );
 }
 
-const setNodeFulltext = text => ({
-  type: 'SET_NODE_FULLTEXT',
+const setNodeFulltext = (text, editor) => ({
+  type: 'SET_TEXT',
+  editor: editor,
   text: text,
 });
 
 function actionDispatch(dispatch) {
   return {
-    onClose: text => {
-      dispatch(setNodeFulltext(text));
-      dispatch(modifyState({editor: false}));
+    onClose: (text, editor) => {
+      dispatch(setNodeFulltext(text, editor));
+      dispatch(modifyState({editor: null, editing: false}));
     }
   };
 }
 
 export default connect(
-  state => ({fulltext: state[`${state.location}_fulltext`][state.focus]}),
+  state => ({
+    editor: state.editor,
+    text: state.editor === 'vertex' ? 
+    state[`${state.location}_fulltext`][state.focus] :
+    _.get(state[`${state.location}_library`], state.editor, {text: ''}).text}),
   actionDispatch,
 )(NewEditor);

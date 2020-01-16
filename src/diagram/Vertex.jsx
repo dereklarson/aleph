@@ -103,7 +103,7 @@ function actionDispatch(dispatch) {
   return {
     onClick: id => dispatch({type: 'MODIFY_STATE', update: {focus: id}}),
     cardActions: {
-      onEditor: () => dispatch(modifyState({editor: true})),
+      onEditor: () => dispatch(modifyState({editor: 'vertex', editing: true})),
       onBuild: state => prepareBuildFocus(state, dispatch),
       onClear: id => dispatch(removeAllSections(id)),
     },
