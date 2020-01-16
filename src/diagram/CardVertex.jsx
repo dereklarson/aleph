@@ -27,7 +27,7 @@ export function PureCardVertex({
     chipDisplay.push(<Chip label={section} onDelete={chipDelete} />);
   }
   return (
-    <Card width={300} style={propsToStyle(styleProps)}>
+    <Card style={propsToStyle(styleProps)}>
       <CardActionArea>
         <CardContent>
           <TextField
