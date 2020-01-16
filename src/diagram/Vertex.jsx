@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {useDrag, useDrop, DragPreviewImage} from 'react-dnd';
 import {prepareBuildFocus} from '../utils/loaders';
 import {addSection, linkVertex, unlinkVertex} from '../utils/actions';
+import {modifyState} from '../utils/loaders';
 import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigNodeVertex from './ConfigNodeVertex';
@@ -35,7 +36,7 @@ export function Vertex({
     drop: item => {
       if (name.charAt(0) === '<') {
         onSectionToGhost(parents[0], parseInt(name.slice(1)), item.id);
-      } else if (item.parents.includes(id)) {
+      } else if (item.type === 'Vertex' && item.parents.includes(id)) {
         dropActions.Unlink(id, item.id);
       } else dropActions[item.type](id, item.id);
     },
@@ -102,9 +103,9 @@ function actionDispatch(dispatch) {
   return {
     onClick: id => dispatch({type: 'MODIFY_STATE', update: {focus: id}}),
     cardActions: {
+      onEditor: () => dispatch(modifyState({editor: true})),
       onBuild: state => prepareBuildFocus(state, dispatch),
       onClear: id => dispatch(removeAllSections(id)),
-      onEditor: () => console.log('TODO add in general editor'),
     },
     dropActions: {
       Vertex: (to, from) => dispatch(linkVertex(to, from)),

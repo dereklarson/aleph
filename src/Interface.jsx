@@ -5,8 +5,8 @@ import {CssBaseline, Typography} from '@material-ui/core';
 import {AppBar, Toolbar} from '@material-ui/core';
 import Workspace from './Workspace';
 import Sidebar from './sidebar/Sidebar';
+import NewEditor from './comcom/NewEditor';
 import {generateButtons} from './utils//generateList';
-import {Credits} from './comcom/Accessories';
 import {saveCheckpoint, loadCheckpoint, modifyState} from './utils/loaders';
 import {playTutorial} from './utils/tutorial';
 import {iconSource} from './style/icons';
@@ -30,6 +30,7 @@ export function Interface({state, onLoad, onPlayTutorial, onSetState}) {
 
   return (
     <div className={classes.root}>
+      <NewEditor open={state.editor} />}
       <CssBaseline />
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
@@ -45,11 +46,7 @@ export function Interface({state, onLoad, onPlayTutorial, onSetState}) {
         </Toolbar>
       </AppBar>
       <Sidebar />
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Workspace />
-        <Credits />
-      </main>
+      <Workspace />
     </div>
   );
 }

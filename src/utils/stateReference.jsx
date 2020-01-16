@@ -6,6 +6,7 @@ export const initState = {
   // Context
   focus: null,
   location: 'docker',
+  editor: false,
   // Operations
   tickertext: 'Ticker',
   percent: 100,
