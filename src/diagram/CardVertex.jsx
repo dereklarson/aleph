@@ -7,7 +7,6 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import {Chip, TextField} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import {propsToStyle} from '../utils/helpers';
 import {addSection, linkVertex} from '../utils/actions';
 

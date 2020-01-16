@@ -29,6 +29,16 @@ export const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
   },
+  box: {
+    alignItems: "center",
+    textAlign: "center",
+    backgroundColor: theme.palette.primary.light,
+    borderRadius: 24,
+    padding: '12px',
+    display: 'flex',
+    minHeight: 50,
+    maxWidth: 200,
+  },
   drawerPaper: {
     whiteSpace: 'nowrap',
     width: drawerWidth,
