@@ -26,7 +26,7 @@ export function calculateDiagramPositions(vertices, dagre = false) {
   // First loop to calculate position of the node and its in/out anchors
   vertices.forEach(function(entry) {
     // Calculate an offset for our 3 "tracks" (rows) of nodes
-    var x = row_shift[entry.generation] * width;
+    var x = row_shift[entry.gseneration] * width;
     var y = entry.generation * height;
     row_shift[entry.generation] += 1;
 
@@ -66,7 +66,7 @@ function calculateDagre(vertices) {
 
   // Populate nodes with two args: ID and metadata
   for (const [index, vertex] of vertices.entries()) {
-    g.setNode(index, {width: 1, height: 1});
+    g.setNode(index, {width: 50, height: 30});
   }
 
   // Populate arrows
@@ -87,19 +87,21 @@ function calculateDagre(vertices) {
   // transition helps us start in the upper left and center out as vertices are added
   const transition_scale = 0.5;
   var transition = Math.min(1, vertices.length / 10);
-  var hScale = 100 / g.graph().width;
-  var vScale = 100 / g.graph().height;
+  var hScale = Math.min(10, 100 / g.graph().width);
+  var vScale = Math.min(10, 100 / g.graph().height);
   var hZoom = 0.2 + (1 - transition) * transition_scale;
   var vZoom = 0.3 + (1 - transition) * transition_scale;
   var h0 = 0 + (1 - transition) * transition_scale;
   var v0 = 0.2 + (1 - transition) * transition_scale;
 
+  console.log('Graph: ' + hScale + ', ' + vScale);
+
   g.nodes().forEach(v => {
     vertices[v]['position'] = {
       x: rescale(g.node(v).x, g.node(v).width, hScale, hZoom, h0),
       y: rescale(g.node(v).y, g.node(v).height, vScale, vZoom, v0),
-      width: Math.min(1, Math.floor(g.node(v).width * hScale)),
-      height: Math.min(1, Math.floor(g.node(v).height * vScale)),
+      width: Math.floor(g.node(v).width * hScale),
+      height: Math.floor(g.node(v).height * vScale),
     };
     console.log('Node ' + v + ': ' + JSON.stringify(vertices[v]['position']));
   });

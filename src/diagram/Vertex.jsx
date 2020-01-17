@@ -10,7 +10,7 @@ import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigNodeVertex from './ConfigNodeVertex';
 
-export function Vertex({
+export function PureVertex({
   state,
   onClick,
   cardActions,
@@ -119,7 +119,4 @@ function actionDispatch(dispatch) {
   };
 }
 
-export default connect(
-  state => ({state: state}),
-  actionDispatch,
-)(Vertex);
+export default connect(state => ({state: state}), actionDispatch)(PureVertex);

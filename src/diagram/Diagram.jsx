@@ -9,7 +9,7 @@ import Vertices from './Vertices';
 import {calculateDiagramPositions} from './diagramDrawing';
 import {useStyles} from '../style/styling';
 
-function Diagram({onClick, onSectionDrop, vertices, activity}) {
+export function PureDiagram({onClick, onSectionDrop, vertices, activity}) {
   const classes = useStyles();
 
   const [{highlighted, isOver}, drop] = useDrop({
@@ -89,4 +89,4 @@ export default connect(
     onClick: () => dispatch({type: 'MODIFY_STATE', update: {focus: null}}),
     onSectionDrop: section => dispatch(addVertex(section)),
   }),
-)(Diagram);
+)(PureDiagram);

@@ -3,10 +3,15 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import Fab from '@material-ui/core/Fab';
 import {Progress} from 'react-sweet-progress';
 import 'react-sweet-progress/lib/style.css';
+import LogPopup from '../comcom/LogPopup'
 
-function Ticker({tickertext, percent}) {
+export function PureTicker({logs, percent, tickertext}) {
+
+  const [logOpen, openLog] = React.useState(false);
+
   return (
     <div>
       <Tooltip
@@ -23,11 +28,14 @@ function Ticker({tickertext, percent}) {
         </Typography>
       </Tooltip>
       <Progress percent={percent} />
+      <LogPopup open={logOpen} text={logs} onClose={() => openLog(false)} />
+      <Fab variant="extended" onClick={() => openLog(true)}> Show Logs </Fab>
     </div>
   );
 }
 
 export default connect(state => ({
-  tickertext: state.tickertext,
+  logs: state.stdout,
   percent: state.percent,
-}))(Ticker);
+  tickertext: state.tickertext,
+}))(PureTicker);

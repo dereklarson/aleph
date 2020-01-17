@@ -33,6 +33,16 @@ export function loadSaved() {
   };
 }
 
+// Thunked: will return function taking dispatch
+export function loadRepo() {
+  return function(dispatch) {
+    console.log('---Loading Repo ---');
+    axios.get('/org_repo').then(response => {
+      dispatch(modifyState(response.data));
+    });
+  };
+}
+
 export function saveCheckpoint(name, state) {
   console.log('---Saving Full State Checkpoint---');
   return axios.post(`/save_checkpoint/${name}`, state);

@@ -2,10 +2,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Popup from 'reactjs-popup';
-import AceEditor from 'react-ace';
 import {List, ListSubheader, TextField} from '@material-ui/core';
 import {clearDiagram, build, modifyState, saveDiagram} from '../utils/loaders';
-import {loadSaved, loadDockerLibrary} from '../utils/loaders';
+import {loadRepo, loadSaved, loadDockerLibrary} from '../utils/loaders';
 import {generateList} from '../utils/generateList';
 import {noBuildState} from '../utils/stateReference';
 
@@ -17,11 +16,11 @@ function BulkActions({
   onBuild,
   onClearBuild,
   onLoadLibrary,
+  onLoadRepo,
   onLoadSaved,
   state,
   setMenuOpen,
 }) {
-  const [logopen, openLog] = React.useState(false);
   const [saveopen, openSave] = React.useState(false);
   const [savename, setSave] = React.useState('default');
   const cancel = React.useRef(false);
@@ -29,6 +28,7 @@ function BulkActions({
   const onLoadAll = () => {
     onLoadSaved();
     onLoadLibrary();
+    onLoadRepo();
   };
 
   const onCancel = () => {
@@ -44,17 +44,11 @@ function BulkActions({
     });
   };
 
-  const onLog = () => {
-    openLog(true);
-    setMenuOpen(false);
-  };
-
   const actionOptions = [
     ['clear_diagram', () => clear(state.location)],
     ['build_marked', () => onBuild(state, cancel)],
     ['cancel_build', onCancel],
     ['refresh', onLoadAll],
-    ['show_logs', onLog],
     ['save_diagram', () => openSave(true)],
   ];
 
@@ -74,16 +68,6 @@ function BulkActions({
           />
         </div>
       </Popup>
-      <Popup open={logopen} onClose={() => openLog(false)}>
-        <div className="modal">
-          <AceEditor
-            width="100%"
-            mode="yaml"
-            theme="monokai"
-            defaultValue={state.stdout}
-          />
-        </div>
-      </Popup>
     </List>
   );
 }
@@ -95,6 +79,7 @@ function actionDispatch(dispatch) {
     onClearBuild: () => dispatch(modifyState(noBuildState)),
     onLoadLibrary: () => dispatch(loadDockerLibrary()),
     onLoadSaved: () => dispatch(loadSaved()),
+    onLoadRepo: () => dispatch(loadRepo()),
   };
 }
 

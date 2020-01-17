@@ -14,7 +14,6 @@ export function Workspace() {
   return (
     <main className={classes.content}>
       <div className={classes.appBarSpacer} />
-      <Credits />
       <Container maxWidth="xl" className={classes.container}>
         <Grid container spacing={1}>
           <Grid item xs={2}>
@@ -26,6 +25,7 @@ export function Workspace() {
           </Grid>
         </Grid>
       </Container>
+      <Credits />
     </main>
   );
 }

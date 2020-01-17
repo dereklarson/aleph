@@ -7,10 +7,10 @@ import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
 // Possible this could be simplified with better JSX and state hooks
-function LogPopup({open, close, text}) {
+function LogPopup({text, open, onClose}) {
   return (
     <div>
-      <Popup open={open} closeOnDocumentClick onClose={close}>
+      <Popup open={open} closeOnDocumentClick onClose={onClose}>
         <div className="modal">
           <AceEditor
             width="100%"

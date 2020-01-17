@@ -11,6 +11,7 @@ export const initState = {
   // Operations
   tickertext: 'Ticker',
   percent: 100,
+  building: null,
   build_orders: [],
   build_cache: [],
   // Core
