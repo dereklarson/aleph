@@ -7,13 +7,13 @@ import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
 import {muiTheme} from 'storybook-addon-material-ui';
 import Divbox from './Divbox'
 import { PureDiagram } from '../diagram/Diagram';
-import { initState } from '../utils/stateReference';
+import { coveredState } from './testStates';
 
 const TestComponent = PureDiagram;
 
 // A super-simple mock of a redux store
 const store = {
-  getState: () => initState,
+  getState: () => coveredState,
   subscribe: () => 0,
   dispatch: action('dispatch'),
 };
@@ -34,7 +34,7 @@ export default {
 };
 
 export const testData = {
-  vertices: initState.pipeline_vertices,
+  vertices: coveredState.medium_vertices,
   activity: {
     focus: null,
     location: 'docker',
