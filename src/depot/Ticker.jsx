@@ -6,10 +6,9 @@ import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import {Progress} from 'react-sweet-progress';
 import 'react-sweet-progress/lib/style.css';
-import LogPopup from '../comcom/LogPopup'
+import LogPopup from '../comcom/LogPopup';
 
 export function PureTicker({logs, percent, tickertext}) {
-
   const [logOpen, openLog] = React.useState(false);
 
   return (
@@ -29,7 +28,9 @@ export function PureTicker({logs, percent, tickertext}) {
       </Tooltip>
       <Progress percent={percent} />
       <LogPopup open={logOpen} text={logs} onClose={() => openLog(false)} />
-      <Fab variant="extended" onClick={() => openLog(true)}> Show Logs </Fab>
+      <Fab variant="extended" onClick={() => openLog(true)}>
+        Show Logs
+      </Fab>
     </div>
   );
 }

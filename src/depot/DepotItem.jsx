@@ -15,7 +15,7 @@ export function DepotItem({itemProps, onClick}) {
   });
 
   return (
-    <div ref={drag}>
+    <div ref={drag} style={{zIndex: 5}}>
       <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
       <Chip
         title={itemProps.text}

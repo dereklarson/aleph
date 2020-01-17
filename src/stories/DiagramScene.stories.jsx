@@ -49,6 +49,12 @@ function genTest(props, boxprops={squaresize: 800}) {
   )
 }
 
-export const test = () => genTest({});
-export const dagre = () => genTest({
-  activity: {focus: 1, location: 'docker', prepared: [0], dagre: true}});
+export const stack_small = () => genTest({vertices: coveredState.small_vertices});
+export const dagre_small = () => genTest({vertices: coveredState.small_vertices,
+  activity: {focus: 0, location: 'docker', prepared: [], dagre: true}});
+export const stack_med = () => genTest({vertices: coveredState.medium_vertices});
+export const dagre_med = () => genTest({vertices: coveredState.medium_vertices,
+  activity: {focus: 3, location: 'configuration', prepared: [0, 1], dagre: true}});
+export const stack_big = () => genTest({vertices: coveredState.large_vertices});
+export const dagre_big = () => genTest({vertices: coveredState.large_vertices,
+  activity: {focus: 10, location: 'docker', prepared: [0, 1, 2, 3], dagre: true}});

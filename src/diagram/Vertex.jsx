@@ -69,7 +69,7 @@ export function PureVertex({
     card: CardVertex,
   };
   const CurrentComponent = components[type];
-  const zIndex = type === 'card' ? 5 : 3;
+  const zIndex = type === 'card' ? 4 : 3;
   return (
     <div ref={ref} style={{zIndex: zIndex}}>
       <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
