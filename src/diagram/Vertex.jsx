@@ -1,6 +1,5 @@
 // @format
 import React, {useRef} from 'react';
-import {compose} from 'redux';
 import {connect} from 'react-redux';
 import {useDrag, useDrop, DragPreviewImage} from 'react-dnd';
 import {prepareBuildFocus} from '../utils/loaders';

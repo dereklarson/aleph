@@ -9,7 +9,6 @@ import NewEditor from './comcom/NewEditor';
 import {generateButtons} from './utils//generateList';
 import {saveCheckpoint, loadCheckpoint, modifyState} from './utils/loaders';
 import {playTutorial} from './utils/tutorial';
-import {iconSource} from './style/icons';
 import {useStyles} from './style/styling';
 
 export function Interface({state, onLoad, onPlayTutorial, onSetState}) {
@@ -23,7 +22,7 @@ export function Interface({state, onLoad, onPlayTutorial, onSetState}) {
 
   const appBarOptions = [
     ['save_checkpoint', onSave],
-    ['load_checkpoint', onLoad],
+    ['load_checkpoint', onLoad, saved],
     ['play_tutorial', () => onPlayTutorial(state)],
     ['set_state', () => onSetState()],
   ];

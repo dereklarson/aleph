@@ -1,5 +1,4 @@
 // @format
-import React from 'react';
 import dagre from 'dagre';
 
 export function calculateDiagramPositions(vertices, dagre = false) {
@@ -26,7 +25,7 @@ export function calculateDiagramPositions(vertices, dagre = false) {
   // First loop to calculate position of the node and its in/out anchors
   vertices.forEach(function(entry) {
     // Calculate an offset for our 3 "tracks" (rows) of nodes
-    var x = row_shift[entry.gseneration] * width;
+    var x = row_shift[entry.generation] * width;
     var y = entry.generation * height;
     row_shift[entry.generation] += 1;
 

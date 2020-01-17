@@ -43,20 +43,28 @@ const controlDiagram = (state, action) => {
           }
           return vertex;
         }),
-        [loc_fulltext]: {...state[loc_fulltext], [action.target]: newtext},
       });
     case 'SET_TEXT':
       switch (action.editor) {
         case 'vertex':
           return Object.assign({}, state, {
-            [loc_fulltext]: {...state[loc_fulltext], [state.focus]: action.text},
+            [loc_fulltext]: {
+              ...state[loc_fulltext],
+              [state.focus]: action.text,
+            },
           });
         default:
           return Object.assign({}, state, {
-            [loc_library]: {...state[loc_library], [action.editor]: 
-              Object.assign({}, state[loc_library][action.editor], {text: action.text})}
+            [loc_library]: {
+              ...state[loc_library],
+              [action.editor]: Object.assign(
+                {},
+                state[loc_library][action.editor],
+                {text: action.text},
+              ),
+            },
           });
-      };
+      }
     case 'ADD_SECTION':
       const newtext =
         state[loc_fulltext][action.target] +

@@ -13,7 +13,10 @@ class Divbox extends React.Component {
       return <div style={{height: 400, width: 400, border: '1px dashed red'}}>
         {this.props.children} </div>;
     } else if (_.has(this.props, 'squaresize')) {
-      return <div style={{height: this.props.squaresize, width: this.props.squaresize,
+      return <div style={{
+        // display: 'flex',
+        height: this.props.squaresize,
+        width: this.props.squaresize,
         border: '1px dashed red'}}>
         {this.props.children} </div>;
     } else {

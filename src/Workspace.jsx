@@ -1,6 +1,5 @@
 // @format
 import React from 'react';
-import {connect} from 'react-redux';
 import {Container, Grid} from '@material-ui/core';
 import Depot from './depot/Depot';
 import Diagram from './diagram/Diagram';

@@ -30,8 +30,8 @@ export const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   box: {
-    alignItems: "center",
-    textAlign: "center",
+    alignItems: 'center',
+    textAlign: 'center',
     backgroundColor: theme.palette.primary.light,
     borderRadius: 24,
     padding: '12px',

@@ -3,7 +3,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrag, DragPreviewImage} from 'react-dnd';
 import Chip from '@material-ui/core/Chip';
-import _ from 'lodash';
 import {capitalizeFirstLetter} from '../utils/helpers';
 import {modifyState} from '../utils/loaders';
 
@@ -28,7 +27,6 @@ export function DepotItem({itemProps, onClick}) {
   );
 }
 
-export default connect(
-  null,
-  dispatch => ({onClick: name => dispatch(modifyState({editor: name, editing: true}))}),
-)(DepotItem);
+export default connect(null, dispatch => ({
+  onClick: name => dispatch(modifyState({editor: name, editing: true})),
+}))(DepotItem);

@@ -1,6 +1,37 @@
 // @format
 import _ from 'lodash';
 
+// Useful for generating static initialization and test data, this will produce a set of
+// vertices that are related via paths, e.g. ['a', 'b', 'c'] means 'c' is grandkid of 'a'
+export function vertexDataFromPaths(paths) {
+  var outputVertices = [];
+  var vMap = new Map();
+  var currIndex = 0;
+  var parent = '';
+  for (const path of paths.values()) {
+    for (const [index, name] of path.entries()) {
+      if (vMap.has(name)) {
+        parent = name;
+        continue;
+      }
+      vMap.set(name, currIndex);
+      var parentIndex = vMap.get(parent);
+      var newVertex = {
+        name: name,
+        children: [],
+        parents: [parentIndex],
+        sections: [],
+      };
+      if (index === 0) newVertex.parents.pop();
+      else outputVertices[parentIndex].children.push(currIndex);
+      outputVertices.push(newVertex);
+      currIndex = currIndex + 1;
+      parent = name;
+    }
+  }
+  return outputVertices;
+}
+
 // Updates the diagram vertices with a new path, taking into account overlap
 // We will track vertices under consideration, which changes as we find matches
 // For example, if a input vertex matches an existing one, we will only consider the children

@@ -2,7 +2,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
-import Button from '@material-ui/core/Button';
 import AceEditor from 'react-ace';
 import Popup from 'reactjs-popup';
 import {modifyState} from '../utils/loaders';
@@ -11,7 +10,7 @@ import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
 export function NewEditor({editor, text, open, onClose}) {
-  var currtext = text; 
+  var currtext = text;
   const onChange = (value, event) => {
     currtext = value;
   };
@@ -42,15 +41,18 @@ function actionDispatch(dispatch) {
     onClose: (text, editor) => {
       dispatch(setNodeFulltext(text, editor));
       dispatch(modifyState({editor: null, editing: false}));
-    }
+    },
   };
 }
 
 export default connect(
   state => ({
     editor: state.editor,
-    text: state.editor === 'vertex' ? 
-    state[`${state.location}_fulltext`][state.focus] :
-    _.get(state[`${state.location}_library`], state.editor, {text: ''}).text}),
+    text:
+      state.editor === 'vertex'
+        ? state[`${state.location}_fulltext`][state.focus]
+        : _.get(state[`${state.location}_library`], state.editor, {text: ''})
+            .text,
+  }),
   actionDispatch,
 )(NewEditor);

@@ -1,4 +1,14 @@
 // @format
+import {vertexDataFromPaths} from './vertexHelpers';
+import _ from 'lodash';
+
+export const library_sample = {
+  sample: {
+    name: 'sample',
+    dependencies: [],
+    text: '#Functional text will be here\n',
+  },
+};
 
 export const initState = {
   // Test variables
@@ -16,69 +26,16 @@ export const initState = {
   build_cache: [],
   // Core
   docker_vertices: [],
-  pipeline_vertices: [
-    {
-      name: 'parent',
-      children: [1],
-      parents: [],
-      sections: [],
-    },
-    {
-      name: 'child',
-      children: [],
-      parents: [0],
-      sections: [],
-    },
-  ],
+  pipeline_vertices: vertexDataFromPaths([['Parent', 'Child']]),
   data_vertices: [],
-  configuration_vertices: [
-    {
-      name: 'control',
-      children: [1, 2],
-      parents: [],
-      sections: [],
-    },
-    {
-      name: 'worker',
-      children: [],
-      parents: [0],
-      sections: [],
-    },
-    {
-      name: 'dev',
-      children: [],
-      parents: [0],
-      sections: [],
-    },
-  ],
-  docker_library: {
-    docker_sample: {
-      name: 'docker_sample',
-      dependencies: [],
-      text: '#Docker text will be here\n',
-    },
-  },
-  pipeline_library: {
-    pipe_sample: {
-      name: 'pipe_sample',
-      dependencies: [],
-      text: '//Pipeline code will be here\n',
-    },
-  },
-  data_library: {
-    data_sample: {
-      name: 'data_sample',
-      dependencies: [],
-      text: '//Data model crap be here\n',
-    },
-  },
-  configuration_library: {
-    data_sample: {
-      name: 'data_sample',
-      dependencies: [],
-      text: '//Data model crap be here\n',
-    },
-  },
+  configuration_vertices: vertexDataFromPaths([
+    ['Control', 'Worker'],
+    ['Control', 'Dev'],
+  ]),
+  docker_library: _.clone(library_sample),
+  pipeline_library: _.clone(library_sample),
+  data_library: _.clone(library_sample),
+  configuratino_library: _.clone(library_sample),
   docker_saved: {},
   pipeline_saved: {},
   data_saved: {},
