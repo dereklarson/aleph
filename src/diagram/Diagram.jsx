@@ -15,7 +15,6 @@ export function PureDiagram({onClick, onSectionDrop, vertices, activity}) {
   const [{highlighted, isOver}, drop] = useDrop({
     accept: 'DepotItem',
     drop: (item, monitor) => {
-      // Ensure we don't double drop in case of ghost vertex creation
       if (!monitor.didDrop()) {
         onSectionDrop(item.id);
       }
@@ -26,33 +25,7 @@ export function PureDiagram({onClick, onSectionDrop, vertices, activity}) {
     }),
   });
 
-  // We'll add some 'ghost' vertices for smarter dropping
-  var verticesToDisplay = [];
-  var ghostVertices = [];
-  if (isOver === true) {
-    for (const [index, vertex] of vertices.entries()) {
-      var currVertex = _.cloneDeep(vertex);
-      // Only add ghosts to leaves for now
-      if (vertex.children.length !== 0) {
-        verticesToDisplay.push(currVertex);
-        continue;
-      }
-
-      // Add ghost as a child
-      verticesToDisplay.push({
-        ...currVertex,
-        children: [vertices.length + ghostVertices.length],
-      });
-      // create ghost
-      ghostVertices.push({
-        name: `<${vertices.length}`,
-        sections: [],
-        children: [],
-        parents: [index],
-      });
-    }
-  } else verticesToDisplay = _.cloneDeep(vertices);
-  verticesToDisplay = verticesToDisplay.concat(ghostVertices);
+  var verticesToDisplay = _.cloneDeep(vertices);
 
   // Add positional information for vertices and get arrow coordinates
   var arrows = calculateDiagramPositions(verticesToDisplay, activity.dagre);

@@ -39,6 +39,12 @@ export const useStyles = makeStyles(theme => ({
     minHeight: 50,
     maxWidth: 200,
   },
+  childHandle: {
+    borderRadius: 24,
+    height: '15px',
+    width: '100%',
+    zIndex: 6,
+  },
   drawerPaper: {
     whiteSpace: 'nowrap',
     width: drawerWidth,

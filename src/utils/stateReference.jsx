@@ -15,7 +15,7 @@ export const initState = {
   dagre: false,
   // Context
   focus: null,
-  location: 'docker',
+  location: 'pipeline',
   editing: false,
   editor: null,
   // Operations

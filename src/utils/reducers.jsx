@@ -12,8 +12,8 @@ const controlDiagram = (state, action) => {
     case 'SET_STATE':
       return action.state;
     case 'MODIFY_STATE':
-      console.log('Modifying State, initial:', state);
       return Object.assign({}, state, action.update);
+      console.log('Modified State To:', state);
     case 'NAVIGATE':
       return Object.assign({}, state, {location: action.location});
     case 'ADD_SAVED':

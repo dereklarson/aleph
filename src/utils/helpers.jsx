@@ -3,11 +3,7 @@ import _ from 'lodash';
 
 export function propsToStyle(styleProps) {
   return {
-    opacity: _.get(styleProps, 'isDragging')
-      ? 0.5
-      : _.get(styleProps, 'ghost')
-      ? 0.2
-      : 1,
+    opacity: _.get(styleProps, 'isDragging') ? 0.5 : 1,
     backgroundColor: _.get(styleProps, 'highlighted')
       ? '#C9C9FF'
       : _.get(styleProps, 'building')

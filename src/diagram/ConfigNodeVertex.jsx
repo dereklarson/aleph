@@ -11,7 +11,7 @@ export default function ConfigNodeVertex({name, sections, id, styleProps}) {
   const classes = useStyles();
 
   return (
-    <Box className={classes.box} boxShadow="8"style={propsToStyle(styleProps)}>
+    <Box className={classes.box} boxShadow="8" style={propsToStyle(styleProps)}>
       {icon} {nodelabel}
     </Box>
   );

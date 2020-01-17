@@ -8,13 +8,13 @@ import {modifyState} from '../utils/loaders';
 import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigNodeVertex from './ConfigNodeVertex';
+import ChildHandle from './ChildHandle';
 
 export function PureVertex({
   state,
   onClick,
   cardActions,
   dropActions,
-  onSectionToGhost,
   type,
   id,
   name,
@@ -33,9 +33,7 @@ export function PureVertex({
   const [{highlighted}, drop] = useDrop({
     accept: ['Vertex', 'DepotItem'],
     drop: item => {
-      if (name.charAt(0) === '<') {
-        onSectionToGhost(parents[0], parseInt(name.slice(1)), item.id);
-      } else if (item.type === 'Vertex' && item.parents.includes(id)) {
+      if (item.type === 'Vertex' && item.parents.includes(id)) {
         dropActions.Unlink(id, item.id);
       } else dropActions[item.type](id, item.id);
     },
@@ -61,7 +59,6 @@ export function PureVertex({
     isDragging: isDragging,
     highlighted: highlighted,
     prepared: prepared.includes(id),
-    ghost: name.charAt(0) === '<',
   };
   const components = {
     conf: ConfigNodeVertex,
@@ -87,6 +84,7 @@ export function PureVertex({
           styleProps={styleProps}
         />
       </div>
+      <ChildHandle vertexId={id} />
     </div>
   );
 }
@@ -110,10 +108,6 @@ function actionDispatch(dispatch) {
       Vertex: (to, from) => dispatch(linkVertex(to, from)),
       DepotItem: (to, from) => dispatch(addSection(to, from)),
       Unlink: (to, from) => dispatch(unlinkVertex(to, from)),
-    },
-    onSectionToGhost: (to, from, section) => {
-      dispatch({type: 'ADD_VERTEX', section: section});
-      dispatch(linkVertex(to, from));
     },
   };
 }
