@@ -10,10 +10,20 @@ export const modifyState = update => ({
 });
 
 // Thunked: will return function taking dispatch
+export function loadInputs() {
+  return function(dispatch) {
+    console.log('---Loading Inputs ---');
+    axios.get('/input').then(response => {
+      dispatch(modifyState(response.data));
+    });
+  };
+}
+
+// Thunked: will return function taking dispatch
 export function loadDockerLibrary() {
   return function(dispatch) {
     console.log('---Loading Docker Library---');
-    axios.get('/docker_library').then(response => {
+    axios.get('/library/docker').then(response => {
       dispatch(modifyState(response.data));
     });
     console.log('---Loading Docker Images---');
@@ -27,17 +37,7 @@ export function loadDockerLibrary() {
 export function loadSaved() {
   return function(dispatch) {
     console.log('---Loading Saved Diagrams---');
-    axios.get('/docker_saved').then(response => {
-      dispatch(modifyState(response.data));
-    });
-  };
-}
-
-// Thunked: will return function taking dispatch
-export function loadRepo() {
-  return function(dispatch) {
-    console.log('---Loading Repo ---');
-    axios.get('/org_repo').then(response => {
+    axios.get('/diagrams/docker').then(response => {
       dispatch(modifyState(response.data));
     });
   };

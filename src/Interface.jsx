@@ -5,7 +5,8 @@ import {CssBaseline, Typography} from '@material-ui/core';
 import {AppBar, Toolbar} from '@material-ui/core';
 import Workspace from './Workspace';
 import Sidebar from './sidebar/Sidebar';
-import NewEditor from './comcom/NewEditor';
+import Editor from './comcom/Editor';
+import TextEntry from './comcom/TextEntry';
 import {generateButtons} from './utils//generateList';
 import {saveCheckpoint, loadCheckpoint, modifyState} from './utils/loaders';
 import {playTutorial} from './utils/tutorial';
@@ -29,7 +30,8 @@ export function Interface({state, onLoad, onPlayTutorial, onSetState}) {
 
   return (
     <div className={classes.root}>
-      <NewEditor open={state.editing} />}
+      <Editor open={state.editing} />
+      <TextEntry open={state.texting} />
       <CssBaseline />
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar}>

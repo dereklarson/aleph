@@ -2,9 +2,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Popup from 'reactjs-popup';
-import {List, ListSubheader, TextField} from '@material-ui/core';
+import {List, ListSubheader} from '@material-ui/core';
 import {clearDiagram, build, modifyState, saveDiagram} from '../utils/loaders';
-import {loadRepo, loadSaved, loadDockerLibrary} from '../utils/loaders';
+import {loadInputs, loadSaved, loadDockerLibrary} from '../utils/loaders';
 import {generateList} from '../utils/generateList';
 import {noBuildState} from '../utils/stateReference';
 
@@ -16,19 +16,20 @@ function BulkActions({
   onBuild,
   onClearBuild,
   onLoadLibrary,
-  onLoadRepo,
+  onLoadInputs,
   onLoadSaved,
+  onText,
   state,
-  setMenuOpen,
 }) {
-  const [saveopen, openSave] = React.useState(false);
-  const [savename, setSave] = React.useState('default');
   const cancel = React.useRef(false);
 
-  const onLoadAll = () => {
+  const onRefresh = () => {
     onLoadSaved();
     onLoadLibrary();
-    onLoadRepo();
+  };
+
+  const onInitialLoad = () => {
+    onLoadInputs();
   };
 
   const onCancel = () => {
@@ -36,9 +37,8 @@ function BulkActions({
     else onClearBuild();
   };
 
-  const onSave = () => {
-    openSave(false);
-    saveDiagram(savename, {
+  const savefunc = fieldText => {
+    saveDiagram(fieldText.savename, {
       [`${state.location}_vertices`]: state[`${state.location}_vertices`],
       [`${state.location}_fulltext`]: state[`${state.location}_fulltext`],
     });
@@ -48,26 +48,17 @@ function BulkActions({
     ['clear_diagram', () => clear(state.location)],
     ['build_marked', () => onBuild(state, cancel)],
     ['cancel_build', onCancel],
-    ['refresh', onLoadAll],
-    ['save_diagram', () => openSave(true)],
+    ['refresh', onRefresh],
+    ['save_diagram', () => onText(savefunc)],
   ];
 
   // Performs loads on mount
-  React.useEffect(onLoadAll, []);
+  React.useEffect(onInitialLoad, []);
 
   return (
     <List>
       <ListSubheader inset>Actions</ListSubheader>
       {generateList(actionOptions)}
-      <Popup open={saveopen} onClose={onSave}>
-        <div className="modal">
-          <TextField
-            label="Save name"
-            defaultValue={savename}
-            onChange={event => setSave(event.target.value)}
-          />
-        </div>
-      </Popup>
     </List>
   );
 }
@@ -79,11 +70,16 @@ function actionDispatch(dispatch) {
     onClearBuild: () => dispatch(modifyState(noBuildState)),
     onLoadLibrary: () => dispatch(loadDockerLibrary()),
     onLoadSaved: () => dispatch(loadSaved()),
-    onLoadRepo: () => dispatch(loadRepo()),
+    onLoadInputs: () => dispatch(loadInputs()),
+    onText: savefunc =>
+      dispatch(
+        modifyState({
+          texting: true,
+          entry_schema: {savename: 1},
+          func: savefunc,
+        }),
+      ),
   };
 }
 
-export default connect(
-  state => ({state: state}),
-  actionDispatch,
-)(BulkActions);
+export default connect(state => ({state: state}), actionDispatch)(BulkActions);

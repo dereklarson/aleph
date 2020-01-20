@@ -35,10 +35,10 @@ export default {
 
 export const testData = {}
 
-function genTest(props, boxprops={squaresize: 800}) {
+function genTest(props, boxprops={squaresize: 1200}) {
   return (
     <Divbox {...boxprops} ><TestComponent {...testData} {...props} /></Divbox>
   )
 }
 
-export const stack_small = () => genTest({});
+export const conf_small = () => genTest({});

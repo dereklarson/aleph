@@ -9,7 +9,7 @@ import {modifyState} from '../utils/loaders';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
-export function NewEditor({editor, text, open, onClose}) {
+export function Editor({editor, text, open, onClose}) {
   var currtext = text;
   const onChange = (value, event) => {
     currtext = value;
@@ -55,4 +55,4 @@ export default connect(
             .text,
   }),
   actionDispatch,
-)(NewEditor);
+)(Editor);

@@ -1,5 +1,5 @@
 // @format
-import React, {useRef} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import {useDrag, useDrop, DragPreviewImage} from 'react-dnd';
 import {prepareBuildFocus} from '../utils/loaders';
@@ -9,6 +9,7 @@ import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigNodeVertex from './ConfigNodeVertex';
 import ChildHandle from './ChildHandle';
+import {HotKeys} from 'react-hotkeys';
 
 export function PureVertex({
   state,
@@ -23,7 +24,10 @@ export function PureVertex({
   prepared,
 }) {
   // First define the Drag-n-Drop functionality
-  const ref = useRef(null);
+  const ref = React.useRef(null);
+  const setFocus = () => {
+    ref.current && ref.current.focus();
+  };
   const [{isDragging}, drag, preview] = useDrag({
     item: {type: 'Vertex', id: id, name: name, parents: parents},
     collect: monitor => ({
@@ -67,24 +71,35 @@ export function PureVertex({
   };
   const CurrentComponent = components[type];
   const zIndex = type === 'card' ? 4 : 3;
+
+  const deleteNode = React.useCallback(() => {
+    cardActions.onClear(id);
+  }, []);
+
+  const handlers = {
+    DELETE_NODE: deleteNode,
+  };
+
   return (
-    <div ref={ref} style={{zIndex: zIndex}}>
-      <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
-      <div
-        onClick={event => {
-          event.stopPropagation();
-          onClick(id);
-        }}>
-        <CurrentComponent
-          name={name}
-          cardActions={cardActions}
-          sections={sections}
-          id={id}
-          state={state}
-          styleProps={styleProps}
-        />
-      </div>
-      <ChildHandle vertexId={id} />
+    <div ref={ref} style={{zIndex: zIndex}} onMouseEnter={setFocus}>
+      <HotKeys handlers={handlers}>
+        <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
+        <div
+          onClick={event => {
+            event.stopPropagation();
+            onClick(id);
+          }}>
+          <CurrentComponent
+            name={name}
+            cardActions={cardActions}
+            sections={sections}
+            id={id}
+            state={state}
+            styleProps={styleProps}
+          />
+        </div>
+        <ChildHandle vertexId={id} />
+      </HotKeys>
     </div>
   );
 }

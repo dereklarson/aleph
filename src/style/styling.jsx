@@ -42,6 +42,7 @@ export const useStyles = makeStyles(theme => ({
   childHandle: {
     borderRadius: 24,
     height: '15px',
+    opacity: 0.5,
     width: '100%',
     zIndex: 6,
   },

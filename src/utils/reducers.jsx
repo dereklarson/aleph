@@ -12,13 +12,15 @@ const controlDiagram = (state, action) => {
     case 'SET_STATE':
       return action.state;
     case 'MODIFY_STATE':
-      return Object.assign({}, state, action.update);
-      console.log('Modified State To:', state);
+      console.log('State update:', action.update);
+      const modify_result = Object.assign({}, state, action.update);
+      console.log('State result:', modify_result);
+      return modify_result;
     case 'NAVIGATE':
       return Object.assign({}, state, {location: action.location});
     case 'ADD_SAVED':
-      var result = vertexAdder(state, action.vertexgroups);
-      return Object.assign({}, state, result);
+      var add_result = vertexAdder(state, action.vertexgroups);
+      return Object.assign({}, state, add_result);
     case 'ADD_VERTEX':
       const fulltext = state[loc_library][action.section].text;
       return Object.assign({}, state, {
@@ -37,9 +39,7 @@ const controlDiagram = (state, action) => {
       return Object.assign({}, state, {
         [loc_vertices]: state[loc_vertices].map((vertex, index) => {
           if (action.id === index) {
-            return Object.assign({}, vertex, {
-              name: action.name,
-            });
+            return Object.assign({}, vertex, {name: action.name});
           }
           return vertex;
         }),

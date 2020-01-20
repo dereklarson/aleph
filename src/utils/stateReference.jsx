@@ -18,6 +18,9 @@ export const initState = {
   location: 'pipeline',
   editing: false,
   editor: null,
+  texting: false,
+  entry_schema: {},
+  func: () => 0,
   // Operations
   tickertext: 'Ticker',
   percent: 100,
