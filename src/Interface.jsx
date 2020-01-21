@@ -1,62 +1,30 @@
 // @format
 import React from 'react';
 import {connect} from 'react-redux';
-import {CssBaseline, Typography} from '@material-ui/core';
-import {AppBar, Toolbar} from '@material-ui/core';
+import {CssBaseline} from '@material-ui/core';
+import AppBar from './AppBar';
 import Workspace from './Workspace';
 import Sidebar from './sidebar/Sidebar';
 import Editor from './comcom/Editor';
 import TextEntry from './comcom/TextEntry';
-import {generateButtons} from './utils//generateList';
-import {saveCheckpoint, loadCheckpoint, modifyState} from './utils/loaders';
-import {playTutorial} from './utils/tutorial';
 import {useStyles} from './style/styling';
 
-export function Interface({state, onLoad, onPlayTutorial, onSetState}) {
+export function Interface({editing, texting}) {
   const classes = useStyles();
-  const [saved, setSaved] = React.useState(false);
-
-  const onSave = () => {
-    setSaved(true);
-    saveCheckpoint('user', state);
-  };
-
-  const appBarOptions = [
-    ['save_checkpoint', onSave],
-    ['load_checkpoint', onLoad, saved],
-    ['play_tutorial', () => onPlayTutorial(state)],
-    ['set_state', () => onSetState()],
-  ];
 
   return (
     <div className={classes.root}>
-      <Editor open={state.editing} />
-      <TextEntry open={state.texting} />
+      <Editor open={editing} />
+      <TextEntry open={texting} />
       <CssBaseline />
-      <AppBar className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}>
-            Control Center
-          </Typography>
-          {generateButtons(appBarOptions)}
-        </Toolbar>
-      </AppBar>
+      <AppBar />
       <Sidebar />
       <Workspace />
     </div>
   );
 }
 
-export default connect(
-  state => ({state: state}),
-  dispatch => ({
-    onLoad: () => loadCheckpoint('user', dispatch),
-    onPlayTutorial: state => playTutorial('tutorial', state, false, dispatch),
-    onSetState: () => dispatch(modifyState({dagre: true})),
-  }),
-)(Interface);
+export default connect(state => ({
+  editing: state.editing,
+  texting: state.texting,
+}))(Interface);
