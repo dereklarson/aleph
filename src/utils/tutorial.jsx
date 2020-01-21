@@ -6,7 +6,7 @@ import {noBuildState, tutorialInitialState} from './stateReference';
 
 export async function playTutorial(tutorialName, state, cancel, dispatch) {
   console.log('---Building---', tutorialName);
-  var steps = [];
+  let steps = [];
   await axios
     .post('/play_tutorial', {tutorial_name: tutorialName})
     .then(response => {

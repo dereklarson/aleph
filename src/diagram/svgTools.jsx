@@ -5,10 +5,10 @@ import React from 'react';
 // It assumes a vertical orientation and default shape
 export function computePathstring(start, end) {
   // The only calculations we need are the average y-position
-  var averageY = (start.y + end.y) / 2;
-  var source = `M${start.x},${start.y}`;
-  var sink = `${end.x},${end.y}`;
-  var control = `C${start.x},${averageY} ${end.x},${averageY}`;
+  const averageY = (start.y + end.y) / 2;
+  const source = `M${start.x},${start.y}`;
+  const sink = `${end.x},${end.y}`;
+  const control = `C${start.x},${averageY} ${end.x},${averageY}`;
   return [source, control, sink].join(' ');
 }
 

@@ -6,9 +6,9 @@ import _ from 'lodash';
 import {generateList} from '../utils/generateList';
 
 function SavedDiagrams({location, saved, onAddSaved, onSetDiagram}) {
-  var items = [];
+  let items = [];
   for (const [name, config] of Object.entries(saved)) {
-    var onClick = () => onAddSaved(config.vertexgroups);
+    let onClick = () => onAddSaved(config.vertexgroups);
     if (_.has(config, `${location}_vertices`)) {
       onClick = () => onSetDiagram(config);
     }

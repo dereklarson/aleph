@@ -78,7 +78,7 @@ export function prepareBuildFocus(currentState, dispatch) {
 }
 
 export async function build(currentState, cancel, dispatch) {
-  var current_cache = {};
+  let current_cache = {};
   if (currentState.location === 'docker') {
     console.log('---Building---');
     for (const [index, step] of currentState.build_orders.entries()) {

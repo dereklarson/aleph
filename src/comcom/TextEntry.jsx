@@ -14,13 +14,13 @@ import 'ace-builds/src-noconflict/theme-monokai';
 export function PureTextEntry({open, schema, func, shutModal}) {
   const classes = useStyles();
 
-  var editorText;
+  let editorText;
   const onEditorChange = (value, event) => {
     editorText = value;
   };
 
-  var fieldText = {};
-  var itemDisplay = [];
+  let fieldText = {};
+  let itemDisplay = [];
   for (const [key, value] of Object.entries(schema)) {
     if (key === 'godmode') continue;
     itemDisplay.push(

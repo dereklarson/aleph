@@ -3,14 +3,14 @@ import React from 'react';
 import Vertex from './Vertex';
 
 function renderVertex(index, vertex, activity) {
-  var type = 'node';
+  let type = 'node';
   if (activity.location === 'configuration') {
     type = 'conf';
   } else if (activity.focus === index) {
     type = 'card';
   }
 
-  var component = (
+  const component = (
     <Vertex
       type={type}
       id={index}

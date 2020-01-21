@@ -17,16 +17,16 @@ export function calculateDiagramPositions(vertices, dagre = false) {
     }
   }
 
-  var width = 20; // Based on Fab size
-  var height = 10; // Based on Fab size
-  var row_shift = [0, 0, 0, 0, 0, 0, 0, 0];
-  var arrows = [];
+  const width = 20; // Based on Fab size
+  const height = 10; // Based on Fab size
+  let row_shift = [0, 0, 0, 0, 0, 0, 0, 0];
+  let arrows = [];
 
   // First loop to calculate position of the node and its in/out anchors
   vertices.forEach(function(entry) {
     // Calculate an offset for our 3 "tracks" (rows) of nodes
-    var x = row_shift[entry.generation] * width;
-    var y = entry.generation * height;
+    const x = row_shift[entry.generation] * width;
+    const y = entry.generation * height;
     row_shift[entry.generation] += 1;
 
     entry['position'] = {x: x, y: y, height: height, width: width};
@@ -46,7 +46,7 @@ export function calculateDiagramPositions(vertices, dagre = false) {
 
 export function populateVertexGenerations(vertices, vIndex, current) {
   vertices[vIndex]['generation'] = current;
-  for (var vChild of vertices[vIndex].children) {
+  for (let vChild of vertices[vIndex].children) {
     populateVertexGenerations(vertices, vChild, current + 1);
   }
 }
@@ -69,7 +69,7 @@ function calculateDagre(vertices) {
   }
 
   // Populate arrows
-  var edges = [];
+  let edges = [];
   for (const [parentIndex, parent] of vertices.entries()) {
     parent.children.forEach(childIndex => {
       edges.push({outIndex: parentIndex, inIndex: childIndex});
@@ -85,13 +85,13 @@ function calculateDagre(vertices) {
   // Get some scale factors to convert positions to percentages, with some buffer
   // transition helps us start in the upper left and center out as vertices are added
   const transition_scale = 0.5;
-  var transition = Math.min(1, vertices.length / 10);
-  var hScale = Math.min(10, 100 / g.graph().width);
-  var vScale = Math.min(10, 100 / g.graph().height);
-  var hZoom = 0.2 + (1 - transition) * transition_scale;
-  var vZoom = 0.3 + (1 - transition) * transition_scale;
-  var h0 = 0 + (1 - transition) * transition_scale;
-  var v0 = 0.2 + (1 - transition) * transition_scale;
+  const transition = Math.min(1, vertices.length / 10);
+  const hScale = Math.min(10, 100 / g.graph().width);
+  const vScale = Math.min(10, 100 / g.graph().height);
+  const hZoom = 0.2 + (1 - transition) * transition_scale;
+  const vZoom = 0.3 + (1 - transition) * transition_scale;
+  const h0 = 0 + (1 - transition) * transition_scale;
+  const v0 = 0.2 + (1 - transition) * transition_scale;
 
   console.log('Graph: ' + hScale + ', ' + vScale);
 
@@ -105,10 +105,10 @@ function calculateDagre(vertices) {
     console.log('Node ' + v + ': ' + JSON.stringify(vertices[v]['position']));
   });
 
-  var arrows = [];
+  let arrows = [];
   g.edges().forEach(function(edge) {
-    var start = g.edge(edge).points[0];
-    var end = g.edge(edge).points[2];
+    const start = g.edge(edge).points[0];
+    const end = g.edge(edge).points[2];
     arrows.push({
       start: {
         x: rescale(start.x, 0, hScale, hZoom, h0),

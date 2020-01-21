@@ -10,7 +10,7 @@ import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
 export function Editor({editor, text, open, onClose}) {
-  var currtext = text;
+  let currtext = text;
   const onChange = (value, event) => {
     currtext = value;
   };

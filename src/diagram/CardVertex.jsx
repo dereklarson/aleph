@@ -19,7 +19,7 @@ export function PureCardVertex({
   state,
   styleProps,
 }) {
-  var chipDisplay = [];
+  let chipDisplay = [];
   for (const section of sections.values()) {
     const chipDelete = () => onChipDelete(id, section);
     chipDisplay.push(<Chip label={section} onDelete={chipDelete} />);

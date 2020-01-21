@@ -33,7 +33,7 @@ export function applyTooltip(child, title = 'no tooltip', key = null) {
 }
 
 export function generateButtons(options, icon = 'def', tooltipBase = '') {
-  var itemDisplay = [];
+  let itemDisplay = [];
   for (const config of options) {
     itemDisplay.push(
       applyTooltip(
@@ -49,7 +49,7 @@ export function generateButtons(options, icon = 'def', tooltipBase = '') {
 }
 
 export function generateList(options, tooltipBase = '', icon = 'def') {
-  var itemDisplay = [];
+  let itemDisplay = [];
   for (const config of options) {
     itemDisplay.push(
       <ListItem button onClick={config[1]}>

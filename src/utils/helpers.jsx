@@ -23,8 +23,8 @@ export function sleep(milliseconds) {
 }
 
 export function titlize(string) {
-  var output = '';
-  for (var word of string.split('_')) {
+  let output = '';
+  for (let word of string.split('_')) {
     output += capitalizeFirstLetter(word) + '\n';
   }
   return output.trim();
