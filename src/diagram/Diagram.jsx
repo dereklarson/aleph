@@ -3,13 +3,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
 import {Paper} from '@material-ui/core';
+import {createSelector} from 'reselect';
 import _ from 'lodash';
 import Arrows from './Arrows';
 import Vertices from './Vertices';
 import {calculateDiagramPositions} from './diagramDrawing';
 import {useStyles} from '../style/styling';
 
-export function PureDiagram({onClick, onSectionDrop, vertices, activity}) {
+export function PureDiagram({clearFocus, onSectionDrop, vertices, activity}) {
   const classes = useStyles();
 
   const [{highlighted, isOver}, drop] = useDrop({
@@ -30,6 +31,9 @@ export function PureDiagram({onClick, onSectionDrop, vertices, activity}) {
   // Add positional information for vertices and get arrow coordinates
   var arrows = calculateDiagramPositions(verticesToDisplay, activity.dagre);
 
+  var onClick = () => 0;
+  if (activity.focus !== null) onClick = clearFocus;
+
   return (
     <div ref={drop}>
       <Paper
@@ -48,18 +52,28 @@ export const addVertex = (section = null) => ({
   section: section,
 });
 
+const getFocus = state => state.focus;
+const getLocation = state => state.location;
+const getBuildOrders = state => state.build_orders;
+const getDagre = state => state.dagre;
+
+const getActivity = createSelector(
+  [getFocus, getLocation, getBuildOrders, getDagre],
+  (focus, location, buildOrders, dagre) => ({
+    focus: focus,
+    location: location,
+    prepared: buildOrders.map(({id}) => id),
+    dagre: dagre,
+  }),
+);
+
 export default connect(
   state => ({
     vertices: state[`${state.location}_vertices`],
-    activity: {
-      focus: state.focus,
-      location: state.location,
-      prepared: state.build_orders.map(({id}) => id),
-      dagre: state.dagre,
-    },
+    activity: getActivity(state),
   }),
   dispatch => ({
-    onClick: () => dispatch({type: 'MODIFY_STATE', update: {focus: null}}),
+    clearFocus: () => dispatch({type: 'MODIFY_STATE', update: {focus: null}}),
     onSectionDrop: section => dispatch(addVertex(section)),
   }),
 )(PureDiagram);
