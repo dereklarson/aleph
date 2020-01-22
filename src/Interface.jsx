@@ -14,9 +14,9 @@ export function Interface({editing, texting}) {
 
   return (
     <div className={classes.root}>
+      <CssBaseline />
       <Editor open={editing} />
       <TextEntry open={texting} />
-      <CssBaseline />
       <AppBar />
       <Sidebar />
       <Workspace />

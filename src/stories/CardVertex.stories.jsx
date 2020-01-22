@@ -47,6 +47,7 @@ function genTest(props, boxprops={boxtype: 'small'}) {
   )
 }
 
+export const simple = () => <TestComponent {...testData} />
 export const names = () => testSet(
   [{name: ''}, {name: 'Normal'}, {name: 'Cornelius Scipio Africanus'}]);
 export const sections = () => testSet(
