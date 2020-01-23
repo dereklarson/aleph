@@ -6,15 +6,34 @@ const drawerWidth = 240;
 export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    backgroundColor: theme.palette.background.default,
-    color: theme.palette.text.primary,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
   appBarSpacer: theme.mixins.toolbar,
+  toolbar: {
+    paddingRight: 24, // keep right padding when drawer closed
+  },
+  title: {
+    flexGrow: 1,
+  },
+  drawerPaper: {
+    whiteSpace: 'nowrap',
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerPaperClose: {
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    width: theme.spacing(7),
+  },
   container: {
-    paddingLeft: theme.spacing(24),
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
   },
@@ -22,12 +41,7 @@ export const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
-  },
-  toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
-  },
-  title: {
-    flexGrow: 1,
+    paddingLeft: theme.spacing(4),
   },
   chipDepot: {
     width: '100%',
@@ -50,24 +64,14 @@ export const useStyles = makeStyles(theme => ({
     width: '100%',
     zIndex: 6,
   },
-  drawerPaper: {
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: theme.spacing(7),
-  },
   paperDrawing: {
     position: 'relative', // Let's us use coordinates to draw the Diagram
+  },
+  vertex: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
   },
   paper: {
     padding: theme.spacing(2),

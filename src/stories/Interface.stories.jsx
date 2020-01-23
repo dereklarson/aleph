@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import {action} from '@storybook/addon-actions';
-import {withKnobs, boolean} from '@storybook/addon-knobs';
+import {withKnobs, text, boolean} from '@storybook/addon-knobs';
 import {muiTheme} from 'storybook-addon-material-ui';
 import Divbox from './Divbox';
 import {PureInterface} from '../Interface';
@@ -45,6 +45,7 @@ function genTest(props, boxprops = {squaresize: 1200}) {
 export const unbounded = () => <TestComponent {...testData} />;
 export const dynamic = () =>
   genTest({
+    themeStr: text('theme', 'dark'),
     editing: boolean('editing', false),
     texting: boolean('texting', false),
   });

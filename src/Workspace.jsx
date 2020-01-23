@@ -21,10 +21,10 @@ export function Workspace() {
           </Grid>
           <Grid item xs={10}>
             <Diagram />
+            <Credits />
           </Grid>
         </Grid>
       </Container>
-      <Credits />
     </main>
   );
 }

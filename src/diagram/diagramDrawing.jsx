@@ -115,11 +115,11 @@ function calculateDagre(vertices) {
     arrows.push({
       start: {
         x: rescale(start.x, 0, hScale, hZoom, h0),
-        y: rescale(start.y, 0, vScale, vZoom, v0),
+        y: rescale(start.y, 0, vScale, vZoom, v0) - 2, //Quick fudge for now
       },
       end: {
         x: rescale(end.x, 0, hScale, hZoom, h0),
-        y: rescale(end.y, 0, vScale, vZoom, v0),
+        y: rescale(end.y, 0, vScale, vZoom, v0) - 2,
       },
     });
     console.log(

@@ -11,15 +11,15 @@ import {useStyles} from '../style/styling';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
-export function PureTextEntry({open, schema, func, shutModal}) {
+export function PureTextEntry({open, schema, func, godmode, shutModal}) {
   const classes = useStyles();
 
+  let fieldText = {};
   let editorText;
   const onEditorChange = (value, event) => {
-    editorText = value;
+    fieldText = value;
   };
 
-  let fieldText = {};
   let itemDisplay = [];
   for (const [key, value] of Object.entries(schema)) {
     if (key === 'godmode') continue;
@@ -39,7 +39,9 @@ export function PureTextEntry({open, schema, func, shutModal}) {
     );
   }
 
+  let callfunc = func;
   if (_.has(schema, 'godmode')) {
+    callfunc = godmode;
     itemDisplay.push(
       <AceEditor
         className={classes.editor}
@@ -55,7 +57,7 @@ export function PureTextEntry({open, schema, func, shutModal}) {
 
   const onDone = () => {
     shutModal();
-    func(fieldText);
+    callfunc(fieldText);
   };
 
   return (
@@ -78,6 +80,9 @@ function actionDispatch(dispatch) {
   return {
     shutModal: (text, editor) => {
       dispatch(modifyState({texting: false}));
+    },
+    godmode: text => {
+      dispatch(modifyState(JSON.parse(text)));
     },
   };
 }

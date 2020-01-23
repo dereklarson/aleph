@@ -11,7 +11,7 @@ const tooltipReference = {
   save_checkpoint: 'Checkpoint the current state',
   load_checkpoint: 'Load the state checkpoint',
   play_tutorial: 'This plays the current sample tutorial',
-  set_state: 'Cheat mode:  directly set state via text',
+  god_mode: 'Cheat mode:  directly set state via text',
   clear_diagram: 'This will clear the current diagram, deleting all vertices',
   build_marked:
     'This will build the diagram, current build will be colored green',

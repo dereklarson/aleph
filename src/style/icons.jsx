@@ -17,7 +17,7 @@ import ReceiptIcon from '@material-ui/icons/Receipt';
 export const iconSource = {
   def: <HelpIcon />,
   // Interface
-  set_state: <HttpsIcon />,
+  god_mode: <HttpsIcon />,
   play_tutorial: <HelpIcon />,
   load_checkpoint: <CloudDownloadIcon />,
   save_checkpoint: <CloudUploadIcon />,

@@ -1,8 +1,9 @@
 // @format
 import React from 'react';
 import Vertex from './Vertex';
+import {useStyles} from '../style/styling';
 
-function renderVertex(index, vertex, activity) {
+function renderVertex(index, vertex, activity, className) {
   let type = 'node';
   if (activity.location === 'configuration') {
     type = 'conf';
@@ -22,13 +23,9 @@ function renderVertex(index, vertex, activity) {
   );
   return (
     <div
+      className={className}
       key={index}
       style={{
-        border: '1px dashed red',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'absolute',
         left: `${vertex.position.x}%`,
         top: `${vertex.position.y}%`,
         height: `${vertex.position.height}%`,
@@ -40,9 +37,10 @@ function renderVertex(index, vertex, activity) {
 }
 
 export default function Vertices({vertices, activity}) {
+  const classes = useStyles();
   const vertexDisplay = [];
   for (const [index, vertex] of vertices.entries()) {
-    vertexDisplay.push(renderVertex(index, vertex, activity));
+    vertexDisplay.push(renderVertex(index, vertex, activity, classes.vertex));
   }
   return <div>{vertexDisplay}</div>;
 }

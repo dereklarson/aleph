@@ -8,7 +8,7 @@ import {playTutorial} from './utils/tutorial';
 import {useStyles} from './style/styling';
 import {capitalizeFirstLetter} from './utils/helpers';
 
-export function PureAppBar({state, onLoad, onPlayTutorial, onSetState}) {
+export function PureAppBar({state, onLoad, onPlayTutorial, onGodMode}) {
   const classes = useStyles();
   const [saved, setSaved] = React.useState(false);
   const onSave = () => {
@@ -20,7 +20,7 @@ export function PureAppBar({state, onLoad, onPlayTutorial, onSetState}) {
     ['save_checkpoint', onSave],
     ['load_checkpoint', onLoad, saved],
     ['play_tutorial', () => onPlayTutorial(state)],
-    ['set_state', () => onSetState()],
+    ['god_mode', () => onGodMode()],
   ];
 
   return (
@@ -45,6 +45,13 @@ export default connect(
   dispatch => ({
     onLoad: () => loadCheckpoint('user', dispatch),
     onPlayTutorial: state => playTutorial('tutorial', state, false, dispatch),
-    onSetState: () => dispatch(modifyState({dagre: true})),
+    onGodMode: () =>
+      dispatch(
+        modifyState({
+          texting: true,
+          entry_schema: {godmode: 1},
+          func: () => null,
+        }),
+      ),
   }),
 )(PureAppBar);
