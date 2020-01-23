@@ -8,13 +8,13 @@ import {withKnobs} from '@storybook/addon-knobs';
 import {muiTheme} from 'storybook-addon-material-ui';
 import Divbox from './Divbox';
 import {PureDiagram} from '../diagram/Diagram';
-import {coveredState} from './testStates';
+import {excitedState, coveredState} from './testStates';
 
 const TestComponent = PureDiagram;
 
 // A super-simple mock of a redux store
 const store = {
-  getState: () => coveredState,
+  getState: () => excitedState,
   subscribe: () => 0,
   dispatch: action('dispatch'),
 };
@@ -55,7 +55,7 @@ export const stack_small = () =>
 export const dagre_small = () =>
   genTest({
     vertices: coveredState.small_vertices,
-    activity: {focus: 0, location: 'docker', prepared: [], dagre: true},
+    activity: {focus: 1, location: 'docker', prepared: [], dagre: true},
   });
 export const stack_med = () =>
   genTest({vertices: coveredState.medium_vertices});

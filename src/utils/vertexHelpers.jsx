@@ -1,6 +1,21 @@
 // @format
 import _ from 'lodash';
 
+// Looks back through the vertex lineage to get all ancestors associated with it
+export function getAncestry(state, vertexId) {
+  let currVertex = state[`${state.location}_vertices`][vertexId];
+  let ancestors = [];
+  let sections = _.clone(currVertex.sections);
+  let aIdx = 0;
+  while (currVertex.parents.length !== 0) {
+    ancestors = ancestors.concat(_.clone(currVertex.parents));
+    currVertex = state[`${state.location}_vertices`][ancestors[aIdx]];
+    sections = sections.concat(_.clone(currVertex.sections));
+    aIdx++;
+  }
+  return [ancestors, sections];
+}
+
 // Useful for generating static initialization and test data, this will produce a set of
 // vertices that are related via paths, e.g. ['a', 'b', 'c'] means 'c' is grandkid of 'a'
 export function vertexDataFromPaths(paths) {

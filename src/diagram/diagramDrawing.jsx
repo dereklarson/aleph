@@ -67,7 +67,7 @@ function calculateDagre(vertices) {
   for (const [index, vertex] of vertices.entries()) {
     // TODO Alter this to do something special for Cards?
     if (vertex !== null) {
-      g.setNode(index, {width: 50, height: 30});
+      g.setNode(index, {width: 20, height: 30});
     }
   }
 
@@ -115,11 +115,11 @@ function calculateDagre(vertices) {
     arrows.push({
       start: {
         x: rescale(start.x, 0, hScale, hZoom, h0),
-        y: rescale(start.y, 0, vScale, vZoom, v0) - 2, //Quick fudge for now
+        y: rescale(start.y, 0, vScale, vZoom, v0),
       },
       end: {
         x: rescale(end.x, 0, hScale, hZoom, h0),
-        y: rescale(end.y, 0, vScale, vZoom, v0) - 2,
+        y: rescale(end.y, 0, vScale, vZoom, v0),
       },
     });
     console.log(

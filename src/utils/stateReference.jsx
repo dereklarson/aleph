@@ -11,6 +11,7 @@ import _ from 'lodash';
 
 export const blankContext = {
   dagre: false,
+  theme: 'dark',
   focus: null,
   location: 'docker',
   editing: false,

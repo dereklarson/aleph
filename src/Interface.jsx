@@ -9,7 +9,7 @@ import Editor from './comcom/Editor';
 import TextEntry from './comcom/TextEntry';
 import {useStyles} from './style/styling';
 import {themePicker} from './style/theme';
-import {ThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+import {ThemeProvider} from '@material-ui/core/styles';
 
 export function PureInterface({themeStr, editing, texting}) {
   const classes = useStyles();

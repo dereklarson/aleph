@@ -9,7 +9,9 @@ import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigNodeVertex from './ConfigNodeVertex';
 import ChildHandle from './ChildHandle';
+import ParentHandle from './ParentHandle';
 import {HotKeys} from 'react-hotkeys';
+import {getAncestry} from '../utils/vertexHelpers';
 
 export function PureVertex({
   state,
@@ -52,7 +54,8 @@ export function PureVertex({
         if (item.parents.length !== 0) return false;
         return true;
       } else if (item.type === 'DepotItem') {
-        return !sections.includes(item.id);
+        const [anc_idx, anc_sec] = getAncestry(state, id);
+        return !anc_sec.includes(item.id);
       }
       return true;
     },
@@ -87,6 +90,7 @@ export function PureVertex({
   return (
     <div ref={ref} style={{zIndex: zIndex}} onMouseEnter={setFocus}>
       <HotKeys handlers={handlers}>
+        <ParentHandle vertexId={id} />
         <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
         <div
           onClick={event => {

@@ -43,6 +43,11 @@ export const useStyles = makeStyles(theme => ({
     overflow: 'auto',
     paddingLeft: theme.spacing(4),
   },
+  ticker: {
+    // color: 'textSecondary',
+    textAlign: 'center',
+    backgroundColor: theme.palette.grey[500],
+  },
   chipDepot: {
     width: '100%',
     zIndex: 1,

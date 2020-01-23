@@ -6,7 +6,7 @@ import {propsToStyle} from '../utils/helpers';
 
 export default function NodeVertex({name, sections, id, styleProps}) {
   // (${sections.length})`;
-  const icon = <DonutSmallIcon />;
+  const icon = <DonutSmallIcon style={{padding: 3}} />;
   return (
     <Fab variant="extended" style={propsToStyle(styleProps)}>
       {icon} {name}

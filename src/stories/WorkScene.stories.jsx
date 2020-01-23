@@ -8,13 +8,13 @@ import {withKnobs} from '@storybook/addon-knobs';
 import {muiTheme} from 'storybook-addon-material-ui';
 import Divbox from './Divbox';
 import Workspace from '../Workspace';
-import {initState} from '../utils/stateReference';
+import {sectionState} from '../stories/testStates';
 
 const TestComponent = Workspace;
 
 // A super-simple mock of a redux store
 const store = {
-  getState: () => initState,
+  getState: () => sectionState,
   subscribe: () => 0,
   dispatch: action('dispatch'),
 };

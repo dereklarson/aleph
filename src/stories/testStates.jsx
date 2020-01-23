@@ -6,7 +6,10 @@ import {blankState} from '../utils/stateReference';
 
 export const coveredState = {
   building: null,
-  small_vertices: vertexDataFromPaths([['Parent', 'Child']]),
+  small_vertices: vertexDataFromPaths([
+    ['Parent', 'Child1'],
+    ['Parent', 'Child2'],
+  ]),
   medium_vertices: vertexDataFromPaths([
     ['Ubuntu', 'Python', 'React', 'Flask'],
     ['Ubuntu', 'Python', 'Python_sci', 'gcp', 'JupyterLab'],
@@ -32,6 +35,30 @@ export const coveredState = {
   ]),
 };
 
+export const sectionedVertices = {
+  docker_vertices: [
+    {
+      children: [1],
+      name: 'ubuntu',
+      parents: [],
+      sections: ['ubuntu'],
+    },
+    {
+      children: [],
+      name: 'python',
+      parents: [0],
+      sections: ['python'],
+    },
+  ],
+  docker_library: genLibrary(['ubuntu', 'python', 'capnproto']),
+};
+
+export const sectionState = {
+  ...blankState,
+  ...sectionedVertices,
+  location: 'docker',
+};
+
 export const excitedState = {
   ...blankState,
   dagre: true,
@@ -41,7 +68,6 @@ export const excitedState = {
   percent: 80,
   building: 2,
   build_orders: [{id: 1}],
-  build_cache: [],
   docker_vertices: _.cloneDeep(coveredState.large_vertices),
   docker_library: _.cloneDeep(coveredState.medium_library),
 };
