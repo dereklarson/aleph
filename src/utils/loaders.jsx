@@ -2,7 +2,7 @@
 import axios from 'axios';
 import _ from 'lodash';
 import {getLastLine} from './helpers';
-import {noBuildState} from './stateReference';
+import {blankOperations} from './stateReference';
 
 export const modifyState = update => ({
   type: 'MODIFY_STATE',
@@ -106,7 +106,7 @@ export async function build(currentState, cancel, dispatch) {
         }),
       );
     }
-    dispatch(modifyState(noBuildState));
+    dispatch(modifyState(blankOperations));
   } else {
     console.log('Not supported building non-docker');
   }
@@ -115,7 +115,7 @@ export async function build(currentState, cancel, dispatch) {
 // TODO Make this work across the board
 export const clearDiagram = location =>
   modifyState({
-    ...noBuildState,
+    ...blankOperations,
     [`${location}_vertices`]: [],
     [`${location}_fulltext`]: new Map(),
   });

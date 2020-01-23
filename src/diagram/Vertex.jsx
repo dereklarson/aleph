@@ -36,10 +36,14 @@ export function PureVertex({
   });
   const [{highlighted}, drop] = useDrop({
     accept: ['Vertex', 'DepotItem'],
-    drop: item => {
+    drop: (item, monitor) => {
       if (item.type === 'Vertex' && item.parents.includes(id)) {
         dropActions.Unlink(id, item.id);
-      } else dropActions[item.type](id, item.id);
+      } else if (item.type === 'DepotItem' && !monitor.didDrop()) {
+        dropActions[item.type](id, item.id);
+      } else if (item.type === 'Vertex') {
+        dropActions[item.type](id, item.id);
+      }
     },
     canDrop: (item, monitor) => {
       if (item.type === 'Vertex') {

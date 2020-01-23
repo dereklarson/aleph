@@ -13,7 +13,7 @@ const tooltips = {
   standard: 'Standard nodes can be added anywhere after base nodes',
 };
 
-export function Depot({onVertexDrop, library}) {
+export function PureDepot({onVertexDrop, library}) {
   const classes = useStyles();
   const libraryInput = _.sortBy(Object.values(library), 'type');
   const itemDisplay = [];
@@ -68,4 +68,4 @@ export const removeVertex = from => ({
 export default connect(
   state => ({library: state[`${state.location}_library`]}),
   dispatch => ({onVertexDrop: vertexId => dispatch(removeVertex(vertexId))}),
-)(Depot);
+)(PureDepot);

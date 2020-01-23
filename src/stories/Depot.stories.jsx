@@ -7,14 +7,14 @@ import {action} from '@storybook/addon-actions';
 import {withKnobs, text, boolean, number} from '@storybook/addon-knobs';
 import {muiTheme} from 'storybook-addon-material-ui';
 import Divbox from './Divbox';
-import Workspace from '../Workspace';
-import {initState} from '../utils/stateReference';
+import {PureDepot} from '../depot/Depot';
+import {coveredState, blankState} from './testStates';
 
-const TestComponent = Workspace;
+const TestComponent = PureDepot;
 
 // A super-simple mock of a redux store
 const store = {
-  getState: () => initState,
+  getState: () => blankState,
   subscribe: () => 0,
   dispatch: action('dispatch'),
 };
@@ -32,9 +32,11 @@ export default {
   excludeStories: /.*Data$/,
 };
 
-export const testData = {};
+export const testData = {
+  library: coveredState.medium_library,
+};
 
-function genTest(props, boxprops = {squaresize: 1200}) {
+function genTest(props, boxprops = {boxtype: 'small'}) {
   return (
     <Divbox {...boxprops}>
       <TestComponent {...testData} {...props} />
@@ -42,4 +44,4 @@ function genTest(props, boxprops = {squaresize: 1200}) {
   );
 }
 
-export const conf_small = () => genTest({});
+export const basic = () => genTest();

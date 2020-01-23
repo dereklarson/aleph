@@ -7,7 +7,7 @@ import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
 import {muiTheme} from 'storybook-addon-material-ui';
 import Divbox from './Divbox'
 import Vertices from '../diagram/Vertices';
-import initState from '../utils/stateReference';
+import {initState} from '../utils/stateReference';
 
 const TestComponent = Vertices;
 

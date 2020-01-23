@@ -1,5 +1,7 @@
 // @format
-import {vertexDataFromPaths} from '../utils//vertexHelpers';
+import _ from 'lodash';
+import {vertexDataFromPaths} from '../utils/vertexHelpers';
+import {genLibrary} from '../utils/stateHelpers';
 
 export const coveredState = {
   building: null,
@@ -17,5 +19,14 @@ export const coveredState = {
     ['Ubuntu', 'Python', 'gcp', 'Worker'],
     ['Ubuntu', 'Go', 'Protobuf', 'Work', 'End3'],
     ['Protobuf', 'Service', 'Host'],
+  ]),
+  small_library: genLibrary(['a']),
+  medium_library: genLibrary([
+    'a',
+    'Ubuntu',
+    'JupyterLab',
+    'Cornelius Scipio Africanus Maximus',
+    'gcp',
+    'python',
   ]),
 };

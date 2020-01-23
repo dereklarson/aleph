@@ -9,7 +9,7 @@ import Editor from './comcom/Editor';
 import TextEntry from './comcom/TextEntry';
 import {useStyles} from './style/styling';
 
-export function Interface({editing, texting}) {
+export function PureInterface({editing, texting}) {
   const classes = useStyles();
 
   return (
@@ -27,4 +27,4 @@ export function Interface({editing, texting}) {
 export default connect(state => ({
   editing: state.editing,
   texting: state.texting,
-}))(Interface);
+}))(PureInterface);

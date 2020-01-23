@@ -4,19 +4,24 @@ import {Provider} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import {action} from '@storybook/addon-actions';
-import {withKnobs, text, boolean, number} from '@storybook/addon-knobs';
+import {withKnobs, boolean} from '@storybook/addon-knobs';
 import {muiTheme} from 'storybook-addon-material-ui';
 import Divbox from './Divbox';
-import Workspace from '../Workspace';
-import {initState} from '../utils/stateReference';
+import {PureInterface} from '../Interface';
+import {blankState} from '../utils/stateReference';
+import {coveredState} from './testStates';
 
-const TestComponent = Workspace;
+const TestComponent = PureInterface;
 
 // A super-simple mock of a redux store
 const store = {
-  getState: () => initState,
+  getState: () => ({...blankState, entry_schema: {sample: true}}),
   subscribe: () => 0,
   dispatch: action('dispatch'),
+};
+
+const keyMap = {
+  DELETE_NODE: ['del', 'backspace'],
 };
 
 const providers = story => (
@@ -42,4 +47,9 @@ function genTest(props, boxprops = {squaresize: 1200}) {
   );
 }
 
-export const conf_small = () => genTest({});
+export const unbounded = () => <TestComponent {...testData} />;
+export const dynamic = () =>
+  genTest({
+    editing: boolean('editing', false),
+    texting: boolean('texting', false),
+  });

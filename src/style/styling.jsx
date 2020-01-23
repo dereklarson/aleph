@@ -29,6 +29,10 @@ export const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
   },
+  chipDepot: {
+    width: '100%',
+    zIndex: 1,
+  },
   box: {
     alignItems: 'center',
     textAlign: 'center',

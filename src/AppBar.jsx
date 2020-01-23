@@ -6,6 +6,7 @@ import {saveCheckpoint, loadCheckpoint, modifyState} from './utils/loaders';
 import {generateButtons} from './utils//generateList';
 import {playTutorial} from './utils/tutorial';
 import {useStyles} from './style/styling';
+import {capitalizeFirstLetter} from './utils/helpers';
 
 export function PureAppBar({state, onLoad, onPlayTutorial, onSetState}) {
   const classes = useStyles();
@@ -31,7 +32,7 @@ export function PureAppBar({state, onLoad, onPlayTutorial, onSetState}) {
           color="inherit"
           noWrap
           className={classes.title}>
-          Control Center
+          Control Center - {capitalizeFirstLetter(state.location)}
         </Typography>
         {generateButtons(appBarOptions)}
       </Toolbar>

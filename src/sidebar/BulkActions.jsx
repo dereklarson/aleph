@@ -6,7 +6,7 @@ import {List, ListSubheader} from '@material-ui/core';
 import {clearDiagram, build, modifyState, saveDiagram} from '../utils/loaders';
 import {loadInputs, loadSaved, loadDockerLibrary} from '../utils/loaders';
 import {generateList} from '../utils/generateList';
-import {noBuildState} from '../utils/stateReference';
+import {blankOperations} from '../utils/stateReference';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
@@ -67,7 +67,7 @@ function actionDispatch(dispatch) {
   return {
     clear: location => dispatch(clearDiagram(location)),
     onBuild: (state, cancel) => build(state, cancel, dispatch),
-    onClearBuild: () => dispatch(modifyState(noBuildState)),
+    onClearBuild: () => dispatch(modifyState(blankOperations)),
     onLoadLibrary: () => dispatch(loadDockerLibrary()),
     onLoadSaved: () => dispatch(loadSaved()),
     onLoadInputs: () => dispatch(loadInputs()),
