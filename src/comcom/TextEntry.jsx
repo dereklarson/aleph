@@ -2,9 +2,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
-import {TextField} from '@material-ui/core';
+import {Button, TextField, Dialog} from '@material-ui/core';
+import {DialogActions, DialogTitle, DialogContent} from '@material-ui/core';
+import {DialogContentText} from '@material-ui/core';
 import AceEditor from 'react-ace';
-import Popup from 'reactjs-popup';
 import {modifyState} from '../utils/loaders';
 import {useStyles} from '../style/styling';
 
@@ -23,12 +24,15 @@ export function PureTextEntry({open, schema, func, shutModal}) {
   let itemDisplay = [];
   for (const [key, value] of Object.entries(schema)) {
     if (key === 'godmode') continue;
+    let defProps = {};
+    // Autofocus on our first text entry field
+    if (itemDisplay.length === 0) defProps['autoFocus'] = true;
     itemDisplay.push(
       <TextField
-        autoFocus
-        label={key}
+        {...defProps}
         className={classes.textField}
         variant="outlined"
+        label={key}
         onChange={event => {
           fieldText[key] = event.target.value;
         }}
@@ -39,7 +43,7 @@ export function PureTextEntry({open, schema, func, shutModal}) {
   if (_.has(schema, 'godmode')) {
     itemDisplay.push(
       <AceEditor
-        width="100%"
+        className={classes.editor}
         mode="yaml"
         theme="monokai"
         defaultValue="Arbitrary field setting"
@@ -54,9 +58,18 @@ export function PureTextEntry({open, schema, func, shutModal}) {
   };
 
   return (
-    <Popup open={open} closeOnDocumentClick onClose={onClose}>
-      <div className="modal">{itemDisplay}</div>
-    </Popup>
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle id="form-dialog-title">Saving Diagram</DialogTitle>
+      <DialogContent>{itemDisplay}</DialogContent>
+      <DialogActions>
+        <Button onClick={() => 0} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={() => 1} color="primary">
+          Done
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

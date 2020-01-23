@@ -78,4 +78,9 @@ export const useStyles = makeStyles(theme => ({
     overflow: 'auto',
     flexDirection: 'column',
   },
+  textField: {},
+  editor: {
+    minWidth: '40vh',
+    width: '100%',
+  },
 }));
