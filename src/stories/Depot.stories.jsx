@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import {action} from '@storybook/addon-actions';
-import {withKnobs, text, boolean, number} from '@storybook/addon-knobs';
+import {withKnobs} from '@storybook/addon-knobs';
 import {muiTheme} from 'storybook-addon-material-ui';
 import Divbox from './Divbox';
 import {PureDepot} from '../depot/Depot';

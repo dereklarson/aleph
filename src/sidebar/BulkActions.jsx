@@ -1,7 +1,6 @@
 // @format
 import React from 'react';
 import {connect} from 'react-redux';
-import Popup from 'reactjs-popup';
 import {List, ListSubheader} from '@material-ui/core';
 import {clearDiagram, build, modifyState, saveDiagram} from '../utils/loaders';
 import {loadInputs, loadSaved, loadDockerLibrary} from '../utils/loaders';

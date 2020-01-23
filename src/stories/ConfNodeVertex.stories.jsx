@@ -1,6 +1,4 @@
 import React from 'react';
-import { action } from '@storybook/addon-actions';
-import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
 import {muiTheme} from 'storybook-addon-material-ui';
 import ConfigNodeVertex from '../diagram/ConfigNodeVertex';
 import Divbox from './Divbox'
@@ -29,7 +27,7 @@ export const testData = {
 
 function testSet(proplist, boxprops={width: 100, height: 80}) {
   const testDisplay = [];
-  for (const [index, props] of proplist.entries()) {
+  for (const props of proplist.values()) {
     testDisplay.push(
       <Divbox {...boxprops} ><TestComponent {...testData} {...props} /></Divbox>
     );

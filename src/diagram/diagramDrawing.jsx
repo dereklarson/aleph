@@ -65,7 +65,10 @@ function calculateDagre(vertices) {
 
   // Populate nodes with two args: ID and metadata
   for (const [index, vertex] of vertices.entries()) {
-    g.setNode(index, {width: 50, height: 30});
+    // TODO Alter this to do something special for Cards?
+    if (vertex !== null) {
+      g.setNode(index, {width: 50, height: 30});
+    }
   }
 
   // Populate arrows

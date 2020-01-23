@@ -13,7 +13,7 @@ import {useStyles} from '../style/styling';
 export function PureDiagram({clearFocus, onSectionDrop, vertices, activity}) {
   const classes = useStyles();
 
-  const [{highlighted, isOver}, drop] = useDrop({
+  const [{highlighted}, drop] = useDrop({
     accept: 'DepotItem',
     drop: (item, monitor) => {
       if (!monitor.didDrop()) {
@@ -21,8 +21,8 @@ export function PureDiagram({clearFocus, onSectionDrop, vertices, activity}) {
       }
     },
     collect: monitor => ({
-      highlighted: monitor.canDrop(),
-      isOver: !!monitor.isOver(),
+      highlighted: !!monitor.canDrop(),
+      // isOver: !!monitor.isOver(),
     }),
   });
 

@@ -1,34 +1,29 @@
+// @format
 import React from 'react';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import { action } from '@storybook/addon-actions';
-import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
+import {action} from '@storybook/addon-actions';
+import {withKnobs} from '@storybook/addon-knobs';
 import {muiTheme} from 'storybook-addon-material-ui';
-import Divbox from './Divbox'
+import Divbox from './Divbox';
 import Vertices from '../diagram/Vertices';
-import {initState} from '../utils/stateReference';
+import {excitedState} from './testStates';
 
 const TestComponent = Vertices;
 
 // A super-simple mock of a redux store
 const store = {
-  getState: () => {
-    return {
-      building: 0, 
-    };
-  },
+  getState: () => excitedState,
   subscribe: () => 0,
   dispatch: action('dispatch'),
 };
 
 const providers = story => (
   <Provider store={store}>
-    <DndProvider backend={HTML5Backend}>
-      {story()}
-    </DndProvider>
+    <DndProvider backend={HTML5Backend}>{story()}</DndProvider>
   </Provider>
-)
+);
 
 export default {
   component: TestComponent,
@@ -58,13 +53,15 @@ export const testData = {
     focus: 1,
     location: 'docker',
     prepared: [1],
-  }
-}
+  },
+};
 
-function genTest(props, boxprops={boxtype: 'medium'}) {
+function genTest(props, boxprops = {boxtype: 'medium'}) {
   return (
-    <Divbox {...boxprops} ><TestComponent {...testData} {...props} /></Divbox>
-  )
+    <Divbox {...boxprops}>
+      <TestComponent {...testData} {...props} />
+    </Divbox>
+  );
 }
 
 export const test = () => genTest({name: 'diff'});

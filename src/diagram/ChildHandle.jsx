@@ -3,7 +3,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
 import {linkVertex} from '../utils/actions';
-import {propsToStyle} from '../utils/helpers';
 import {useStyles} from '../style/styling';
 
 export function ChildHandle({vertexId, state, onDrop}) {

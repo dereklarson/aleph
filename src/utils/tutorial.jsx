@@ -2,7 +2,7 @@
 import axios from 'axios';
 import {saveCheckpoint, loadCheckpoint, modifyState} from './loaders';
 import {sleep} from './helpers';
-import {noBuildState, tutorialInitialState} from './stateReference';
+import {tutorialInitialState} from './stateReference';
 
 export async function playTutorial(tutorialName, state, cancel, dispatch) {
   console.log('---Building---', tutorialName);

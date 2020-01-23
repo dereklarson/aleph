@@ -1,11 +1,12 @@
+// @format
 import React from 'react';
-import { action } from '@storybook/addon-actions';
-import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
+import {action} from '@storybook/addon-actions';
+import {withKnobs, text} from '@storybook/addon-knobs';
 import {muiTheme} from 'storybook-addon-material-ui';
-import { PureCardVertex } from '../diagram/CardVertex';
-import Divbox from './Divbox'
+import {PureCardVertex} from '../diagram/CardVertex';
+import Divbox from './Divbox';
 
-const TestComponent = PureCardVertex
+const TestComponent = PureCardVertex;
 
 export default {
   component: TestComponent,
@@ -15,7 +16,7 @@ export default {
 };
 
 export const testData = {
-  name: 'Test Node',
+  name: 'Test name',
   sections: ['react'],
   id: 1,
   cardActions: {
@@ -28,30 +29,43 @@ export const testData = {
     isDragging: false,
     building: false,
     prepared: false,
-  }
-}
+  },
+};
 
-function testSet(proplist, boxprops={width: 300, height: 150}) {
+function testSet(proplist, boxprops = {width: 300, height: 150}) {
   const testDisplay = [];
-  for (const [index, props] of proplist.entries()) {
+  for (const props of proplist.values()) {
     testDisplay.push(
-      <Divbox {...boxprops} ><TestComponent {...testData} {...props} /></Divbox>
+      <Divbox {...boxprops}>
+        <TestComponent {...testData} {...props} />
+      </Divbox>,
     );
   }
-  return ( <Divbox squaresize={800} > {testDisplay} </Divbox>)
+  return <Divbox squaresize={800}> {testDisplay} </Divbox>;
 }
 
-function genTest(props, boxprops={boxtype: 'small'}) {
+function genTest(props, boxprops = {boxtype: 'small'}) {
   return (
-    <Divbox {...boxprops} ><TestComponent {...testData} {...props} /></Divbox>
-  )
+    <Divbox {...boxprops}>
+      <TestComponent {...testData} {...props} />
+    </Divbox>
+  );
 }
 
-export const simple = () => <TestComponent {...testData} />
-export const names = () => testSet(
-  [{name: ''}, {name: 'Normal'}, {name: 'Cornelius Scipio Africanus'}]);
-export const sections = () => testSet(
-  [{sections: []}, {sections: ['Cornelius', 'Fabius', 'Julius', 'Quinctius', 'Cato']}]);
+export const dynamic = () => (
+  <TestComponent {...testData} name={text('name', 'a')} />
+);
+export const names = () =>
+  testSet([
+    {name: 'a'},
+    {name: 'Normal'},
+    {name: 'Cornelius Scipio Africanus'},
+  ]);
+export const sections = () =>
+  testSet([
+    {sections: []},
+    {sections: ['Cornelius', 'Fabius', 'Julius', 'Quinctius', 'Cato']},
+  ]);
 export const dragging = () => genTest({styleProps: {isDragging: true}});
 export const highlighted = () => genTest({styleProps: {highlighted: true}});
 export const building = () => genTest({styleProps: {building: true}});

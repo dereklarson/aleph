@@ -8,20 +8,15 @@ import {withKnobs, boolean} from '@storybook/addon-knobs';
 import {muiTheme} from 'storybook-addon-material-ui';
 import Divbox from './Divbox';
 import {PureInterface} from '../Interface';
-import {blankState} from '../utils/stateReference';
-import {coveredState} from './testStates';
+import {excitedState} from './testStates';
 
 const TestComponent = PureInterface;
 
 // A super-simple mock of a redux store
 const store = {
-  getState: () => ({...blankState, entry_schema: {sample: true}}),
+  getState: () => excitedState,
   subscribe: () => 0,
   dispatch: action('dispatch'),
-};
-
-const keyMap = {
-  DELETE_NODE: ['del', 'backspace'],
 };
 
 const providers = story => (

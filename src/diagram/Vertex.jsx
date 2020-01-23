@@ -78,7 +78,7 @@ export function PureVertex({
 
   const deleteNode = React.useCallback(() => {
     cardActions.onClear(id);
-  }, []);
+  }, [cardActions, id]);
 
   const handlers = {
     DELETE_NODE: deleteNode,

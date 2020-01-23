@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 import {Button, TextField, Dialog} from '@material-ui/core';
 import {DialogActions, DialogTitle, DialogContent} from '@material-ui/core';
-import {DialogContentText} from '@material-ui/core';
 import AceEditor from 'react-ace';
 import {modifyState} from '../utils/loaders';
 import {useStyles} from '../style/styling';
@@ -52,20 +51,22 @@ export function PureTextEntry({open, schema, func, shutModal}) {
     );
   }
 
-  const onClose = () => {
+  const onCancel = () => shutModal();
+
+  const onDone = () => {
     shutModal();
     func(fieldText);
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onCancel}>
       <DialogTitle id="form-dialog-title">Saving Diagram</DialogTitle>
       <DialogContent>{itemDisplay}</DialogContent>
       <DialogActions>
-        <Button onClick={() => 0} color="primary">
+        <Button onClick={onCancel} color="primary">
           Cancel
         </Button>
-        <Button onClick={() => 1} color="primary">
+        <Button onClick={onDone} color="primary">
           Done
         </Button>
       </DialogActions>

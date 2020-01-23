@@ -14,7 +14,7 @@ export const useStyles = makeStyles(theme => ({
   },
   appBarSpacer: theme.mixins.toolbar,
   container: {
-    paddingLeft: theme.spacing(10),
+    paddingLeft: theme.spacing(24),
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
   },
@@ -65,9 +65,6 @@ export const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     width: theme.spacing(7),
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9),
-    },
   },
   paperDrawing: {
     position: 'relative', // Let's us use coordinates to draw the Diagram
