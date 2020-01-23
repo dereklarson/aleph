@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
 import {clearDiagram, build, modifyState, saveDiagram} from '../utils/loaders';
-import {loadInputs, loadSaved, loadDockerLibrary} from '../utils/loaders';
+import {loadInputs, loadSaved} from '../utils/loaders';
 import {generateList} from '../utils/generateList';
 import {blankOperations} from '../utils/stateReference';
 
@@ -14,22 +14,16 @@ function BulkActions({
   clear,
   onBuild,
   onClearBuild,
-  onLoadLibrary,
   onLoadInputs,
   onLoadSaved,
   onText,
   state,
 }) {
   const cancel = React.useRef(false);
+  const onInitialLoad = () => onLoadInputs();
 
-  const onRefresh = () => {
-    onLoadSaved();
-    onLoadLibrary();
-  };
-
-  const onInitialLoad = () => {
-    onLoadInputs();
-  };
+  // Performs loads on mount
+  React.useEffect(onInitialLoad, []);
 
   const onCancel = () => {
     if (state.building !== null) cancel.current = true;
@@ -37,7 +31,7 @@ function BulkActions({
   };
 
   const savefunc = fieldText => {
-    saveDiagram(fieldText.savename, {
+    saveDiagram(state.location, fieldText.savename, {
       [`${state.location}_vertices`]: state[`${state.location}_vertices`],
       [`${state.location}_fulltext`]: state[`${state.location}_fulltext`],
     });
@@ -47,12 +41,9 @@ function BulkActions({
     ['clear_diagram', () => clear(state.location)],
     ['build_marked', () => onBuild(state, cancel)],
     ['cancel_build', onCancel],
-    ['refresh', onRefresh],
+    ['refresh', () => onLoadSaved(state.location)],
     ['save_diagram', () => onText(savefunc)],
   ];
-
-  // Performs loads on mount
-  React.useEffect(onInitialLoad, []);
 
   return (
     <List>
@@ -67,8 +58,7 @@ function actionDispatch(dispatch) {
     clear: location => dispatch(clearDiagram(location)),
     onBuild: (state, cancel) => build(state, cancel, dispatch),
     onClearBuild: () => dispatch(modifyState(blankOperations)),
-    onLoadLibrary: () => dispatch(loadDockerLibrary()),
-    onLoadSaved: () => dispatch(loadSaved()),
+    onLoadSaved: location => dispatch(loadSaved(location)),
     onLoadInputs: () => dispatch(loadInputs()),
     onText: savefunc =>
       dispatch(

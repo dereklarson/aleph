@@ -6,7 +6,7 @@ export function genLocationData(loc, defaults = {}) {
     data[`${name}_vertices`] = _.get(defaults, 'vertices', []);
     data[`${name}_library`] = _.get(defaults, 'library', {});
     data[`${name}_fulltext`] = _.get(defaults, 'fulltext', new Map());
-    data[`${name}_saved`] = _.get(defaults, 'saved', {});
+    data[`${name}_diagrams`] = _.get(defaults, 'saved', {});
     return data;
   }, {});
 }
@@ -24,5 +24,13 @@ export function genLibrary(names) {
     library[name] = _.cloneDeep(librarySample.sample);
     library[name]['name'] = name;
     return library;
+  }, {});
+}
+
+export function genGreatLibrary(locations, namedict = {def: ['sample']}) {
+  return locations.reduce((great_library, location) => {
+    let names = _.get(namedict, location, _.get(namedict, 'def', []));
+    great_library[`${location}_library`] = genLibrary(names);
+    return great_library;
   }, {});
 }

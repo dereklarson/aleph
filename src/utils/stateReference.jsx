@@ -1,12 +1,13 @@
 // @format
 import {vertexDataFromPaths} from './vertexHelpers';
-import {genLocationData, genLibrary} from './stateHelpers';
+import {genLocationData, genGreatLibrary} from './stateHelpers';
 import _ from 'lodash';
 
-// We have four main categories of state data: context, ops, cache, and location
+// We have five main categories of state data: context, ops, cache, config, and location
 // context: describes state of the display, such as what's visible now
 // ops: describes things that might happen in the background
 // cache: useful optimization data
+// config: broader settings like the organizational details
 // location: data associated with diagram-building based on the current location
 
 export const blankContext = {
@@ -32,6 +33,10 @@ export const blankCache = {
   build_cache: [],
 };
 
+export const blankConfig = {
+  organization: {},
+};
+
 const locations = ['docker', 'pipeline', 'data', 'configuration'];
 const locationData = genLocationData(locations, {});
 
@@ -39,13 +44,14 @@ export const blankState = {
   ..._.cloneDeep(blankContext),
   ..._.cloneDeep(blankOperations),
   ..._.cloneDeep(blankCache),
+  ..._.cloneDeep(blankConfig),
   ..._.cloneDeep(locationData),
 };
 
 // State we would first see if nothing else is loaded via Axios
 export const initState = {
   ..._.cloneDeep(blankState),
-  ...genLibrary(locations),
+  ...genGreatLibrary(locations),
   pipeline_vertices: vertexDataFromPaths([['Parent', 'Child']]),
   configuration_vertices: vertexDataFromPaths([
     ['Control', 'Worker'],

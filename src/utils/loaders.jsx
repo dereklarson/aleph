@@ -20,13 +20,15 @@ export function loadInputs() {
 }
 
 // Thunked: will return function taking dispatch
-export function loadDockerLibrary() {
+export function loadLibrary(location) {
   return function(dispatch) {
-    console.log('---Loading Docker Library---');
-    axios.get('/library/docker').then(response => {
-      dispatch(modifyState(response.data));
-    });
-    console.log('---Loading Docker Images---');
+    if (['pipeline', 'docker'].includes(location)) {
+      console.log(`---Loading ${location} Library---`);
+      axios.get(`/library/${location}`).then(response => {
+        dispatch(modifyState(response.data));
+      });
+    }
+    console.log(`---Loading Docker Images---`);
     axios.get('/docker_images').then(response => {
       dispatch(modifyState(response.data));
     });
@@ -34,12 +36,14 @@ export function loadDockerLibrary() {
 }
 
 // Thunked: will return function taking dispatch
-export function loadSaved() {
+export function loadSaved(location) {
   return function(dispatch) {
-    console.log('---Loading Saved Diagrams---');
-    axios.get('/diagrams/docker').then(response => {
-      dispatch(modifyState(response.data));
-    });
+    if (['pipeline', 'docker'].includes(location)) {
+      console.log(`---Loading ${location} Diagrams---`);
+      axios.get(`/diagrams/${location}`).then(response => {
+        dispatch(modifyState(response.data));
+      });
+    }
   };
 }
 
@@ -55,9 +59,13 @@ export function loadCheckpoint(name, dispatch) {
   });
 }
 
-export function saveDiagram(name, partialState) {
-  console.log('---Saving Diagram---');
-  return axios.post('/save_diagram', {name: name, state: partialState});
+export function saveDiagram(location, name, partialState) {
+  console.log(`---Saving ${location} Diagrams---`);
+  return axios.post('/save_diagram', {
+    location: location,
+    name: name,
+    state: partialState,
+  });
 }
 
 export function prepareBuildFocus(currentState, dispatch) {

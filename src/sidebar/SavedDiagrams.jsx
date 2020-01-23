@@ -5,9 +5,9 @@ import {List, ListSubheader} from '@material-ui/core';
 import _ from 'lodash';
 import {generateList} from '../utils/generateList';
 
-function SavedDiagrams({location, saved, onAddSaved, onSetDiagram}) {
+function SavedDiagrams({location, diagrams, onAddSaved, onSetDiagram}) {
   let items = [];
-  for (const [name, config] of Object.entries(saved)) {
+  for (const [name, config] of Object.entries(diagrams)) {
     let onClick = () => onAddSaved(config.vertexgroups);
     if (_.has(config, `${location}_vertices`)) {
       onClick = () => onSetDiagram(config);
@@ -17,7 +17,7 @@ function SavedDiagrams({location, saved, onAddSaved, onSetDiagram}) {
 
   return (
     <List>
-      <ListSubheader inset>Saved Configurations</ListSubheader>
+      <ListSubheader inset>Saved Diagrams</ListSubheader>
       {generateList(items, 'Load the diagram called <>', 'assignment')}
     </List>
   );
@@ -29,14 +29,14 @@ export const setDiagram = state_update => ({
 });
 
 export const addSaved = vertexgroups => ({
-  type: 'ADD_SAVED',
+  type: 'ADD_DIAGRAMS',
   vertexgroups: vertexgroups,
 });
 
 export default connect(
   state => ({
     location: state.location,
-    saved: state[`${state.location}_saved`],
+    diagrams: state[`${state.location}_diagrams`],
   }),
   dispatch => ({
     onAddSaved: vertexgroups => dispatch(addSaved(vertexgroups)),

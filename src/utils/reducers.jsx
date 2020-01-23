@@ -18,7 +18,7 @@ const controlDiagram = (state, action) => {
       return modify_result;
     case 'NAVIGATE':
       return Object.assign({}, state, {location: action.location});
-    case 'ADD_SAVED':
+    case 'ADD_DIAGRAMS':
       const add_result = vertexAdder(state, action.vertexgroups);
       return Object.assign({}, state, add_result);
     case 'ADD_VERTEX':

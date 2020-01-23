@@ -11,11 +11,21 @@ import 'react-sweet-progress/lib/style.css';
 import LogPopup from '../comcom/LogPopup';
 import {modifyState} from '../utils/loaders';
 import {useStyles} from '../style/styling';
+import {loadLibrary} from '../utils/loaders';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
-export function PureTicker({logs, percent, tickertext, dagre, onDagre}) {
-  const [logOpen, openLog] = React.useState(false);
-
+export function PureTicker({
+  location,
+  logs,
+  percent,
+  tickertext,
+  dagre,
+  onDagre,
+  onLoadLibrary,
+}) {
   const classes = useStyles();
+
+  const [logOpen, openLog] = React.useState(false);
 
   return (
     <div>
@@ -35,12 +45,16 @@ export function PureTicker({logs, percent, tickertext, dagre, onDagre}) {
       <Fab onClick={() => onDagre(dagre)}>
         <SettingsOverscanIcon />
       </Fab>
+      <Fab onClick={() => onLoadLibrary(location)}>
+        <RefreshIcon />
+      </Fab>
     </div>
   );
 }
 
 export default connect(
   state => ({
+    location: state.location,
     logs: state.stdout,
     percent: state.percent,
     tickertext: state.tickertext,
@@ -48,5 +62,6 @@ export default connect(
   }),
   dispatch => ({
     onDagre: dagre => dispatch(modifyState({dagre: !dagre})),
+    onLoadLibrary: location => dispatch(loadLibrary(location)),
   }),
 )(PureTicker);
