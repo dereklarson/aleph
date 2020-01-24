@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
 import {clearDiagram, build, modifyState, saveDiagram} from '../utils/loaders';
-import {loadInputs, loadSaved} from '../utils/loaders';
+import {loadInputs, loadCore} from '../utils/loaders';
 import {generateList} from '../utils/generateList';
 import {blankOperations} from '../utils/stateReference';
 
@@ -58,7 +58,7 @@ function actionDispatch(dispatch) {
     clear: location => dispatch(clearDiagram(location)),
     onBuild: (state, cancel) => build(state, cancel, dispatch),
     onClearBuild: () => dispatch(modifyState(blankOperations)),
-    onLoadSaved: location => dispatch(loadSaved(location)),
+    onLoadSaved: location => dispatch(loadCore('diagrams', location)),
     onLoadInputs: () => dispatch(loadInputs()),
     onText: savefunc =>
       dispatch(

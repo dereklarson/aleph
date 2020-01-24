@@ -11,7 +11,7 @@ import 'react-sweet-progress/lib/style.css';
 import LogPopup from '../comcom/LogPopup';
 import {modifyState} from '../utils/loaders';
 import {useStyles} from '../style/styling';
-import {loadLibrary} from '../utils/loaders';
+import {loadCore} from '../utils/loaders';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 export function PureTicker({
@@ -62,6 +62,6 @@ export default connect(
   }),
   dispatch => ({
     onDagre: dagre => dispatch(modifyState({dagre: !dagre})),
-    onLoadLibrary: location => dispatch(loadLibrary(location)),
+    onLoadLibrary: location => dispatch(loadCore('library', location)),
   }),
 )(PureTicker);

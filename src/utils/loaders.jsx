@@ -20,11 +20,11 @@ export function loadInputs() {
 }
 
 // Thunked: will return function taking dispatch
-export function loadLibrary(location) {
+export function loadCore(source, location) {
   return function(dispatch) {
     if (['pipeline', 'docker'].includes(location)) {
-      console.log(`---Loading ${location} Library---`);
-      axios.get(`/library/${location}`).then(response => {
+      console.log(`---Loading ${location} ${source}---`);
+      axios.get(`/coreload/${source}/${location}`).then(response => {
         dispatch(modifyState(response.data));
       });
     }
@@ -32,18 +32,6 @@ export function loadLibrary(location) {
     axios.get('/docker_images').then(response => {
       dispatch(modifyState(response.data));
     });
-  };
-}
-
-// Thunked: will return function taking dispatch
-export function loadSaved(location) {
-  return function(dispatch) {
-    if (['pipeline', 'docker'].includes(location)) {
-      console.log(`---Loading ${location} Diagrams---`);
-      axios.get(`/diagrams/${location}`).then(response => {
-        dispatch(modifyState(response.data));
-      });
-    }
   };
 }
 
@@ -72,7 +60,7 @@ export function prepareBuildFocus(currentState, dispatch) {
   if (currentState.location === 'docker') {
     console.log('---Preparing build for current focus---');
     axios
-      .post('/gen_build', {
+      .post('/gen_build/docker', {
         vertices: currentState.docker_vertices,
         fulltext: currentState.docker_fulltext,
         build_id: currentState.focus,
@@ -87,8 +75,9 @@ export function prepareBuildFocus(currentState, dispatch) {
 
 export async function build(currentState, cancel, dispatch) {
   let current_cache = {};
-  if (currentState.location === 'docker') {
-    console.log('---Building---');
+  let location = currentState.location;
+  if (location === 'docker') {
+    console.log('---Building Docker Image---');
     for (const [index, step] of currentState.build_orders.entries()) {
       if (cancel.current === true) {
         cancel.current = false;
@@ -104,9 +93,11 @@ export async function build(currentState, cancel, dispatch) {
       if (_.has(currentState.build_cache, step.hash)) {
         continue;
       }
-      await axios.post('/send_build', {build_order: step}).then(response => {
-        dispatch(modifyState(response.data));
-      });
+      await axios
+        .post(`/build/${location}`, {build_order: step})
+        .then(response => {
+          dispatch(modifyState(response.data));
+        });
       current_cache[step.hash] = true;
       dispatch(
         modifyState({
@@ -115,8 +106,28 @@ export async function build(currentState, cancel, dispatch) {
       );
     }
     dispatch(modifyState(blankOperations));
+  } else if (location === 'pipeline') {
+    console.log('---Building Pipeline---');
+    let steps = [];
+    await axios
+      .post('/gen_build/pipeline', {
+        vertices: currentState.pipeline_vertices,
+        fulltext: currentState.pipeline_fulltext,
+        build_id: currentState.focus,
+      })
+      .then(response => {
+        steps = response.data.build_orders;
+        dispatch(modifyState(response.data));
+      });
+    console.log(steps);
+    await axios
+      .post(`/build/${location}`, {build_order: steps})
+      .then(response => {
+        console.log('...built');
+      });
+    dispatch(modifyState(blankOperations));
   } else {
-    console.log('Not supported building non-docker');
+    console.log('Not supported building besides docker or pipeline locations');
   }
 }
 
