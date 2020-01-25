@@ -108,7 +108,7 @@ export async function build(currentState, cancel, dispatch) {
     dispatch(modifyState(blankOperations));
   } else if (location === 'pipeline') {
     console.log('---Building Pipeline---');
-    let steps = [];
+    let build_context = {};
     await axios
       .post('/gen_build/pipeline', {
         vertices: currentState.pipeline_vertices,
@@ -116,12 +116,11 @@ export async function build(currentState, cancel, dispatch) {
         build_id: currentState.focus,
       })
       .then(response => {
-        steps = response.data.build_orders;
-        dispatch(modifyState(response.data));
+        build_context = response.data.build_context;
       });
-    console.log(steps);
+    console.log(build_context);
     await axios
-      .post(`/build/${location}`, {build_order: steps})
+      .post(`/build/${location}`, {build_context: build_context})
       .then(response => {
         console.log('...built');
       });
