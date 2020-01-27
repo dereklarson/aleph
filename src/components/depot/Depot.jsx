@@ -5,8 +5,8 @@ import {useDrop} from 'react-dnd';
 import {Paper, Typography, Tooltip} from '@material-ui/core';
 import _ from 'lodash';
 import DepotItem from './DepotItem';
-import {capitalizeFirstLetter} from 'utils/helpers';
-import {useStyles} from 'style/styling';
+import {capitalizeFirstLetter} from '@utils/helpers';
+import {useStyles} from '@style/styling';
 
 const tooltips = {
   base: "Base items are starting points, OS's and public images",

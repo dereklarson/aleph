@@ -5,7 +5,7 @@ import Depot from '@depot/Depot';
 import Ticker from '@depot/Ticker';
 import Diagram from '@diagram/Diagram';
 import {Credits} from '@common/Accessories';
-import {useStyles} from 'style/styling';
+import {useStyles} from '@style/styling';
 
 export function Workspace() {
   const classes = useStyles();

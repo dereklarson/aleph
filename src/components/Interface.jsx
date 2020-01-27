@@ -8,8 +8,8 @@ import Workspace from '@comp/Workspace';
 import Sidebar from '@sidebar/Sidebar';
 import Editor from '@common/Editor';
 import TextEntry from '@common/TextEntry';
-import {useStyles} from 'style/styling';
-import {themePicker} from 'style/theme';
+import {useStyles} from '@style/styling';
+import {themePicker} from '@style/theme';
 
 export function PureInterface({themeStr, editing, texting}) {
   const classes = useStyles();

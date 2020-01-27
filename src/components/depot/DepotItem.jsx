@@ -3,9 +3,9 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrag, DragPreviewImage} from 'react-dnd';
 import Chip from '@material-ui/core/Chip';
-import {capitalizeFirstLetter} from 'utils/helpers';
-import {modifyState} from 'utils/loaders';
-import {useStyles} from 'style/styling';
+import {capitalizeFirstLetter} from '@utils/helpers';
+import {modifyState} from '@utils/loaders';
+import {useStyles} from '@style/styling';
 
 export function DepotItem({itemProps, onClick}) {
   const classes = useStyles();

@@ -9,9 +9,9 @@ import Fab from '@material-ui/core/Fab';
 import {Progress} from 'react-sweet-progress';
 import 'react-sweet-progress/lib/style.css';
 import LogPopup from '@common/LogPopup';
-import {modifyState} from 'utils/loaders';
-import {useStyles} from 'style/styling';
-import {loadCore} from 'utils/loaders';
+import {modifyState} from '@utils/loaders';
+import {useStyles} from '@style/styling';
+import {loadCore} from '@utils/loaders';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 export function PureTicker({

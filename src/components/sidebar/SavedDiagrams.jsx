@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
 import _ from 'lodash';
-import {generateList} from 'utils/generateList';
+import {generateList} from '@utils/generateList';
 
 function SavedDiagrams({location, diagrams, onAddSaved, onSetDiagram}) {
   let items = [];

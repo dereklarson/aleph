@@ -5,8 +5,8 @@ import {Button, TextField, Dialog} from '@material-ui/core';
 import {DialogActions, DialogTitle, DialogContent} from '@material-ui/core';
 import AceEditor from 'react-ace';
 import _ from 'lodash';
-import {modifyState} from 'utils/loaders';
-import {useStyles} from 'style/styling';
+import {modifyState} from '@utils/loaders';
+import {useStyles} from '@style/styling';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';

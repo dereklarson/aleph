@@ -1,7 +1,7 @@
 // @format
 import React from 'react';
 import Vertex from './Vertex';
-import {useStyles} from 'style/styling';
+import {useStyles} from '@style/styling';
 
 function renderVertex(index, vertex, activity, className) {
   let type = 'node';

@@ -4,7 +4,7 @@ import {ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
 import {IconButton, Tooltip} from '@material-ui/core';
 // import Tooltip from '@material-ui/core/Tooltip';
 import _ from 'lodash';
-import {iconSource} from '../style/icons';
+import {iconSource} from '@style/icons';
 import {titlize} from './helpers';
 
 const tooltipReference = {

@@ -2,11 +2,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
-import {clearDiagram, build, modifyState, saveDiagram} from 'utils/loaders';
-import {loadCore} from 'utils/loaders';
-import {generateList} from 'utils/generateList';
-import {blankOperations} from 'utils/stateReference';
-import {requestSave} from 'utils/stateHelpers';
+import {clearDiagram, build, modifyState, saveDiagram} from '@utils/loaders';
+import {loadCore} from '@utils/loaders';
+import {generateList} from '@utils/generateList';
+import {blankOperations} from '@utils/stateReference';
+import {requestSave} from '@utils/stateHelpers';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
