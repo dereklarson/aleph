@@ -34,7 +34,7 @@ export function genStoryEntry(storyOrder, TestComponent, state) {
   let providers = genProviderDecorator(state);
   return {
     component: TestComponent,
-    title: `${storyOrder}-${TestComponent.displayName}`,
+    title: `${storyOrder}-${TestComponent.displayName.replace('Pure', '')}`,
     decorators: [withKnobs, muiTheme(), providers],
     excludeStories: /.*Data$/,
   };

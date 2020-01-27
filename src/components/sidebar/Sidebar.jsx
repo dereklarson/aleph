@@ -11,7 +11,7 @@ import {useStyles} from '@style/styling';
 // TODO add this back in
 // selected={location === config[0]}>
 
-export function Sidebar({onNavigate, location}) {
+export function PureSidebar({onNavigate, location}) {
   const sidebarOptions = [
     ['configuration', () => onNavigate('configuration')],
     ['docker', () => onNavigate('docker')],
@@ -33,7 +33,7 @@ export function Sidebar({onNavigate, location}) {
       onMouseLeave={ecent => setOpen(false)}>
       <Divider />
       <List>
-        <ListSubheader inset>Locations</ListSubheader>
+        <ListSubheader inset> Locations </ListSubheader>
         {generateList(sidebarOptions, 'Switch to the <> environment')}
       </List>
       <Divider />
@@ -58,4 +58,4 @@ function actionDispatch(dispatch) {
 export default connect(
   state => ({location: state.location}),
   actionDispatch,
-)(Sidebar);
+)(PureSidebar);

@@ -33,6 +33,7 @@ export const coveredState = {
     'gcp',
     'python',
   ]),
+  large_diagrams: {a: {}, b: {}, c: {}, d: {}, e: {}, f: {}},
 };
 
 export const sectionedVertices = {

@@ -6,7 +6,7 @@ import Vertices from '@diagram/Vertices';
 
 const TestComponent = Vertices;
 // Generate a Storybook entry based on the following key args (order, component, state)
-export default genStoryEntry(5, TestComponent, excitedState);
+export default genStoryEntry(7, TestComponent, excitedState);
 
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {

@@ -6,7 +6,7 @@ import ConfigNodeVertex from '@diagram/ConfigNodeVertex';
 
 const TestComponent = ConfigNodeVertex;
 // Generate a Storybook entry based on the following key args (order, component, state)
-export default genStoryEntry(3, TestComponent, excitedState);
+export default genStoryEntry(11, TestComponent, excitedState);
 
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
