@@ -8,7 +8,7 @@ import _ from 'lodash';
 import Arrows from './Arrows';
 import Vertices from './Vertices';
 import {calculateDiagramPositions} from './diagramDrawing';
-import {useStyles} from '../style/styling';
+import {useStyles} from 'style/styling';
 
 export function PureDiagram({clearFocus, onSectionDrop, vertices, activity}) {
   const classes = useStyles();

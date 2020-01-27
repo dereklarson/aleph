@@ -6,10 +6,10 @@ import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import Interface from './Interface';
-import rootReducer from './utils/reducers';
-import {initState} from './utils/stateReference';
 import {HotKeys} from 'react-hotkeys';
+import Interface from '@comp/Interface';
+import rootReducer from 'utils/reducers';
+import {initState} from 'utils/stateReference';
 
 // The redux store maintains all state, with thunk handling async updates
 const store = createStore(rootReducer, initState, applyMiddleware(thunk));
@@ -22,9 +22,9 @@ const keyMap = {
 render(
   <Provider store={store}>
     <DndProvider backend={HTML5Backend}>
-        <HotKeys keyMap={keyMap}>
-          <Interface />
-        </HotKeys>
+      <HotKeys keyMap={keyMap}>
+        <Interface />
+      </HotKeys>
     </DndProvider>
   </Provider>,
   document.getElementById('root'),

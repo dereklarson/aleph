@@ -1,10 +1,10 @@
 // @format
 import React from 'react';
 import {connect} from 'react-redux';
-import _ from 'lodash';
 import AceEditor from 'react-ace';
 import Popup from 'reactjs-popup';
-import {modifyState} from '../utils/loaders';
+import _ from 'lodash';
+import {modifyState} from 'utils/loaders';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';

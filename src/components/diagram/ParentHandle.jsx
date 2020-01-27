@@ -2,10 +2,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
-import {linkVertex} from '../utils/actions';
-import {useStyles} from '../style/styling';
+import {linkVertex} from 'utils/actions';
+import {useStyles} from 'style/styling';
 
-export function ChildHandle({vertexId, state, onDrop}) {
+export function ParentHandle({vertexId, state, onDrop}) {
   const classes = useStyles();
 
   const [{highlighted}, drop] = useDrop({
@@ -14,7 +14,9 @@ export function ChildHandle({vertexId, state, onDrop}) {
       onDrop(vertexId, state[`${state.location}_vertices`].length, item.id);
     },
     canDrop: (item, monitor) => {
-      return true;
+      if (state[`${state.location}_vertices`][vertexId].parents.length === 0) {
+        return true;
+      } else return false;
     },
     collect: monitor => ({
       highlighted: monitor.canDrop(),
@@ -34,9 +36,9 @@ function actionDispatch(dispatch) {
   return {
     onDrop: (to, from, section) => {
       dispatch({type: 'ADD_VERTEX', section: section});
-      dispatch(linkVertex(to, from));
+      dispatch(linkVertex(from, to));
     },
   };
 }
 
-export default connect(state => ({state: state}), actionDispatch)(ChildHandle);
+export default connect(state => ({state: state}), actionDispatch)(ParentHandle);

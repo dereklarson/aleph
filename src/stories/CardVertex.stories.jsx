@@ -1,20 +1,20 @@
 // @format
 import React from 'react';
 import {action} from '@storybook/addon-actions';
-import {withKnobs, text} from '@storybook/addon-knobs';
-import {muiTheme} from 'storybook-addon-material-ui';
-import {PureCardVertex} from '../diagram/CardVertex';
-import Divbox from './Divbox';
+import {text} from '@storybook/addon-knobs';
+import {
+  genStoryEntry,
+  getStoryGenerator,
+  getCollageGenerator,
+} from './testHelpers';
+import {excitedState} from './testStates';
+import {PureCardVertex} from '@comp/diagram/CardVertex';
 
 const TestComponent = PureCardVertex;
+// Generate a Storybook entry based on the following key args (order, component, state)
+export default genStoryEntry(2, TestComponent, excitedState);
 
-export default {
-  component: TestComponent,
-  title: TestComponent.displayName,
-  decorators: [withKnobs, muiTheme()],
-  excludeStories: /.*Data$/,
-};
-
+// testData should containing a baseline object of properties to pass into the component
 export const testData = {
   name: 'Test name',
   sections: ['react'],
@@ -32,41 +32,35 @@ export const testData = {
   },
 };
 
-function testSet(proplist, boxprops = {width: 300, height: 150}) {
-  const testDisplay = [];
-  for (const props of proplist.values()) {
-    testDisplay.push(
-      <Divbox {...boxprops}>
-        <TestComponent {...testData} {...props} />
-      </Divbox>,
-    );
-  }
-  return <Divbox squaresize={800}> {testDisplay} </Divbox>;
-}
-
-function genTest(props, boxprops = {boxtype: 'small'}) {
-  return (
-    <Divbox {...boxprops}>
-      <TestComponent {...testData} {...props} />
-    </Divbox>
-  );
-}
+// Produce a function 'genStory' that can generate a story from hand-tweaked properties
+const boxProps = {squaresize: 300};
+const windowProps = {squaresize: 800};
+let genStory = getStoryGenerator(TestComponent, boxProps, testData);
+let genCollage = getCollageGenerator(
+  TestComponent,
+  windowProps,
+  boxProps,
+  testData,
+);
 
 export const dynamic = () => (
   <TestComponent {...testData} name={text('name', 'a')} />
 );
 export const names = () =>
-  testSet([
+  genCollage([
     {name: 'a'},
     {name: 'Normal'},
     {name: 'Cornelius Scipio Africanus'},
   ]);
 export const sections = () =>
-  testSet([
+  genCollage([
     {sections: []},
     {sections: ['Cornelius', 'Fabius', 'Julius', 'Quinctius', 'Cato']},
   ]);
-export const dragging = () => genTest({styleProps: {isDragging: true}});
-export const highlighted = () => genTest({styleProps: {highlighted: true}});
-export const building = () => genTest({styleProps: {building: true}});
-export const prepared = () => genTest({styleProps: {prepared: true}});
+export const states = () =>
+  genCollage([
+    {styleProps: {isDragging: true}},
+    {styleProps: {highlighted: true}},
+    {styleProps: {building: true}},
+    {styleProps: {prepared: true}},
+  ]);

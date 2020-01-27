@@ -5,8 +5,8 @@ import {connect} from 'react-redux';
 import {Drawer, Divider, List, ListSubheader} from '@material-ui/core';
 import BulkActions from './BulkActions';
 import SavedDiagrams from './SavedDiagrams';
-import {generateList} from '../utils//generateList';
-import {useStyles} from '../style/styling';
+import {generateList} from 'utils/generateList';
+import {useStyles} from 'style/styling';
 
 // TODO add this back in
 // selected={location === config[0]}>

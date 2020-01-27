@@ -1,11 +1,11 @@
 // @format
 import React from 'react';
 import {Container, Grid} from '@material-ui/core';
-import Depot from './depot/Depot';
-import Diagram from './diagram/Diagram';
-import Ticker from './depot/Ticker';
-import {useStyles} from './style/styling';
-import {Credits} from './comcom/Accessories';
+import Depot from '@depot/Depot';
+import Ticker from '@depot/Ticker';
+import Diagram from '@diagram/Diagram';
+import {Credits} from '@common/Accessories';
+import {useStyles} from 'style/styling';
 
 export function Workspace() {
   const classes = useStyles();

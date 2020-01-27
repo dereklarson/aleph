@@ -2,14 +2,14 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {CssBaseline} from '@material-ui/core';
-import AppBar from './AppBar';
-import Workspace from './Workspace';
-import Sidebar from './sidebar/Sidebar';
-import Editor from './comcom/Editor';
-import TextEntry from './comcom/TextEntry';
-import {useStyles} from './style/styling';
-import {themePicker} from './style/theme';
 import {ThemeProvider} from '@material-ui/core/styles';
+import AppBar from './AppBar';
+import Workspace from '@comp/Workspace';
+import Sidebar from '@sidebar/Sidebar';
+import Editor from '@common/Editor';
+import TextEntry from '@common/TextEntry';
+import {useStyles} from 'style/styling';
+import {themePicker} from 'style/theme';
 
 export function PureInterface({themeStr, editing, texting}) {
   const classes = useStyles();

@@ -18,7 +18,7 @@ export const blankContext = {
   editing: false,
   editor: null,
   texting: false,
-  entry_schema: {},
+  entry_schema: {title: '', keys: {}},
   func: () => 0,
 };
 
@@ -34,7 +34,11 @@ export const blankCache = {
 };
 
 export const blankConfig = {
-  organization: {},
+  organization: {
+    name: '<Org Name>',
+    repository: null,
+    local: null,
+  },
 };
 
 const locations = ['docker', 'pipeline', 'data', 'configuration'];

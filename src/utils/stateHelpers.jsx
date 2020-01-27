@@ -34,3 +34,35 @@ export function genGreatLibrary(locations, namedict = {def: ['sample']}) {
     return great_library;
   }, {});
 }
+
+export const requestSave = {
+  texting: true,
+  entry_schema: {
+    title: 'Enter Org Info',
+    dispatch: false,
+    keys: {
+      savename: 1,
+    },
+  },
+};
+
+export const requestOrg = {
+  texting: true,
+  entry_schema: {
+    title: 'Enter Org Info',
+    dispatch: true,
+    keys: {
+      name: 1,
+      repository: 1,
+    },
+  },
+};
+
+export const godMode = {
+  texting: true,
+  entry_schema: {
+    title: 'Enter Org Info',
+    dispatch: true,
+    godmode: 1,
+  },
+};

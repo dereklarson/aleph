@@ -2,16 +2,16 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {useDrag, useDrop, DragPreviewImage} from 'react-dnd';
-import {prepareBuildFocus} from '../utils/loaders';
-import {addSection, linkVertex, unlinkVertex} from '../utils/actions';
-import {modifyState} from '../utils/loaders';
+import {prepareBuildFocus} from 'utils/loaders';
+import {addSection, linkVertex, unlinkVertex} from 'utils/actions';
+import {modifyState} from 'utils/loaders';
 import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigNodeVertex from './ConfigNodeVertex';
 import ChildHandle from './ChildHandle';
 import ParentHandle from './ParentHandle';
 import {HotKeys} from 'react-hotkeys';
-import {getAncestry} from '../utils/vertexHelpers';
+import {getAncestry} from 'utils/vertexHelpers';
 
 export function PureVertex({
   state,
@@ -54,7 +54,7 @@ export function PureVertex({
         if (item.parents.length !== 0) return false;
         return true;
       } else if (item.type === 'DepotItem') {
-        const [anc_idx, anc_sec] = getAncestry(state, id);
+        const anc_sec = getAncestry(state, id)[1];
         return !anc_sec.includes(item.id);
       }
       return true;

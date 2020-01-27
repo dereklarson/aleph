@@ -1,50 +1,27 @@
 // @format
 import React from 'react';
-import {Provider} from 'react-redux';
-import {DndProvider} from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
-import {action} from '@storybook/addon-actions';
-import {withKnobs, text, boolean} from '@storybook/addon-knobs';
-import {muiTheme} from 'storybook-addon-material-ui';
-import Divbox from './Divbox';
-import {PureInterface} from '../Interface';
+import {text, boolean} from '@storybook/addon-knobs';
+import {genStoryEntry, getStoryGenerator} from './testHelpers';
 import {excitedState} from './testStates';
+import {PureInterface} from '@comp/Interface';
 
 const TestComponent = PureInterface;
+// Generate a Storybook entry based on the following key args (order, component, state)
+//   Order (+int): when we want to view the story in the Storybook sidebar
+//   Component: imported component variable (capital first letter)
+//   state: The state of the Redux store we will build from for the test
+export default genStoryEntry(1, TestComponent, excitedState);
 
-// A super-simple mock of a redux store
-const store = {
-  getState: () => excitedState,
-  subscribe: () => 0,
-  dispatch: action('dispatch'),
-};
-
-const providers = story => (
-  <Provider store={store}>
-    <DndProvider backend={HTML5Backend}>{story()}</DndProvider>
-  </Provider>
-);
-
-export default {
-  component: TestComponent,
-  title: TestComponent.displayName,
-  decorators: [withKnobs, muiTheme(), providers],
-  excludeStories: /.*Data$/,
-};
-
+// testData should containing a baseline object of properties to pass into the component
 export const testData = {};
+// Produce a function 'genStory' that can generate a story from hand-tweaked properties
+const boxProps = {squaresize: 1200};
+let genStory = getStoryGenerator(TestComponent, boxProps, testData);
 
-function genTest(props, boxprops = {squaresize: 1200}) {
-  return (
-    <Divbox {...boxprops}>
-      <TestComponent {...testData} {...props} />
-    </Divbox>
-  );
-}
-
+// TESTS
 export const unbounded = () => <TestComponent {...testData} />;
 export const dynamic = () =>
-  genTest({
+  genStory({
     themeStr: text('theme', 'dark'),
     editing: boolean('editing', false),
     texting: boolean('texting', false),

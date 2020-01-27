@@ -1,32 +1,30 @@
 // @format
 import React from 'react';
-import {withKnobs} from '@storybook/addon-knobs';
-import {muiTheme} from 'storybook-addon-material-ui';
-import {PureTextEntry} from '../comcom/TextEntry';
-import Divbox from './Divbox';
+import {genStoryEntry, getStoryGenerator} from './testHelpers';
+import {excitedState} from './testStates';
+import {PureTextEntry} from '@common/TextEntry';
 
 const TestComponent = PureTextEntry;
+// Generate a Storybook entry based on the following key args (order, component, state)
+export default genStoryEntry(9, TestComponent, excitedState);
 
-export default {
-  component: TestComponent,
-  title: TestComponent.displayName,
-  decorators: [withKnobs, muiTheme()],
-  excludeStories: /.*Data$/,
-};
-
+// testData should containing a baseline object of properties to pass into the component
 export const testData = {
   open: true,
-  schema: {savename: 1},
+  schema: {
+    title: 'Saving Diagram',
+    keys: {
+      savename: 1,
+    },
+  },
 };
 
-function genTest(props, boxprops = {boxtype: 'medium'}) {
-  return (
-    <Divbox {...boxprops}>
-      <TestComponent {...testData} {...props} />
-    </Divbox>
-  );
-}
+// Produce a function 'genStory' that can generate a story from hand-tweaked properties
+const boxProps = {boxtype: 'medium'};
+let genStory = getStoryGenerator(TestComponent, boxProps, testData);
 
-export const test = () => genTest();
-export const many = () => genTest({schema: {a: 1, b: 2, c: 3}});
-export const god = () => genTest({schema: {savename: 1, godmode: true}});
+export const test = () => genStory();
+export const many = () =>
+  genStory({schema: {title: 'Z', keys: {a: 1, b: 2, c: 3}}});
+export const god = () =>
+  genStory({schema: {title: 'God', godmode: true, keys: {}}});

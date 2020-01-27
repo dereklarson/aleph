@@ -1,6 +1,7 @@
 import React from 'react';
-import HttpsIcon from '@material-ui/icons/Https';
 import HelpIcon from '@material-ui/icons/Help';
+import BusinessIcon from '@material-ui/icons/Business';
+import HttpsIcon from '@material-ui/icons/Https';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -16,7 +17,8 @@ import ReceiptIcon from '@material-ui/icons/Receipt';
 
 export const iconSource = {
   def: <HelpIcon />,
-  // Interface
+  // AppBar
+  load_org: <BusinessIcon />,
   god_mode: <HttpsIcon />,
   play_tutorial: <HelpIcon />,
   load_checkpoint: <CloudDownloadIcon />,

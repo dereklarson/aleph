@@ -3,6 +3,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import {getLastLine} from './helpers';
 import {blankOperations} from './stateReference';
+import {requestOrg} from './stateHelpers';
 
 export const modifyState = update => ({
   type: 'MODIFY_STATE',
@@ -10,10 +11,28 @@ export const modifyState = update => ({
 });
 
 // Thunked: will return function taking dispatch
-export function loadInputs() {
+export function loadInputs(state) {
+  let org = state.organization;
+  const savefunc = fieldText => modifyState({organization: fieldText});
   return function(dispatch) {
     console.log('---Loading Inputs ---');
     axios.get('/input').then(response => {
+      dispatch(modifyState(response.data));
+      Object.assign(org, _.get(response.data, 'organization', {}));
+      if (org.name.includes('<')) {
+        console.log('Requesting org...');
+        dispatch(modifyState({...requestOrg, func: savefunc}));
+      }
+    });
+  };
+}
+
+// Thunked: will return function taking dispatch
+export function loadOrg(org) {
+  console.log(org);
+  return function(dispatch) {
+    console.log(`---Loading Organization---`);
+    axios.get(`/repo/${org.repository}/test`).then(response => {
       dispatch(modifyState(response.data));
     });
   };
@@ -37,12 +56,12 @@ export function loadCore(source, location) {
 
 export function saveCheckpoint(name, state) {
   console.log('---Saving Full State Checkpoint---');
-  return axios.post(`/save_checkpoint/${name}`, state);
+  return axios.post(`/checkpoint/save/${name}`, state);
 }
 
 export function loadCheckpoint(name, dispatch) {
   console.log('---Loading Full State Checkpoint---');
-  return axios.get(`/load_checkpoint/${name}`).then(response => {
+  return axios.get(`/checkpoint/load/${name}`).then(response => {
     dispatch(modifyState(response.data));
   });
 }

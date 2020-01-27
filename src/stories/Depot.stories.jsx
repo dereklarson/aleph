@@ -1,47 +1,21 @@
 // @format
 import React from 'react';
-import {Provider} from 'react-redux';
-import {DndProvider} from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
-import {action} from '@storybook/addon-actions';
-import {withKnobs} from '@storybook/addon-knobs';
-import {muiTheme} from 'storybook-addon-material-ui';
-import Divbox from './Divbox';
-import {PureDepot} from '../depot/Depot';
+import {genStoryEntry, getStoryGenerator} from './testHelpers';
 import {coveredState, blankState} from './testStates';
+import {excitedState} from './testStates';
+import {PureDepot} from '@depot/Depot';
 
 const TestComponent = PureDepot;
+// Generate a Storybook entry based on the following key args (order, component, state)
+export default genStoryEntry(4, TestComponent, excitedState);
 
-// A super-simple mock of a redux store
-const store = {
-  getState: () => blankState,
-  subscribe: () => 0,
-  dispatch: action('dispatch'),
-};
-
-const providers = story => (
-  <Provider store={store}>
-    <DndProvider backend={HTML5Backend}>{story()}</DndProvider>
-  </Provider>
-);
-
-export default {
-  component: TestComponent,
-  title: TestComponent.displayName,
-  decorators: [withKnobs, muiTheme(), providers],
-  excludeStories: /.*Data$/,
-};
-
+// testData should containing a baseline object of properties to pass into the component
 export const testData = {
   library: coveredState.medium_library,
 };
 
-function genTest(props, boxprops = {boxtype: 'small'}) {
-  return (
-    <Divbox {...boxprops}>
-      <TestComponent {...testData} {...props} />
-    </Divbox>
-  );
-}
+// Produce a function 'genStory' that can generate a story from hand-tweaked properties
+const boxProps = {squaresize: 600};
+let genStory = getStoryGenerator(TestComponent, boxProps, testData);
 
-export const basic = () => genTest();
+export const basic = () => genStory();

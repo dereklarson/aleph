@@ -2,7 +2,7 @@
 import React from 'react';
 import Fab from '@material-ui/core/Fab';
 import DonutSmallIcon from '@material-ui/icons/DonutSmall';
-import {propsToStyle} from '../utils/helpers';
+import {propsToStyle} from 'utils/helpers';
 
 export default function NodeVertex({name, sections, id, styleProps}) {
   // (${sections.length})`;

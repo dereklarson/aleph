@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@comp/*": ["./src/components/*"],
+      "@depot/*": ["../src/components/depot"],
+      "@diagram/*": ["../src/components/diagram"],
+      "@sidebar/*": ["../src/components/sidebar"],
+      "@common/*": ["../src/components/common"]
+    }
+  },
+  "exclude": ["node_modules", "build", "coverage", "dist", "lib"]
+}
