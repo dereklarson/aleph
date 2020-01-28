@@ -65,7 +65,7 @@ export const sectionState = {
 
 export const excitedState = {
   ...blankState,
-  config: {present: {organization: {name: 'Top Dog'}}},
+  config: {organization: {name: 'Top Dog'}},
   context: {...blankState.context, dagre: true, focus: 0},
   operations: {
     ...blankState.operations,

@@ -8,7 +8,7 @@ import _ from 'lodash';
 import {initState} from './stateReference';
 // import {combineReducers} from 'redux';
 
-const confbase = (state, action) => {
+const config = (state, action) => {
   switch (action.type) {
     case 'MODIFY_CONFIG':
       return Object.assign({}, state, action.update);
@@ -228,7 +228,7 @@ function combineReducers(reducers) {
 
 // Give some parts of the store TimeTravel
 const vertices = undoable(verticesbase);
-const config = undoable(confbase);
+// const config = undoable(confbase);
 
 // Combine all reducers
 const rootReducer = combineReducers({

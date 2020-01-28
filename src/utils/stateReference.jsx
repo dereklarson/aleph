@@ -38,6 +38,7 @@ export const blankConfig = {
   organization: {
     name: '<Org Name>',
     repository: null,
+    uid: '',
     local: null,
   },
 };

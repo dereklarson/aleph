@@ -70,7 +70,7 @@ export function PureAppBar({
 }
 
 export default connect(
-  state => ({config: state.config.present, context: state.context}),
+  state => ({config: state.config, context: state.context}),
   dispatch => ({
     onLoadInputs: state => dispatch(loadInputs(state)),
     onLoadChk: () => loadCheckpoint('user', dispatch),

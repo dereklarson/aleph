@@ -10,7 +10,7 @@ export default genStoryEntry(2, TestComponent, excitedState);
 
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
-  config: excitedState.config.present,
+  config: excitedState.config,
   context: excitedState.context,
   onLoadInputs: action('Load'),
 };

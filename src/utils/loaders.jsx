@@ -12,7 +12,7 @@ export const modify = (loc, update) => ({
 
 // Thunked: will return function taking dispatch
 export function loadInputs(config) {
-  let org = config.organization;
+  let org = _.cloneDeep(config.organization);
   const savefunc = fieldText => modify('config', {organization: fieldText});
   return function(dispatch) {
     console.log('---Loading Inputs ---');
@@ -28,22 +28,26 @@ export function loadInputs(config) {
 }
 
 // Thunked: will return function taking dispatch
-export function loadOrg(org) {
-  console.log(org);
-  return function(dispatch) {
+export function loadOrg() {
+  return function(dispatch, getState) {
+    let org = getState()['config']['organization'];
     console.log(`---Loading Organization---`);
-    axios.get(`/repo/${org.repository}/test`).then(response => {
-      dispatch(modify('config', response.data));
-    });
+    console.log(org);
+    axios
+      .post(`/repo/${org.uid}`, {repository: org.repository})
+      .then(response => {
+        dispatch(modify('config', response.data));
+      });
   };
 }
 
 // Thunked: will return function taking dispatch
 export function loadCore(source, location) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    let org = getState()['config']['organization'];
     if (['pipeline', 'docker'].includes(location)) {
       console.log(`---Loading ${location} ${source}---`);
-      axios.get(`/coreload/${source}/${location}`).then(response => {
+      axios.get(`/coreload/${source}/${location}/${org.uid}`).then(response => {
         dispatch(modify(source, response.data));
       });
     }

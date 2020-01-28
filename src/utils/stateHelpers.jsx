@@ -39,7 +39,7 @@ export function genGreatLibrary(locations, namedict = {def: ['sample']}) {
 export const requestSave = {
   texting: true,
   schema: {
-    title: 'Enter Org Info',
+    title: 'Save the current diagram',
     dispatch: false,
     keys: {
       savename: 1,
@@ -54,6 +54,7 @@ export const requestOrg = {
     dispatch: true,
     keys: {
       name: 1,
+      uid: 1,
       repository: 1,
     },
   },
