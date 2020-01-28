@@ -56,6 +56,6 @@ function actionDispatch(dispatch) {
 }
 
 export default connect(
-  state => ({location: state.location}),
+  state => ({location: state.context.location}),
   actionDispatch,
 )(PureSidebar);

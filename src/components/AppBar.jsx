@@ -2,7 +2,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {AppBar, Toolbar, Typography} from '@material-ui/core';
-import {saveCheckpoint, loadCheckpoint, modifyState} from '@utils/loaders';
+import _ from 'lodash';
+import {saveCheckpoint, loadCheckpoint, modify} from '@utils/loaders';
 import {loadInputs, loadOrg} from '@utils/loaders';
 import {generateButtons} from '@utils/generateList';
 import {playTutorial} from '@utils/tutorial';
@@ -11,33 +12,43 @@ import {capitalizeFirstLetter} from '@utils/helpers';
 import {requestOrg, godMode} from '@utils/stateHelpers';
 
 export function PureAppBar({
-  state,
+  config,
+  context,
   onLoadInputs,
   onLoadChk,
   onLoadOrg,
   onPlayTutorial,
+  onSetTheme,
   onText,
   onGodMode,
+  loc,
 }) {
   const classes = useStyles();
-  const onInitialLoad = () => onLoadInputs(state);
+  const onInitialLoad = () => onLoadInputs(config);
 
   // Performs loads on mount
   React.useEffect(onInitialLoad, [onLoadOrg]);
 
   const [saved, setSaved] = React.useState(false);
-  const onSaveChk = () => {
-    setSaved(true);
-    saveCheckpoint('user', state);
-  };
-  const savefunc = fieldText => modifyState({organization: fieldText});
+  // const onSaveChk = () => {
+  //   setSaved(true);
+  //   saveCheckpoint('user', state);
+  // };
+  const savefunc = fieldText => ({
+    type: 'MODIFY_CONFIG',
+    update: {organization: fieldText},
+  });
 
   const appBarOptions = [
     ['set_org', () => onText(savefunc)],
-    ['load_org', () => onLoadOrg(state.organization)],
-    ['save_checkpoint', onSaveChk],
+    ['load_org', () => onLoadOrg(config.organization)],
+    [
+      'set_theme',
+      () => onSetTheme(context.theme === 'light' ? 'dark' : 'light'),
+    ],
+    // ['save_checkpoint', onSaveChk],
     ['load_checkpoint', onLoadChk, saved],
-    ['play_tutorial', () => onPlayTutorial(state)],
+    // ['play_tutorial', () => onPlayTutorial(state)],
     ['god_mode', () => onGodMode()],
   ];
 
@@ -50,7 +61,7 @@ export function PureAppBar({
           color="inherit"
           noWrap
           className={classes.title}>
-          {state.organization.name} - {capitalizeFirstLetter(state.location)}
+          {config.organization.name} - {capitalizeFirstLetter(context.location)}
         </Typography>
         {generateButtons(appBarOptions)}
       </Toolbar>
@@ -59,13 +70,15 @@ export function PureAppBar({
 }
 
 export default connect(
-  state => ({state: state}),
+  state => ({config: state.config.present, context: state.context}),
   dispatch => ({
     onLoadInputs: state => dispatch(loadInputs(state)),
     onLoadChk: () => loadCheckpoint('user', dispatch),
     onLoadOrg: org => dispatch(loadOrg(org)),
     onPlayTutorial: state => playTutorial('tutorial', state, false, dispatch),
-    onText: savefunc => dispatch(modifyState({...requestOrg, func: savefunc})),
-    onGodMode: () => dispatch(modifyState({...godMode})),
+    onSetTheme: theme => dispatch(modify('context', {theme: theme})),
+    onText: savefunc =>
+      dispatch(modify('context', {...requestOrg, func: savefunc})),
+    onGodMode: () => dispatch(modify('context', {...godMode})),
   }),
 )(PureAppBar);

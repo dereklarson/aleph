@@ -5,16 +5,16 @@ import {useDrop} from 'react-dnd';
 import {linkVertex} from '@utils/actions';
 import {useStyles} from '@style/styling';
 
-export function ParentHandle({vertexId, state, onDrop}) {
+export function ParentHandle({location, vertexId, vertices, onDrop}) {
   const classes = useStyles();
 
   const [{highlighted}, drop] = useDrop({
     accept: ['DepotItem'],
     drop: item => {
-      onDrop(vertexId, state[`${state.location}_vertices`].length, item.id);
+      onDrop(location, vertexId, vertices.length, item.id);
     },
     canDrop: (item, monitor) => {
-      if (state[`${state.location}_vertices`][vertexId].parents.length === 0) {
+      if (vertices[vertexId].parents.length === 0) {
         return true;
       } else return false;
     },
@@ -34,11 +34,17 @@ export function ParentHandle({vertexId, state, onDrop}) {
 
 function actionDispatch(dispatch) {
   return {
-    onDrop: (to, from, section) => {
-      dispatch({type: 'ADD_VERTEX', section: section});
-      dispatch(linkVertex(from, to));
+    onDrop: (location, to, from, section) => {
+      dispatch({type: 'ADD_VERTEX', location: location, section: section});
+      dispatch(linkVertex(location, from, to));
     },
   };
 }
 
-export default connect(state => ({state: state}), actionDispatch)(ParentHandle);
+export default connect(
+  state => ({
+    location: state.context.location,
+    vertices: state.vertices.present[state.context.location],
+  }),
+  actionDispatch,
+)(ParentHandle);

@@ -1,6 +1,7 @@
 import React from 'react';
 import HelpIcon from '@material-ui/icons/Help';
 import BusinessIcon from '@material-ui/icons/Business';
+import NightsStayIcon from '@material-ui/icons/NightsStay';
 import HttpsIcon from '@material-ui/icons/Https';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -21,6 +22,7 @@ export const iconSource = {
   load_org: <BusinessIcon />,
   god_mode: <HttpsIcon />,
   play_tutorial: <HelpIcon />,
+  set_theme: <NightsStayIcon />,
   load_checkpoint: <CloudDownloadIcon />,
   save_checkpoint: <CloudUploadIcon />,
   // Saved items

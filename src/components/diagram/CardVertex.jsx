@@ -10,19 +10,21 @@ import Button from '@material-ui/core/Button';
 import {propsToStyle} from '@utils/helpers';
 
 export function PureCardVertex({
+  location,
   onChange,
   onChipDelete,
   name,
   cardActions,
   sections,
   id,
-  state,
   styleProps,
 }) {
   let chipDisplay = [];
-  for (const section of sections.values()) {
-    const chipDelete = () => onChipDelete(id, section);
-    chipDisplay.push(<Chip label={section} onDelete={chipDelete} />);
+  for (const [index, section] of sections.entries()) {
+    const chipDelete = () => onChipDelete(location, id, section);
+    chipDisplay.push(
+      <Chip key={index} label={section} onDelete={chipDelete} />,
+    );
   }
   return (
     <Card style={propsToStyle(styleProps)}>
@@ -41,9 +43,9 @@ export function PureCardVertex({
         <Button size="small" onClick={() => cardActions.onEditor()}>
           Editor
         </Button>
-        <Button size="small" onClick={() => cardActions.onBuild(state)}>
-          Build
-        </Button>
+        {/* <Button size="small" onClick={() => cardActions.onBuild(state)}> */}
+        {/*   Build */}
+        {/* </Button> */}
         <Button size="small" onClick={() => cardActions.onClear(id)}>
           Reset
         </Button>
@@ -52,8 +54,9 @@ export function PureCardVertex({
   );
 }
 
-export const removeSection = (id, sectionValue) => ({
+export const removeSection = (location, id, sectionValue) => ({
   type: 'REMOVE_SECTION',
+  location: location,
   vertex: id,
   section: sectionValue,
 });
@@ -67,9 +70,14 @@ export const changeVertexName = (id, name) => ({
 function actionDispatch(dispatch) {
   return {
     onChange: (id, name) => dispatch(changeVertexName(id, name)),
-    onChipDelete: (id, sectionValue) =>
-      dispatch(removeSection(id, sectionValue)),
+    onChipDelete: (location, id, sectionValue) =>
+      dispatch(removeSection(location, id, sectionValue)),
   };
 }
 
-export default connect(null, actionDispatch)(PureCardVertex);
+export default connect(
+  state => ({
+    location: state.context.location,
+  }),
+  actionDispatch,
+)(PureCardVertex);

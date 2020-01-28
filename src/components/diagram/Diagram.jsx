@@ -10,19 +10,24 @@ import Vertices from './Vertices';
 import {calculateDiagramPositions} from './diagramDrawing';
 import {useStyles} from '@style/styling';
 
-export function PureDiagram({clearFocus, onSectionDrop, vertices, activity}) {
+export function PureDiagram({
+  location,
+  clearFocus,
+  onSectionDrop,
+  vertices,
+  activity,
+}) {
   const classes = useStyles();
 
   const [{highlighted}, drop] = useDrop({
     accept: 'DepotItem',
     drop: (item, monitor) => {
       if (!monitor.didDrop()) {
-        onSectionDrop(item.id);
+        onSectionDrop(location, item.id);
       }
     },
     collect: monitor => ({
       highlighted: !!monitor.canDrop(),
-      // isOver: !!monitor.isOver(),
     }),
   });
 
@@ -47,15 +52,16 @@ export function PureDiagram({clearFocus, onSectionDrop, vertices, activity}) {
   );
 }
 
-export const addVertex = (section = null) => ({
+export const addVertex = (location, section = null) => ({
   type: 'ADD_VERTEX',
+  location: location,
   section: section,
 });
 
-const getFocus = state => state.focus;
-const getLocation = state => state.location;
-const getBuildOrders = state => state.build_orders;
-const getDagre = state => state.dagre;
+const getFocus = state => state.context.focus;
+const getLocation = state => state.context.location;
+const getBuildOrders = state => state.operations.build_orders;
+const getDagre = state => state.context.dagre;
 
 const getActivity = createSelector(
   [getFocus, getLocation, getBuildOrders, getDagre],
@@ -69,11 +75,12 @@ const getActivity = createSelector(
 
 export default connect(
   state => ({
-    vertices: state[`${state.location}_vertices`],
+    location: state.context.location,
+    vertices: state.vertices.present[state.context.location],
     activity: getActivity(state),
   }),
   dispatch => ({
-    clearFocus: () => dispatch({type: 'MODIFY_STATE', update: {focus: null}}),
-    onSectionDrop: section => dispatch(addVertex(section)),
+    clearFocus: () => dispatch({type: 'MODIFY_CONTEXT', update: {focus: null}}),
+    onSectionDrop: (loc, section) => dispatch(addVertex(loc, section)),
   }),
 )(PureDiagram);

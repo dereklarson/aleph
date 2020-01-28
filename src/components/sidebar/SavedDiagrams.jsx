@@ -9,7 +9,7 @@ function SavedDiagrams({location, diagrams, onAddSaved, onSetDiagram}) {
   let items = [];
   for (const [name, config] of Object.entries(diagrams)) {
     let onClick = () => onAddSaved(config.vertexgroups);
-    if (_.has(config, `${location}_vertices`)) {
+    if (_.has(config, 'vertices')) {
       onClick = () => onSetDiagram(config);
     }
     items.push([name, onClick]);
@@ -35,8 +35,8 @@ export const addSaved = vertexgroups => ({
 
 export default connect(
   state => ({
-    location: state.location,
-    diagrams: state[`${state.location}_diagrams`],
+    location: state.context.location,
+    diagrams: state.diagrams[state.context.location],
   }),
   dispatch => ({
     onAddSaved: vertexgroups => dispatch(addSaved(vertexgroups)),

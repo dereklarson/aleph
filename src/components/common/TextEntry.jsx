@@ -5,7 +5,7 @@ import {Button, TextField, Dialog} from '@material-ui/core';
 import {DialogActions, DialogTitle, DialogContent} from '@material-ui/core';
 import AceEditor from 'react-ace';
 import _ from 'lodash';
-import {modifyState} from '@utils/loaders';
+import {modify} from '@utils/loaders';
 import {useStyles} from '@style/styling';
 
 import 'ace-builds/src-noconflict/mode-yaml';
@@ -20,18 +20,19 @@ export function PureTextEntry({open, schema, func, dispatch}) {
   };
 
   let itemDisplay = [];
-  for (const key of Object.values(_.get(schema, 'keys', []))) {
+  for (const keystr of Object.keys(_.get(schema, 'keys', []))) {
     let defProps = {};
     // Autofocus on our first text entry field
     if (itemDisplay.length === 0) defProps['autoFocus'] = true;
     itemDisplay.push(
       <TextField
         {...defProps}
+        key={itemDisplay.length}
         className={classes.textField}
         variant="outlined"
-        label={key}
+        label={keystr}
         onChange={event => {
-          fieldText[key] = event.target.value;
+          fieldText[keystr] = event.target.value;
         }}
       />,
     );
@@ -39,7 +40,7 @@ export function PureTextEntry({open, schema, func, dispatch}) {
 
   let callfunc = func;
   if (_.has(schema, 'godmode')) {
-    callfunc = text => modifyState(JSON.parse(text));
+    callfunc = text => modify('context', JSON.parse(text));
     itemDisplay.push(
       <AceEditor
         className={classes.editor}
@@ -51,9 +52,9 @@ export function PureTextEntry({open, schema, func, dispatch}) {
     );
   }
 
-  const onCancel = () => dispatch(modifyState({texting: false}));
+  const onCancel = () => dispatch(modify('context', {texting: false}));
   const onDone = () => {
-    dispatch(modifyState({texting: false}));
+    dispatch(modify('context', {texting: false}));
     console.log(callfunc(fieldText));
     if (_.get(schema, 'dispatch', true)) dispatch(callfunc(fieldText));
     else callfunc(fieldText);
@@ -76,7 +77,6 @@ export function PureTextEntry({open, schema, func, dispatch}) {
 }
 
 export default connect(state => ({
-  open: state.texting,
-  schema: state.entry_schema,
-  func: state.func,
+  schema: state.context.schema,
+  func: state.context.func,
 }))(PureTextEntry);

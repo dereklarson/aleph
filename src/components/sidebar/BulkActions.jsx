@@ -2,7 +2,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
-import {clearDiagram, build, modifyState, saveDiagram} from '@utils/loaders';
+import {clearDiagram, build, modify} from '@utils/loaders';
+// import {clearDiagram, build, modifyState, saveDiagram} from '@utils/loaders';
 import {loadCore} from '@utils/loaders';
 import {generateList} from '@utils/generateList';
 import {blankOperations} from '@utils/stateReference';
@@ -17,27 +18,28 @@ function BulkActions({
   onClearBuild,
   onLoadSaved,
   onText,
-  state,
+  operations,
+  location,
 }) {
   const cancel = React.useRef(false);
   const onCancel = () => {
-    if (state.building !== null) cancel.current = true;
+    if (operations.building !== null) cancel.current = true;
     else onClearBuild();
   };
 
-  const savefunc = fieldText => {
-    saveDiagram(state.location, fieldText.savename, {
-      [`${state.location}_vertices`]: state[`${state.location}_vertices`],
-      [`${state.location}_fulltext`]: state[`${state.location}_fulltext`],
-    });
-  };
+  // const savefunc = fieldText => {
+  //   saveDiagram(context.location, fieldText.savename, {
+  //     [`${state.location}_vertices`]: state[`${state.location}_vertices`],
+  //     [`${state.location}_fulltext`]: state[`${state.location}_fulltext`],
+  //   });
+  // };
 
   const actionOptions = [
-    ['clear_diagram', () => clear(state.location)],
-    ['build_marked', () => onBuild(state, cancel)],
+    ['clear_diagram', () => clear(location)],
+    ['build_marked', () => onBuild(operations, cancel)],
     ['cancel_build', onCancel],
-    ['refresh', () => onLoadSaved(state.location)],
-    ['save_diagram', () => onText(savefunc)],
+    ['refresh', () => onLoadSaved(location)],
+    // ['save_diagram', () => onText(savefunc)],
   ];
 
   return (
@@ -51,11 +53,15 @@ function BulkActions({
 function actionDispatch(dispatch) {
   return {
     clear: location => dispatch(clearDiagram(location)),
-    onBuild: (state, cancel) => build(state, cancel, dispatch),
-    onClearBuild: () => dispatch(modifyState(blankOperations)),
+    onBuild: (operations, cancel) => build(operations, cancel, dispatch),
+    onClearBuild: () => dispatch(modify('operations', blankOperations)),
     onLoadSaved: location => dispatch(loadCore('diagrams', location)),
-    onText: savefunc => dispatch(modifyState({...requestSave, func: savefunc})),
+    onText: savefunc =>
+      dispatch(modify('context', {...requestSave, func: savefunc})),
   };
 }
 
-export default connect(state => ({state: state}), actionDispatch)(BulkActions);
+export default connect(
+  state => ({operations: state.operations, location: state.context.location}),
+  actionDispatch,
+)(BulkActions);

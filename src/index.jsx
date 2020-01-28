@@ -4,6 +4,8 @@ import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
+import logger from 'redux-logger';
+import freeze from 'redux-freeze';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import {HotKeys} from 'react-hotkeys';
@@ -12,7 +14,11 @@ import rootReducer from '@utils/reducers';
 import {initState} from '@utils/stateReference';
 
 // The redux store maintains all state, with thunk handling async updates
-const store = createStore(rootReducer, initState, applyMiddleware(thunk));
+const store = createStore(
+  rootReducer,
+  initState,
+  applyMiddleware(thunk, logger, freeze),
+);
 
 const keyMap = {
   DELETE_NODE: ['del', 'backspace'],

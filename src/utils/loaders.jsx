@@ -5,23 +5,23 @@ import {getLastLine} from './helpers';
 import {blankOperations} from './stateReference';
 import {requestOrg} from './stateHelpers';
 
-export const modifyState = update => ({
-  type: 'MODIFY_STATE',
+export const modify = (loc, update) => ({
+  type: `MODIFY_${loc.toUpperCase()}`,
   update: update,
 });
 
 // Thunked: will return function taking dispatch
-export function loadInputs(state) {
-  let org = state.organization;
-  const savefunc = fieldText => modifyState({organization: fieldText});
+export function loadInputs(config) {
+  let org = config.organization;
+  const savefunc = fieldText => modify('config', {organization: fieldText});
   return function(dispatch) {
     console.log('---Loading Inputs ---');
     axios.get('/input').then(response => {
-      dispatch(modifyState(response.data));
+      dispatch(modify('config', response.data));
       Object.assign(org, _.get(response.data, 'organization', {}));
       if (org.name.includes('<')) {
         console.log('Requesting org...');
-        dispatch(modifyState({...requestOrg, func: savefunc}));
+        dispatch(modify('context', {...requestOrg, func: savefunc}));
       }
     });
   };
@@ -33,7 +33,7 @@ export function loadOrg(org) {
   return function(dispatch) {
     console.log(`---Loading Organization---`);
     axios.get(`/repo/${org.repository}/test`).then(response => {
-      dispatch(modifyState(response.data));
+      dispatch(modify('config', response.data));
     });
   };
 }
@@ -44,12 +44,12 @@ export function loadCore(source, location) {
     if (['pipeline', 'docker'].includes(location)) {
       console.log(`---Loading ${location} ${source}---`);
       axios.get(`/coreload/${source}/${location}`).then(response => {
-        dispatch(modifyState(response.data));
+        dispatch(modify(source, response.data));
       });
     }
     console.log(`---Loading Docker Images---`);
     axios.get('/docker_images').then(response => {
-      dispatch(modifyState(response.data));
+      dispatch(modify('operations', response.data));
     });
   };
 }
@@ -62,7 +62,7 @@ export function saveCheckpoint(name, state) {
 export function loadCheckpoint(name, dispatch) {
   console.log('---Loading Full State Checkpoint---');
   return axios.get(`/checkpoint/load/${name}`).then(response => {
-    dispatch(modifyState(response.data));
+    dispatch(modify('vertices', response.data));
   });
 }
 
@@ -80,12 +80,12 @@ export function prepareBuildFocus(currentState, dispatch) {
     console.log('---Preparing build for current focus---');
     axios
       .post('/gen_build/docker', {
-        vertices: currentState.docker_vertices,
-        fulltext: currentState.docker_fulltext,
+        vertices: currentState.vertices.present.docker,
+        corpus: currentState.corpus.docker,
         build_id: currentState.focus,
       })
       .then(response => {
-        dispatch(modifyState(response.data));
+        dispatch(modify('operations', response.data));
       });
   } else {
     console.log('Not supported building non-docker');
@@ -107,7 +107,11 @@ export async function build(currentState, cancel, dispatch) {
       );
       const ticker = getLastLine(step.text);
       dispatch(
-        modifyState({building: step.id, tickertext: ticker, percent: percent}),
+        modify('operations', {
+          building: step.id,
+          tickertext: ticker,
+          percent: percent,
+        }),
       );
       if (_.has(currentState.build_cache, step.hash)) {
         continue;
@@ -115,23 +119,23 @@ export async function build(currentState, cancel, dispatch) {
       await axios
         .post(`/build/${location}`, {build_order: step})
         .then(response => {
-          dispatch(modifyState(response.data));
+          dispatch(modify('operations', response.data));
         });
       current_cache[step.hash] = true;
       dispatch(
-        modifyState({
+        modify('cache', {
           build_cache: {...currentState.build_cache, ...current_cache},
         }),
       );
     }
-    dispatch(modifyState(blankOperations));
+    dispatch(modify('operations', blankOperations));
   } else if (location === 'pipeline') {
     console.log('---Building Pipeline---');
     let build_context = {};
     await axios
       .post('/gen_build/pipeline', {
-        vertices: currentState.pipeline_vertices,
-        fulltext: currentState.pipeline_fulltext,
+        vertices: currentState.vertices.present.pipeline,
+        corpus: currentState.corpus.pipeline,
         build_id: currentState.focus,
       })
       .then(response => {
@@ -143,16 +147,11 @@ export async function build(currentState, cancel, dispatch) {
       .then(response => {
         console.log('...built');
       });
-    dispatch(modifyState(blankOperations));
+    dispatch(modify('operations', blankOperations));
   } else {
     console.log('Not supported building besides docker or pipeline locations');
   }
 }
 
 // TODO Make this work across the board
-export const clearDiagram = location =>
-  modifyState({
-    ...blankOperations,
-    [`${location}_vertices`]: [],
-    [`${location}_fulltext`]: new Map(),
-  });
+export const clearDiagram = location => modify('vertices', {[location]: []});

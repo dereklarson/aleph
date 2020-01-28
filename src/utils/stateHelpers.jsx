@@ -1,14 +1,15 @@
 // @format
 import _ from 'lodash';
 
-export function genLocationData(loc, defaults = {}) {
-  return loc.reduce((data, name) => {
-    data[`${name}_vertices`] = _.get(defaults, 'vertices', []);
-    data[`${name}_library`] = _.get(defaults, 'library', {});
-    data[`${name}_fulltext`] = _.get(defaults, 'fulltext', new Map());
-    data[`${name}_diagrams`] = _.get(defaults, 'saved', {});
-    return data;
-  }, {});
+export function genCoreData(categories, locations) {
+  let output = {};
+  for (const [category, def] of Object.entries(categories)) {
+    output[category] = locations.reduce((data, name) => {
+      data[name] = _.cloneDeep(def);
+      return data;
+    }, {});
+  }
+  return output;
 }
 
 export const librarySample = {
@@ -28,16 +29,16 @@ export function genLibrary(names) {
 }
 
 export function genGreatLibrary(locations, namedict = {def: ['sample']}) {
-  return locations.reduce((great_library, location) => {
+  return locations.reduce((library, location) => {
     let names = _.get(namedict, location, _.get(namedict, 'def', []));
-    great_library[`${location}_library`] = genLibrary(names);
-    return great_library;
+    library[location] = genLibrary(names);
+    return library;
   }, {});
 }
 
 export const requestSave = {
   texting: true,
-  entry_schema: {
+  schema: {
     title: 'Enter Org Info',
     dispatch: false,
     keys: {
@@ -48,7 +49,7 @@ export const requestSave = {
 
 export const requestOrg = {
   texting: true,
-  entry_schema: {
+  schema: {
     title: 'Enter Org Info',
     dispatch: true,
     keys: {
@@ -60,8 +61,8 @@ export const requestOrg = {
 
 export const godMode = {
   texting: true,
-  entry_schema: {
-    title: 'Enter Org Info',
+  schema: {
+    title: 'Godmode',
     dispatch: true,
     godmode: 1,
   },

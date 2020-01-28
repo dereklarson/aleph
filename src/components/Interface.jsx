@@ -11,20 +11,26 @@ import TextEntry from '@common/TextEntry';
 import {GlobalHotKeys} from 'react-hotkeys';
 import {useStyles} from '@style/styling';
 import {themePicker} from '@style/theme';
-// import {ActionCreators as UndoAC} from 'redux-undo';
+import {ActionCreators as UndoAC} from 'redux-undo';
 
-export function PureInterface({themeStr, editing, texting}) {
+export function PureInterface({themeStr, editing, texting, dispatch}) {
   const classes = useStyles();
 
   const theme = themePicker[themeStr];
 
   const globalKeyMap = {
     UNDO: ['command+z'],
+    REDO: ['command+shift+z'],
   };
 
   const globalHandlers = {
     UNDO: event => {
       console.log('Undoing...');
+      dispatch(UndoAC.undo());
+    },
+    REDO: event => {
+      console.log('Redoing...');
+      dispatch(UndoAC.redo());
     },
   };
 
@@ -44,7 +50,7 @@ export function PureInterface({themeStr, editing, texting}) {
 }
 
 export default connect(state => ({
-  themeStr: state.theme,
-  editing: state.editing,
-  texting: state.texting,
+  themeStr: state.context.theme,
+  editing: state.context.editing,
+  texting: state.context.texting,
 }))(PureInterface);

@@ -1,6 +1,6 @@
 // @format
 import axios from 'axios';
-import {saveCheckpoint, loadCheckpoint, modifyState} from './loaders';
+import {saveCheckpoint, loadCheckpoint, modify} from './loaders';
 import {sleep} from './helpers';
 import {tutorialInitialState} from './stateReference';
 
@@ -14,7 +14,7 @@ export async function playTutorial(tutorialName, state, cancel, dispatch) {
     });
   console.log(steps);
   saveCheckpoint('system', state);
-  dispatch(modifyState(tutorialInitialState));
+  dispatch(modify('vertices', tutorialInitialState));
   for (const [index, step] of steps.entries()) {
     if (cancel.current === true) {
       cancel.current = false;
@@ -22,7 +22,11 @@ export async function playTutorial(tutorialName, state, cancel, dispatch) {
     }
     const percent = Math.floor((100 * index) / steps.length);
     dispatch(
-      modifyState({tickertext: step.text, percent: percent, ...step.state}),
+      modify('operations', {
+        tickertext: step.text,
+        percent: percent,
+        ...step.state,
+      }),
     );
     await sleep(1000);
   }

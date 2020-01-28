@@ -13,7 +13,7 @@ const tooltips = {
   standard: 'Standard nodes can be added anywhere after base nodes',
 };
 
-export function PureDepot({onVertexDrop, library}) {
+export function PureDepot({location, onVertexDrop, library}) {
   const classes = useStyles();
   const libraryInput = _.sortBy(Object.values(library), 'type');
   const itemDisplay = [];
@@ -39,7 +39,7 @@ export function PureDepot({onVertexDrop, library}) {
 
   const [{highlighted}, drop] = useDrop({
     accept: 'Vertex',
-    drop: item => onVertexDrop(item.id),
+    drop: item => onVertexDrop(location, item.id),
     collect: monitor => ({
       highlighted: monitor.canDrop(),
     }),
@@ -61,12 +61,18 @@ export function PureDepot({onVertexDrop, library}) {
   );
 }
 
-export const removeVertex = from => ({
+export const removeVertex = (location, from) => ({
   type: 'REMOVE_VERTEX',
+  location: location,
   vertex: from,
 });
 
 export default connect(
-  state => ({library: state[`${state.location}_library`]}),
-  dispatch => ({onVertexDrop: vertexId => dispatch(removeVertex(vertexId))}),
+  state => ({
+    location: state.context.location,
+    library: state.library[state.context.location],
+  }),
+  dispatch => ({
+    onVertexDrop: (loc, vertexId) => dispatch(removeVertex(loc, vertexId)),
+  }),
 )(PureDepot);

@@ -2,14 +2,14 @@
 import _ from 'lodash';
 
 // Looks back through the vertex lineage to get all ancestors associated with it
-export function getAncestry(state, vertexId) {
-  let currVertex = state[`${state.location}_vertices`][vertexId];
+export function getAncestry(vertices, vertexId) {
+  let currVertex = vertices[vertexId];
   let ancestors = [];
   let sections = _.clone(currVertex.sections);
   let aIdx = 0;
   while (currVertex.parents.length !== 0) {
     ancestors = ancestors.concat(_.clone(currVertex.parents));
-    currVertex = state[`${state.location}_vertices`][ancestors[aIdx]];
+    currVertex = vertices[ancestors[aIdx]];
     sections = sections.concat(_.clone(currVertex.sections));
     aIdx++;
   }

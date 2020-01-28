@@ -37,38 +37,43 @@ export const coveredState = {
 };
 
 export const sectionedVertices = {
-  docker_vertices: [
-    {
-      children: [1],
-      name: 'ubuntu',
-      parents: [],
-      sections: ['ubuntu'],
+  vertices: {
+    present: {
+      docker: [
+        {
+          children: [1],
+          name: 'ubuntu',
+          parents: [],
+          sections: ['ubuntu'],
+        },
+        {
+          children: [],
+          name: 'python',
+          parents: [0],
+          sections: ['python'],
+        },
+      ],
     },
-    {
-      children: [],
-      name: 'python',
-      parents: [0],
-      sections: ['python'],
-    },
-  ],
-  docker_library: genLibrary(['ubuntu', 'python', 'capnproto']),
+  },
+  library: {docker: genLibrary(['ubuntu', 'python', 'capnproto'])},
 };
 
 export const sectionState = {
   ...blankState,
   ...sectionedVertices,
-  location: 'docker',
 };
 
 export const excitedState = {
   ...blankState,
-  dagre: true,
-  focus: 0,
-  location: 'docker',
-  tickertext: 'The most fabulous state in town',
-  percent: 80,
-  building: 2,
-  build_orders: [{id: 1}],
-  docker_vertices: _.cloneDeep(coveredState.large_vertices),
-  docker_library: _.cloneDeep(coveredState.medium_library),
+  config: {present: {organization: {name: 'Top Dog'}}},
+  context: {...blankState.context, dagre: true, focus: 0},
+  operations: {
+    ...blankState.operations,
+    tickertext: 'The most fabulous state in town',
+    percent: 80,
+    building: 2,
+    build_orders: [{id: 1}],
+  },
+  vertices: {present: {docker: _.cloneDeep(coveredState.large_vertices)}},
+  library: {docker: _.cloneDeep(coveredState.medium_library)},
 };

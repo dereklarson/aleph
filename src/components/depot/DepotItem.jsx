@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {useDrag, DragPreviewImage} from 'react-dnd';
 import Chip from '@material-ui/core/Chip';
 import {capitalizeFirstLetter} from '@utils/helpers';
-import {modifyState} from '@utils/loaders';
+import {modify} from '@utils/loaders';
 import {useStyles} from '@style/styling';
 
 export function DepotItem({itemProps, onClick}) {
@@ -32,5 +32,5 @@ export function DepotItem({itemProps, onClick}) {
 }
 
 export default connect(null, dispatch => ({
-  onClick: name => dispatch(modifyState({editor: name, editing: true})),
+  onClick: name => dispatch(modify('context', {editor: name, editing: true})),
 }))(DepotItem);

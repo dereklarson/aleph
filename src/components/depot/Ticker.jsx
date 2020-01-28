@@ -9,17 +9,14 @@ import Fab from '@material-ui/core/Fab';
 import {Progress} from 'react-sweet-progress';
 import 'react-sweet-progress/lib/style.css';
 import LogPopup from '@common/LogPopup';
-import {modifyState} from '@utils/loaders';
 import {useStyles} from '@style/styling';
 import {loadCore} from '@utils/loaders';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 export function PureTicker({
   location,
-  logs,
-  percent,
-  tickertext,
   dagre,
+  operations,
   onDagre,
   onLoadLibrary,
 }) {
@@ -34,11 +31,15 @@ export function PureTicker({
         placement="bottom"
         enterDelay={500}>
         <Typography noWrap={true} className={classes.ticker} variant="body2">
-          {tickertext}
+          {operations.tickertext}
         </Typography>
       </Tooltip>
-      <Progress percent={percent} />
-      <LogPopup open={logOpen} text={logs} onClose={() => openLog(false)} />
+      <Progress percent={operations.percent} />
+      <LogPopup
+        open={logOpen}
+        text={operations.logs}
+        onClose={() => openLog(false)}
+      />
       <Fab onClick={() => openLog(true)}>
         <SubjectIcon />
       </Fab>
@@ -54,14 +55,13 @@ export function PureTicker({
 
 export default connect(
   state => ({
-    location: state.location,
-    logs: state.stdout,
-    percent: state.percent,
-    tickertext: state.tickertext,
-    dagre: state.dagre,
+    location: state.context.location,
+    dagre: state.context.dagre,
+    operations: state.operations,
   }),
   dispatch => ({
-    onDagre: dagre => dispatch(modifyState({dagre: !dagre})),
+    onDagre: dagre =>
+      dispatch({type: 'MODIFY_CONTEXT', update: {dagre: !dagre}}),
     onLoadLibrary: location => dispatch(loadCore('library', location)),
   }),
 )(PureTicker);

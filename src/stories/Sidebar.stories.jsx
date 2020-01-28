@@ -12,7 +12,7 @@ export default genStoryEntry(3, TestComponent, {
 
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
-  location: excitedState.location,
+  location: excitedState.context.location,
 };
 
 // Produce a function 'genStory' that can generate a story from hand-tweaked properties

@@ -1,6 +1,6 @@
 // @format
 import {vertexDataFromPaths} from './vertexHelpers';
-import {genLocationData, genGreatLibrary} from './stateHelpers';
+import {genCoreData, genGreatLibrary} from './stateHelpers';
 import _ from 'lodash';
 
 // We have five main categories of state data: context, ops, cache, config, and location
@@ -17,8 +17,8 @@ export const blankContext = {
   location: 'docker',
   editing: false,
   editor: null,
+  schema: {title: '', keys: {}},
   texting: false,
-  entry_schema: {title: '', keys: {}},
   func: () => 0,
 };
 
@@ -27,6 +27,7 @@ export const blankOperations = {
   percent: 100,
   building: null,
   build_orders: [],
+  stdout: '',
 };
 
 export const blankCache = {
@@ -41,32 +42,34 @@ export const blankConfig = {
   },
 };
 
+const categories = {
+  vertices: vertexDataFromPaths([['Parent', 'Child']]),
+  library: {},
+  corpus: new Map(),
+  diagrams: {},
+};
 const locations = ['docker', 'pipeline', 'data', 'configuration'];
-const locationData = genLocationData(locations, {});
+const locationData = genCoreData(categories, locations, {});
 
 export const blankState = {
-  ..._.cloneDeep(blankContext),
-  ..._.cloneDeep(blankOperations),
-  ..._.cloneDeep(blankCache),
-  ..._.cloneDeep(blankConfig),
+  context: _.cloneDeep(blankContext),
+  operations: _.cloneDeep(blankOperations),
+  cache: _.cloneDeep(blankCache),
+  config: _.cloneDeep(blankConfig),
   ..._.cloneDeep(locationData),
 };
 
 // State we would first see if nothing else is loaded via Axios
 export const initState = {
   ..._.cloneDeep(blankState),
-  ...genGreatLibrary(locations),
-  pipeline_vertices: vertexDataFromPaths([['Parent', 'Child']]),
-  configuration_vertices: vertexDataFromPaths([
-    ['Control', 'Worker'],
-    ['Control', 'Dev'],
-  ]),
+  library: genGreatLibrary(locations),
 };
+console.log(initState);
 
 // State a tutorial will set prior to running
 export const tutorialInitialState = {
-  ..._.cloneDeep(blankContext),
-  ..._.cloneDeep(blankOperations),
+  context: _.cloneDeep(blankContext),
+  operations: _.cloneDeep(blankOperations),
   docker_vertices: [],
   docker_fulltext: new Map(),
 };

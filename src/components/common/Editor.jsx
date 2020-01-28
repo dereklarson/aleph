@@ -4,17 +4,17 @@ import {connect} from 'react-redux';
 import AceEditor from 'react-ace';
 import Popup from 'reactjs-popup';
 import _ from 'lodash';
-import {modifyState} from '@utils/loaders';
+import {modify} from '@utils/loaders';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
-export function Editor({editor, text, open, onClose}) {
+export function Editor({location, editor, text, open, onClose}) {
   let currtext = text;
   const onChange = (value, event) => {
     currtext = value;
   };
-  const closeModal = () => onClose(currtext, editor);
+  const closeModal = () => onClose(location, editor, currtext);
   return (
     <Popup open={open} closeOnDocumentClick onClose={closeModal}>
       <div className="modal">
@@ -30,29 +30,32 @@ export function Editor({editor, text, open, onClose}) {
   );
 }
 
-const setNodeFulltext = (text, editor) => ({
-  type: 'SET_TEXT',
+const setNodeFulltext = (location, editor, text) => ({
+  type: 'WRITE_TEXT',
+  location: location,
   editor: editor,
   text: text,
 });
 
 function actionDispatch(dispatch) {
   return {
-    onClose: (text, editor) => {
-      dispatch(setNodeFulltext(text, editor));
-      dispatch(modifyState({editor: null, editing: false}));
+    onClose: (location, editor, text) => {
+      dispatch(setNodeFulltext(location, editor, text));
+      dispatch(modify('context', {editor: null, editing: false}));
     },
   };
 }
 
 export default connect(
   state => ({
-    editor: state.editor,
+    location: state.context.location,
+    editor: state.context.editor,
     text:
-      state.editor === 'vertex'
-        ? state[`${state.location}_fulltext`][state.focus]
-        : _.get(state[`${state.location}_library`], state.editor, {text: ''})
-            .text,
+      state.context.editor === 'vertex'
+        ? state.corpus[state.context.location][state.context.focus]
+        : _.get(state.library[state.context.location], state.context.editor, {
+            text: '',
+          }).text,
   }),
   actionDispatch,
 )(Editor);
