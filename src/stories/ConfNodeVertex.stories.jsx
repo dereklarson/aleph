@@ -1,5 +1,4 @@
 // @format
-import React from 'react';
 import {genStoryEntry, getCollageGenerator} from './testHelpers';
 import {excitedState} from './testStates';
 import ConfigNodeVertex from '@diagram/ConfigNodeVertex';

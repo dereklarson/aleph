@@ -1,5 +1,4 @@
 // @format
-import React from 'react';
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
 import {excitedState, coveredState} from './testStates';
 import {PureDiagram} from '@diagram/Diagram';

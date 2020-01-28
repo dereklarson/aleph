@@ -18,12 +18,13 @@ export function PureDepot({onVertexDrop, library}) {
   const libraryInput = _.sortBy(Object.values(library), 'type');
   const itemDisplay = [];
   const dividers = {};
-  for (const item of libraryInput) {
+  libraryInput.forEach(function(item, index) {
     const itemtype = _.get(item, 'type', 'standard');
     if (!_.has(dividers, itemtype)) {
       dividers[itemtype] = itemtype;
       itemDisplay.push(
         <Tooltip
+          key={100 + index}
           title={_.get(tooltips, itemtype, '(No description)')}
           placement="bottom"
           enterDelay={500}>
@@ -33,8 +34,8 @@ export function PureDepot({onVertexDrop, library}) {
         </Tooltip>,
       );
     }
-    itemDisplay.push(<DepotItem itemProps={item} />);
-  }
+    itemDisplay.push(<DepotItem key={index} itemProps={item} />);
+  });
 
   const [{highlighted}, drop] = useDrop({
     accept: 'Vertex',

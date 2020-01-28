@@ -15,13 +15,12 @@ export function PureTextEntry({open, schema, func, dispatch}) {
   const classes = useStyles();
 
   let fieldText = {};
-  let editorText;
   const onEditorChange = (value, event) => {
     fieldText = value;
   };
 
   let itemDisplay = [];
-  for (const [key, value] of Object.entries(_.get(schema, 'keys', []))) {
+  for (const key of Object.values(_.get(schema, 'keys', []))) {
     let defProps = {};
     // Autofocus on our first text entry field
     if (itemDisplay.length === 0) defProps['autoFocus'] = true;

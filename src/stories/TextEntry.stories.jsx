@@ -1,5 +1,4 @@
 // @format
-import React from 'react';
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
 import {excitedState} from './testStates';
 import {PureTextEntry} from '@common/TextEntry';

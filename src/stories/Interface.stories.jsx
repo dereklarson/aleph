@@ -4,6 +4,7 @@ import {text, boolean} from '@storybook/addon-knobs';
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
 import {excitedState} from './testStates';
 import {PureInterface} from '@comp/Interface';
+import {GlobalHotKeys} from 'react-hotkeys';
 
 const TestComponent = PureInterface;
 // Generate a Storybook entry based on the following key args (order, component, state)
@@ -18,8 +19,22 @@ export const testData = {};
 const boxProps = {squaresize: 1200};
 let genStory = getStoryGenerator(TestComponent, boxProps, testData);
 
+const globalKeyMap = {
+  UNDO: ['command+z'],
+};
+
+const globalHandlers = {
+  UNDO: event => console.log('Undoing...'),
+};
+
 // TESTS
 export const unbounded = () => <TestComponent {...testData} />;
+export const hotkeys = () => (
+  <div>
+    <GlobalHotKeys keyMap={globalKeyMap} handlers={globalHandlers} />
+    <TestComponent {...testData} />;
+  </div>
+);
 export const dynamic = () =>
   genStory({
     themeStr: text('theme', 'dark'),

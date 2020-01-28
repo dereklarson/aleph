@@ -1,7 +1,6 @@
 // @format
-import React from 'react';
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
-import {coveredState, blankState} from './testStates';
+import {coveredState} from './testStates';
 import {excitedState} from './testStates';
 import {PureDepot} from '@depot/Depot';
 

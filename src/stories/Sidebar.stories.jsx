@@ -1,6 +1,4 @@
 // @format
-import React from 'react';
-import {action} from '@storybook/addon-actions';
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
 import {coveredState, excitedState} from './testStates';
 import {PureSidebar} from '@sidebar/Sidebar';

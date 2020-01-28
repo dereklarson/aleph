@@ -33,7 +33,7 @@ export function PureTicker({
         title="Displays currently running build cmd"
         placement="bottom"
         enterDelay={500}>
-        <Typography noWrap="true" className={classes.ticker} variant="body2">
+        <Typography noWrap={true} className={classes.ticker} variant="body2">
           {tickertext}
         </Typography>
       </Tooltip>

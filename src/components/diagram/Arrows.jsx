@@ -2,20 +2,21 @@
 import React from 'react';
 import {ArrowMarker, computePathstring} from './svgTools';
 
-function renderArrow(arrow) {
+function renderArrow(arrow, index) {
   return (
     <path
+      key={index}
       d={computePathstring(arrow.start, arrow.end)}
       style={{fill: 'none', stroke: 'black', strokeWidth: '0.5'}}
-      marker-end="url(#triangle)"
+      markerEnd="url(#triangle)"
     />
   );
 }
 
 export default function Arrows({arrows}) {
   const arrowDisplay = [];
-  arrows.forEach(function(arrow) {
-    arrowDisplay.push(renderArrow(arrow));
+  arrows.forEach(function(arrow, index) {
+    arrowDisplay.push(renderArrow(arrow, index));
   });
 
   return (

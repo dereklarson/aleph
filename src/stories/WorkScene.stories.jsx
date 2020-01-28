@@ -1,5 +1,4 @@
 // @format
-import React from 'react';
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
 import {sectionState} from './testStates';
 import Workspace from '@comp/Workspace';

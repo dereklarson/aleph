@@ -1,5 +1,4 @@
 // @format
-import React from 'react';
 import {text} from '@storybook/addon-knobs';
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
 import {excitedState} from './testStates';

@@ -2,7 +2,19 @@
 // NOTES
 // We generally use Object.assign at the base level, as spread {...} is shallow only
 
+import undoable, {distinctState} from 'redux-undo';
 import {vertexAdder} from './vertexHelpers';
+
+const plocManip = (state, action) => {
+  switch (action.type) {
+    case 'NAVIGATE':
+      return Object.assign({}, state, {location: action.location});
+    default:
+      return state;
+  }
+};
+
+const locManip = undoable(plocManip); //, {filter: distinctState()});
 
 const controlDiagram = (state, action) => {
   const loc_fulltext = `${state.location}_fulltext`;
@@ -171,4 +183,23 @@ const controlDiagram = (state, action) => {
   }
 };
 
-export default controlDiagram;
+function combineReducers(reducers) {
+  return function(state = {}, action) {
+    return Object.keys(reducers).reduce((nextState, key) => {
+      console.log(key);
+      if (key === 'locManip') {
+        nextState[key] = reducers[key](state[key], action);
+      } else {
+        nextState = reducers[key](state, action);
+      }
+      return nextState;
+    }, {});
+  };
+}
+
+const rootReducer = combineReducers({
+  controlDiagram,
+  locManip,
+});
+
+export default rootReducer;

@@ -34,25 +34,27 @@ export function applyTooltip(child, title = 'no tooltip', key = null) {
 
 export function generateButtons(options, icon = 'def', tooltipBase = '') {
   let itemDisplay = [];
-  for (const config of options) {
+  options.forEach(function(config, index) {
     itemDisplay.push(
-      applyTooltip(
-        <IconButton color="inherit" onClick={config[1]}>
-          {_.get(iconSource, config[0], _.get(iconSource, icon))}
-        </IconButton>,
-        tooltipBase,
-        config[0],
-      ),
+      <div key={index}>
+        {applyTooltip(
+          <IconButton color="inherit" onClick={config[1]}>
+            {_.get(iconSource, config[0], _.get(iconSource, icon))}
+          </IconButton>,
+          tooltipBase,
+          config[0],
+        )}
+      </div>,
     );
-  }
+  });
   return itemDisplay;
 }
 
 export function generateList(options, tooltipBase = '', icon = 'def') {
   let itemDisplay = [];
-  for (const config of options) {
+  options.forEach(function(config, index) {
     itemDisplay.push(
-      <ListItem button onClick={config[1]}>
+      <ListItem key={index} button onClick={config[1]}>
         <ListItemIcon>
           {_.get(iconSource, config[0], _.get(iconSource, icon))}
         </ListItemIcon>
@@ -63,6 +65,6 @@ export function generateList(options, tooltipBase = '', icon = 'def') {
         )}
       </ListItem>,
     );
-  }
+  });
   return itemDisplay;
 }

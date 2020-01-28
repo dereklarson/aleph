@@ -2,11 +2,7 @@
 import React from 'react';
 import {action} from '@storybook/addon-actions';
 import {text} from '@storybook/addon-knobs';
-import {
-  genStoryEntry,
-  getStoryGenerator,
-  getCollageGenerator,
-} from './testHelpers';
+import {genStoryEntry, getCollageGenerator} from './testHelpers';
 import {excitedState} from './testStates';
 import {PureCardVertex} from '@comp/diagram/CardVertex';
 
@@ -35,7 +31,6 @@ export const testData = {
 // Produce a function 'genStory' that can generate a story from hand-tweaked properties
 const boxProps = {squaresize: 300};
 const windowProps = {squaresize: 800};
-let genStory = getStoryGenerator(TestComponent, boxProps, testData);
 let genCollage = getCollageGenerator(
   TestComponent,
   windowProps,
