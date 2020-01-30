@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {useDrag, DragPreviewImage} from 'react-dnd';
 import Chip from '@material-ui/core/Chip';
 import {capitalizeFirstLetter} from '@utils/helpers';
-import {modify, writeText} from '@utils/reducers';
+import {modify, writeText} from '@data/reducers';
 import {useStyles} from '@style/styling';
 
 export function DepotItem({itemProps, location, onClick}) {

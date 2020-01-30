@@ -1,7 +1,7 @@
 // @format
 import _ from 'lodash';
-import {vertexDataFromPaths} from '../utils/vertexHelpers';
-import {genLibrary} from '../utils/stateHelpers';
+import {vertexDataFromPaths} from '../utils/vertex';
+import {genLibrary} from '../utils/state';
 import {blankState} from '../utils/stateReference';
 
 export const coveredState = {

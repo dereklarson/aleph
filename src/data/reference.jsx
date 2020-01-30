@@ -1,6 +1,6 @@
 // @format
-import {vertexDataFromPaths} from './vertexHelpers';
-import {genCoreData, genGreatLibrary} from './stateHelpers';
+import {vertexDataFromPaths} from '@utils/vertex';
+import {genCoreData, genGreatLibrary} from '@utils/state';
 import _ from 'lodash';
 
 // We have five main categories of state data: context, ops, cache, config, and location

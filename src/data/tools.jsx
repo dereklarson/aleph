@@ -1,6 +1,6 @@
 // @format
 import {createSlice} from '@reduxjs/toolkit';
-import {initState} from './stateReference';
+import {initState} from '@data/reference';
 
 export function genSlice(name, extraReducers = {}) {
   const slice = createSlice({

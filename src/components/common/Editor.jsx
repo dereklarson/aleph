@@ -4,8 +4,8 @@ import {connect} from 'react-redux';
 import AceEditor from 'react-ace';
 import Popup from 'reactjs-popup';
 // import _ from 'lodash';
-import {notEditingState} from '@utils/stateHelpers';
-import {modify} from '@utils/reducers';
+import {modify} from '@data/reducers';
+import {notEditingState} from '@utils/state';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';

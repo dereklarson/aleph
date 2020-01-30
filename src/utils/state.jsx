@@ -52,7 +52,6 @@ export const requestSave = {
   texting: true,
   schema: {
     title: 'Save the current diagram',
-    dispatch: true,
     keys: {
       savename: 1,
     },
@@ -63,7 +62,6 @@ export const requestOrg = {
   texting: true,
   schema: {
     title: 'Enter Org Info',
-    dispatch: true,
     keys: {
       name: 1,
       uid: 1,
@@ -76,7 +74,6 @@ export const godMode = {
   texting: true,
   schema: {
     title: 'Godmode',
-    dispatch: true,
     godmode: 1,
   },
 };

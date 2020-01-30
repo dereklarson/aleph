@@ -8,7 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import {Chip, TextField} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {propsToStyle} from '@utils/helpers';
-import {removeSection, renameVertex, setText} from '@utils/reducers';
+import {removeSection, renameVertex, setText, clearText} from '@data/reducers';
 import {createText} from '@utils/helpers';
 
 export function PureCardVertex({
@@ -69,8 +69,14 @@ export function PureCardVertex({
 
 function actionDispatch(dispatch) {
   return {
-    onChange: payload => dispatch(renameVertex(payload)),
-    onChipDelete: payload => dispatch(removeSection(payload)),
+    onChange: payload => {
+      dispatch(renameVertex(payload));
+      dispatch(clearText(payload));
+    },
+    onChipDelete: payload => {
+      dispatch(removeSection(payload));
+      dispatch(clearText(payload));
+    },
   };
 }
 

@@ -9,7 +9,7 @@ import Arrows from './Arrows';
 import Vertices from './Vertices';
 import {calculateDiagramPositions} from './diagramDrawing';
 import {useStyles} from '@style/styling';
-import {modify, addVertex} from '@utils/reducers';
+import {modify, addVertex} from '@data/reducers';
 
 export function PureDiagram({
   location,

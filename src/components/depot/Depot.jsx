@@ -7,7 +7,7 @@ import _ from 'lodash';
 import DepotItem from './DepotItem';
 import {capitalizeFirstLetter} from '@utils/helpers';
 import {useStyles} from '@style/styling';
-import {removeVertex} from '@utils/reducers';
+import {removeVertex, clearText} from '@data/reducers';
 
 const tooltips = {
   base: "Base items are starting points, OS's and public images",
@@ -68,6 +68,9 @@ export default connect(
     library: state.library[state.context.location],
   }),
   dispatch => ({
-    onVertexDrop: payload => dispatch(removeVertex(payload)),
+    onVertexDrop: payload => {
+      dispatch(removeVertex(payload));
+      dispatch(clearText(payload));
+    },
   }),
 )(PureDepot);

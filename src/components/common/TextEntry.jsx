@@ -5,14 +5,15 @@ import {Button, TextField, Dialog} from '@material-ui/core';
 import {DialogActions, DialogTitle, DialogContent} from '@material-ui/core';
 import AceEditor from 'react-ace';
 import _ from 'lodash';
-import {notTextingState} from '@utils/stateHelpers';
-import {modify} from '@utils/reducers';
+import {modify} from '@data/reducers';
 import {useStyles} from '@style/styling';
+import {notTextingState} from '@utils/state';
+import {saveDiagram} from '@ops/load';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
-export function PureTextEntry({open, schema, editfunc, dispatch}) {
+export function PureTextEntry({open, location, schema, editfunc, dispatch}) {
   const classes = useStyles();
   let [fieldText, setFieldText] = React.useState({});
 
@@ -53,10 +54,13 @@ export function PureTextEntry({open, schema, editfunc, dispatch}) {
 
   const onCancel = () => dispatch(modify('context', {...notTextingState}));
   const onDone = () => {
+    if (_.has(fieldText, 'savename')) {
+      console.log('Triggering save');
+      dispatch(saveDiagram(location, fieldText.savename));
+    } else {
+      dispatch(callfunc(fieldText));
+    }
     dispatch(modify('context', {...notTextingState}));
-    console.log(callfunc(fieldText));
-    if (_.get(schema, 'dispatch', true)) dispatch(callfunc(fieldText));
-    else callfunc(fieldText);
   };
 
   return (
@@ -76,6 +80,7 @@ export function PureTextEntry({open, schema, editfunc, dispatch}) {
 }
 
 export default connect(state => ({
+  location: state.context.location,
   schema: state.context.schema,
   editfunc: state.context.editfunc,
 }))(PureTextEntry);

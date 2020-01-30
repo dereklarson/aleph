@@ -3,9 +3,9 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
 import _ from 'lodash';
-import {addVertex, linkVertex} from '@utils/reducers';
+import {addVertex, linkVertex} from '@data/reducers';
 import {useStyles} from '@style/styling';
-import {getAncestry} from '@utils/vertexHelpers';
+import {getAncestry} from '@utils/vertex';
 
 export function ChildHandle({location, vertexId, vertices, onDrop}) {
   const classes = useStyles();

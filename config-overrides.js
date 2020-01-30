@@ -4,6 +4,8 @@ const resolve = dir => path.resolve(__dirname, dir);
 
 module.exports = function(config, env) {
   config.resolve.alias = Object.assign(config.resolve.alias, {
+    "@data": resolve("src/data"),
+    "@ops": resolve("src/operations"),
     "@utils": resolve("src/utils"),
     "@style": resolve("src/style"),
     "@comp": resolve("src/components"),

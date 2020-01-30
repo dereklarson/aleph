@@ -3,21 +3,22 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrag, useDrop, DragPreviewImage} from 'react-dnd';
 import _ from 'lodash';
-import {prepareFocusedBuild} from '@utils/loaders';
-import {modify} from '@utils/reducers';
+import {prepareFocusedBuild} from '@ops/build';
+import {modify} from '@data/reducers';
 import {
   addSection,
   removeAllSections,
+  clearText,
   linkVertex,
   unlinkVertex,
-} from '@utils/reducers';
+} from '@data/reducers';
 import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigNodeVertex from './ConfigNodeVertex';
 import ChildHandle from './ChildHandle';
 import ParentHandle from './ParentHandle';
 import {HotKeys} from 'react-hotkeys';
-import {getAncestry} from '@utils/vertexHelpers';
+import {getAncestry} from '@utils/vertex';
 
 export function PureVertex({
   location,
@@ -126,11 +127,17 @@ function actionDispatch(dispatch) {
       onEditor: payload =>
         dispatch(modify('context', {...payload, editing: true})),
       onBuild: () => dispatch(prepareFocusedBuild()),
-      onClear: payload => dispatch(removeAllSections(payload)),
+      onClear: payload => {
+        dispatch(removeAllSections(payload));
+        dispatch(clearText(payload));
+      },
     },
     dropActions: {
       Vertex: payload => dispatch(linkVertex(payload)),
-      DepotItem: payload => dispatch(addSection(payload)),
+      DepotItem: payload => {
+        dispatch(addSection(payload));
+        dispatch(clearText(payload));
+      },
       Unlink: payload => dispatch(unlinkVertex(payload)),
     },
   };

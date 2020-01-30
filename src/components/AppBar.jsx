@@ -4,13 +4,13 @@ import {connect} from 'react-redux';
 import {AppBar, Toolbar, Typography} from '@material-ui/core';
 import _ from 'lodash';
 import {useStyles} from '@style/styling';
-import {saveCheckpoint, loadCheckpoint} from '@utils/loaders';
-import {loadInputs, loadOrg} from '@utils/loaders';
+import {modify} from '@data/reducers';
+import {saveCheckpoint, loadCheckpoint} from '@ops/load';
+import {loadInputs, loadOrg} from '@ops/load';
 import {generateButtons} from '@utils/generateList';
 import {playTutorial} from '@utils/tutorial';
 import {capitalizeFirstLetter} from '@utils/helpers';
-import {requestOrg, godMode} from '@utils/stateHelpers';
-import {modify} from '@utils/reducers';
+import {requestOrg, godMode} from '@utils/state';
 
 export function PureAppBar({
   config,

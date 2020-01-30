@@ -1,9 +1,9 @@
 // @format
 import axios from 'axios';
-import {saveCheckpoint, loadCheckpoint} from './loaders';
-import {modify} from './reducers';
+import {saveCheckpoint, loadCheckpoint} from '@ops/load';
+import {modify} from '@data/reducers';
+import {tutorialInitialState} from '@data/reference';
 import {sleep} from './helpers';
-import {tutorialInitialState} from './stateReference';
 
 export async function playTutorial(tutorialName, state, cancel, dispatch) {
   console.log('---Building---', tutorialName);

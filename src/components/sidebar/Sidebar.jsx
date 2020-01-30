@@ -7,7 +7,7 @@ import BulkActions from './BulkActions';
 import SavedDiagrams from './SavedDiagrams';
 import {generateList} from '@utils/generateList';
 import {useStyles} from '@style/styling';
-import {modify} from '@utils/reducers';
+import {modify} from '@data/reducers';
 
 // TODO add this back in
 // selected={location === config[0]}>

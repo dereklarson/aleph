@@ -1,3 +1,3 @@
 // @format
-import {vertexDataFromPaths} from './vertexHelpers';
+import {vertexDataFromPaths} from './vertex';
 import _ from 'lodash';

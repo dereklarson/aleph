@@ -2,12 +2,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
-import {build, saveDiagram} from '@utils/loaders';
-import {loadCore} from '@utils/loaders';
+import {blankOperations} from '@data/reference';
+import {modify} from '@data/reducers';
+import {saveDiagram, loadCore} from '@ops/load';
+import {buildDocker} from '@ops/build';
 import {generateList} from '@utils/generateList';
-import {blankOperations} from '@utils/stateReference';
-import {requestSave} from '@utils/stateHelpers';
-import {modify} from '@utils/reducers';
+import {requestSave} from '@utils/state';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
@@ -27,16 +27,12 @@ function BulkActions({
     else onClearBuild();
   };
 
-  const savefunc = fieldText => {
-    saveDiagram(location, fieldText.savename);
-  };
-
   const actionOptions = [
     ['clear_diagram', () => onClear(location)],
     ['build_marked', () => onBuild(operations, cancel)],
     ['cancel_build', onCancel],
     ['refresh', () => onLoadSaved(location)],
-    ['save_diagram', () => onText(savefunc)],
+    ['save_diagram', () => onText()],
   ];
 
   return (
@@ -50,11 +46,10 @@ function BulkActions({
 function actionDispatch(dispatch) {
   return {
     onClear: location => dispatch(modify('vertices', {[location]: {}})),
-    onBuild: (operations, cancel) => dispatch(build(operations, cancel)),
+    onBuild: (operations, cancel) => dispatch(buildDocker(operations, cancel)),
     onClearBuild: () => dispatch(modify('operations', blankOperations)),
     onLoadSaved: location => dispatch(loadCore('diagrams', location)),
-    onText: savefunc =>
-      dispatch(modify('context', {...requestSave, editfunc: savefunc})),
+    onText: () => dispatch(modify('context', {...requestSave})),
   };
 }
 

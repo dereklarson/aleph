@@ -1,8 +1,8 @@
 // @format
 import undoable from 'redux-undo';
 import _ from 'lodash';
-import {vertexDataFromPaths} from './vertexHelpers';
-import {genSlice, stateLoc} from './storeUtils';
+import {vertexDataFromPaths} from '@utils/vertex';
+import {genSlice, stateLoc} from './tools';
 
 const configSlice = genSlice('config');
 const operationsSlice = genSlice('operations');
@@ -25,16 +25,26 @@ const corpusReducers = {
     }
     stateLoc(state, action.payload).text = action.payload.text;
   },
+  clearText(state, action) {
+    if (_.has(state[action.payload.location], action.payload.uid)) {
+      delete state[action.payload.location][action.payload.uid];
+    }
+  },
 };
 const corpusSlice = genSlice('corpus', corpusReducers);
-export const {setText} = corpusSlice.actions;
+export const {setText, clearText} = corpusSlice.actions;
 
 const vertexReducers = {
   addDiagram(state, action) {
-    Object.assign(
-      state[action.payload.location],
-      vertexDataFromPaths(state, action.payload.vertexgroups),
-    );
+    let content = action.payload.content;
+    if (_.has(content, 'paths')) {
+      Object.assign(
+        state[action.payload.location],
+        vertexDataFromPaths(content.paths),
+      );
+    } else if (_.has(content, 'vertices')) {
+      Object.assign(state[action.payload.location], content.vertices);
+    }
   },
   addVertex(state, action) {
     let uid = action.payload.uid;

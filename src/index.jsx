@@ -9,8 +9,8 @@ import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import {HotKeys} from 'react-hotkeys';
 import Interface from '@comp/Interface';
-import rootReducer from '@utils/reducers';
-import {initState} from '@utils/stateReference';
+import rootReducer from '@data/reducers';
+import {initState} from '@data/reference';
 
 const store = configureStore({
   reducer: rootReducer,
