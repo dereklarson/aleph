@@ -9,6 +9,7 @@ export function prepareFocusedBuild() {
   return async function(dispatch, getState) {
     let state = getState();
     let location = state.context.location;
+    let focus = state.context.focus;
     let vertices = state.vertices[location];
     let library = state.library[location];
     let corpus = generateCorpus({
@@ -20,11 +21,7 @@ export function prepareFocusedBuild() {
     if (location === 'docker') {
       console.log('---Preparing docker build for current focus---');
       axios
-        .post('/gen_build/docker', {
-          vertices,
-          corpus,
-          build_id: state.context.focus,
-        })
+        .post('/gen_build/docker', {vertices, corpus, build_id: focus})
         .then(response => {
           dispatch(modify('operations', response.data));
         });
@@ -32,11 +29,7 @@ export function prepareFocusedBuild() {
       console.log('---Building Pipeline from Focus---');
       let build_context = {};
       await axios
-        .post('/gen_build/pipeline', {
-          vertices,
-          corpus,
-          build_id: state.focus,
-        })
+        .post('/gen_build/pipeline', {vertices, corpus, build_id: focus})
         .then(response => {
           build_context = response.data.build_context;
         });

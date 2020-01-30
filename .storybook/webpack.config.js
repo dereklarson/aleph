@@ -4,6 +4,8 @@ const resolve = dir => path.resolve(__dirname, dir);
 module.exports = {
   resolve: {
     alias: {
+      "@data": resolve("../src/data"),
+      "@ops": resolve("../src/operations"),
       "@utils": resolve("../src/utils"),
       "@style": resolve("../src/style"),
       "@comp": resolve('../src/components'),

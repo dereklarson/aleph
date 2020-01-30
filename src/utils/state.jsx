@@ -40,6 +40,7 @@ export const notEditingState = {
   editing: false,
   edittext: '',
   editfunc: () => 0,
+  schema: {},
 };
 
 export const requestSave = {

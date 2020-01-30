@@ -74,10 +74,11 @@ export function PureTextEntry({
     }
     dispatch(modify('context', {...notEditingState}));
   };
+  const title = _.get(schema, 'title', 'TextEntry');
 
   return (
     <Dialog open={open} onClose={onCancel}>
-      <DialogTitle id="form-dialog-title">{schema.title}</DialogTitle>
+      <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>{itemDisplay}</DialogContent>
       <DialogActions>
         <Button onClick={onCancel} color="primary">
