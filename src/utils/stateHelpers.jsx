@@ -14,16 +14,16 @@ export function genCoreData(categories, locations) {
 
 export const librarySample = {
   sample: {
-    name: 'sample',
+    uid: 'sample',
     dependencies: [],
     text: '#Functional text will be here\n',
   },
 };
 
 export function genLibrary(names) {
-  return names.reduce((library, name) => {
-    library[name] = _.cloneDeep(librarySample.sample);
-    library[name]['name'] = name;
+  return names.reduce((library, uid) => {
+    library[uid] = _.cloneDeep(librarySample.sample);
+    library[uid]['uid'] = uid;
     return library;
   }, {});
 }
@@ -36,11 +36,23 @@ export function genGreatLibrary(locations, namedict = {def: ['sample']}) {
   }, {});
 }
 
+export const notEditingState = {
+  editing: false,
+  edittext: '',
+  editfunc: () => 0,
+};
+
+export const notTextingState = {
+  texting: false,
+  edittext: '',
+  editfunc: () => 0,
+};
+
 export const requestSave = {
   texting: true,
   schema: {
     title: 'Save the current diagram',
-    dispatch: false,
+    dispatch: true,
     keys: {
       savename: 1,
     },

@@ -5,19 +5,16 @@ import {Button, TextField, Dialog} from '@material-ui/core';
 import {DialogActions, DialogTitle, DialogContent} from '@material-ui/core';
 import AceEditor from 'react-ace';
 import _ from 'lodash';
-import {modify} from '@utils/loaders';
+import {notTextingState} from '@utils/stateHelpers';
+import {modify} from '@utils/reducers';
 import {useStyles} from '@style/styling';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
-export function PureTextEntry({open, schema, func, dispatch}) {
+export function PureTextEntry({open, schema, editfunc, dispatch}) {
   const classes = useStyles();
-
-  let fieldText = {};
-  const onEditorChange = (value, event) => {
-    fieldText = value;
-  };
+  let [fieldText, setFieldText] = React.useState({});
 
   let itemDisplay = [];
   for (const keystr of Object.keys(_.get(schema, 'keys', []))) {
@@ -32,13 +29,13 @@ export function PureTextEntry({open, schema, func, dispatch}) {
         variant="outlined"
         label={keystr}
         onChange={event => {
-          fieldText[keystr] = event.target.value;
+          setFieldText({...fieldText, [keystr]: event.target.value});
         }}
       />,
     );
   }
 
-  let callfunc = func;
+  let callfunc = editfunc;
   if (_.has(schema, 'godmode')) {
     callfunc = text => modify('context', JSON.parse(text));
     itemDisplay.push(
@@ -46,15 +43,17 @@ export function PureTextEntry({open, schema, func, dispatch}) {
         className={classes.editor}
         mode="yaml"
         theme="monokai"
-        defaultValue="Arbitrary field setting"
-        onChange={onEditorChange}
+        defaultValue='{"dagre": true}'
+        onChange={(value, event) => {
+          fieldText = value;
+        }}
       />,
     );
   }
 
-  const onCancel = () => dispatch(modify('context', {texting: false}));
+  const onCancel = () => dispatch(modify('context', {...notTextingState}));
   const onDone = () => {
-    dispatch(modify('context', {texting: false}));
+    dispatch(modify('context', {...notTextingState}));
     console.log(callfunc(fieldText));
     if (_.get(schema, 'dispatch', true)) dispatch(callfunc(fieldText));
     else callfunc(fieldText);
@@ -78,5 +77,5 @@ export function PureTextEntry({open, schema, func, dispatch}) {
 
 export default connect(state => ({
   schema: state.context.schema,
-  func: state.context.func,
+  editfunc: state.context.editfunc,
 }))(PureTextEntry);

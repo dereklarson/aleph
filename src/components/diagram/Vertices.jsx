@@ -1,21 +1,21 @@
 // @format
 import React from 'react';
+import _ from 'lodash';
 import Vertex from './Vertex';
 import {useStyles} from '@style/styling';
 
-function renderVertex(index, vertex, activity, className) {
+function renderVertex(vertex, activity, className) {
   let type = 'node';
   if (activity.location === 'configuration') {
     type = 'conf';
-  } else if (activity.focus === index) {
+  } else if (activity.focus === vertex.uid) {
     type = 'card';
   }
 
   const component = (
     <Vertex
       type={type}
-      id={index}
-      name={vertex.name}
+      uid={vertex.uid}
       sections={vertex.sections}
       parents={vertex.parents}
       prepared={activity.prepared}
@@ -24,7 +24,7 @@ function renderVertex(index, vertex, activity, className) {
   return (
     <div
       className={className}
-      key={index}
+      key={vertex.uid}
       style={{
         left: `${vertex.position.x}%`,
         top: `${vertex.position.y}%`,
@@ -39,8 +39,8 @@ function renderVertex(index, vertex, activity, className) {
 export default function Vertices({vertices, activity}) {
   const classes = useStyles();
   const vertexDisplay = [];
-  for (const [index, vertex] of vertices.entries()) {
-    vertexDisplay.push(renderVertex(index, vertex, activity, classes.vertex));
-  }
+  _.values(vertices).forEach(vertex => {
+    vertexDisplay.push(renderVertex(vertex, activity, classes.vertex));
+  });
   return <div>{vertexDisplay}</div>;
 }

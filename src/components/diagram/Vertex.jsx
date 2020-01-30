@@ -2,8 +2,15 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {useDrag, useDrop, DragPreviewImage} from 'react-dnd';
-import {prepareBuildFocus, modify} from '@utils/loaders';
-import {addSection, linkVertex, unlinkVertex} from '@utils/actions';
+import _ from 'lodash';
+import {prepareFocusedBuild} from '@utils/loaders';
+import {modify} from '@utils/reducers';
+import {
+  addSection,
+  removeAllSections,
+  linkVertex,
+  unlinkVertex,
+} from '@utils/reducers';
 import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigNodeVertex from './ConfigNodeVertex';
@@ -20,8 +27,7 @@ export function PureVertex({
   cardActions,
   dropActions,
   type,
-  id,
-  name,
+  uid,
   sections,
   parents,
   prepared,
@@ -32,7 +38,7 @@ export function PureVertex({
     ref.current && ref.current.focus();
   };
   const [{isDragging}, drag, preview] = useDrag({
-    item: {type: 'Vertex', id: id, name: name, parents: parents},
+    item: {type: 'Vertex', uid: uid, parents: parents},
     collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),
@@ -40,23 +46,23 @@ export function PureVertex({
   const [{highlighted}, drop] = useDrop({
     accept: ['Vertex', 'DepotItem'],
     drop: (item, monitor) => {
-      if (item.type === 'Vertex' && item.parents.includes(id)) {
-        dropActions.Unlink(location, id, item.id);
+      if (item.type === 'Vertex' && _.has(item.parents, uid)) {
+        dropActions.Unlink({location, child: item.uid, parent: uid});
       } else if (item.type === 'DepotItem' && !monitor.didDrop()) {
-        dropActions[item.type](location, id, item.id);
+        dropActions[item.type]({location, uid: uid, section: item.uid});
       } else if (item.type === 'Vertex') {
-        dropActions[item.type](location, id, item.id);
+        dropActions[item.type]({location, child: item.uid, parent: uid});
       }
     },
     canDrop: (item, monitor) => {
       if (item.type === 'Vertex') {
-        if (item.id === id) return false;
-        if (item.parents.includes(id)) return true;
-        if (item.parents.length !== 0) return false;
+        if (item.uid === uid) return false;
+        if (_.has(item.parents, uid)) return true;
+        if (_.size(item.parents) !== 0) return false;
         return true;
       } else if (item.type === 'DepotItem') {
-        const anc_sec = getAncestry(vertices, id)[1];
-        return !anc_sec.includes(item.id);
+        const anc_sec = getAncestry(vertices, uid)[1];
+        return !anc_sec.includes(item.uid);
       }
       return true;
     },
@@ -67,10 +73,10 @@ export function PureVertex({
   drag(drop(ref));
 
   const styleProps = {
-    building: operations.building === id,
+    building: operations.building === uid,
     isDragging: isDragging,
     highlighted: highlighted,
-    prepared: prepared.includes(id),
+    prepared: prepared.includes(uid),
   };
   const components = {
     conf: ConfigNodeVertex,
@@ -81,8 +87,8 @@ export function PureVertex({
   const zIndex = type === 'card' ? 4 : 3;
 
   const deleteNode = React.useCallback(() => {
-    cardActions.onClear(location, id);
-  }, [cardActions, id]);
+    cardActions.onClear({location, uid});
+  }, [location, cardActions, uid]);
 
   const handlers = {
     DELETE_NODE: deleteNode,
@@ -91,22 +97,21 @@ export function PureVertex({
   return (
     <div ref={ref} style={{zIndex: zIndex}} onMouseEnter={setFocus}>
       <HotKeys handlers={handlers}>
-        <ParentHandle vertexId={id} />
+        <ParentHandle vertexId={uid} />
         <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
         <div
           onClick={event => {
             event.stopPropagation();
-            onClick(id);
+            onClick(uid);
           }}>
           <CurrentComponent
-            name={name}
+            uid={uid}
             cardActions={cardActions}
             sections={sections}
-            id={id}
             styleProps={styleProps}
           />
         </div>
-        <ChildHandle vertexId={id} />
+        <ChildHandle vertexId={uid} />
       </HotKeys>
     </div>
   );
@@ -114,24 +119,19 @@ export function PureVertex({
 
 // ======== DnD Handling ========
 
-export const removeAllSections = id => ({
-  type: 'REMOVE_ALL_SECTIONS',
-  vertex: id,
-});
-
 function actionDispatch(dispatch) {
   return {
-    onClick: id => dispatch(modify('context', {focus: id})),
+    onClick: uid => dispatch(modify('context', {focus: uid})),
     cardActions: {
-      onEditor: () =>
-        dispatch(modify('context', {editor: 'vertex', editing: true})),
-      onBuild: state => prepareBuildFocus(state, dispatch),
-      onClear: (loc, id) => dispatch(removeAllSections(loc, id)),
+      onEditor: payload =>
+        dispatch(modify('context', {...payload, editing: true})),
+      onBuild: () => dispatch(prepareFocusedBuild()),
+      onClear: payload => dispatch(removeAllSections(payload)),
     },
     dropActions: {
-      Vertex: (loc, to, from) => dispatch(linkVertex(loc, to, from)),
-      DepotItem: (loc, to, from) => dispatch(addSection(loc, to, from)),
-      Unlink: (loc, to, from) => dispatch(unlinkVertex(loc, to, from)),
+      Vertex: payload => dispatch(linkVertex(payload)),
+      DepotItem: payload => dispatch(addSection(payload)),
+      Unlink: payload => dispatch(unlinkVertex(payload)),
     },
   };
 }
@@ -139,7 +139,8 @@ function actionDispatch(dispatch) {
 export default connect(
   state => ({
     location: state.context.location,
-    vertices: state.vertices.present[state.context.location],
+    vertices: state.vertices[state.context.location],
+    // vertices: state.vertices.present[state.context.location],
     operations: state.operations,
   }),
   actionDispatch,

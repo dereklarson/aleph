@@ -7,6 +7,7 @@ import BulkActions from './BulkActions';
 import SavedDiagrams from './SavedDiagrams';
 import {generateList} from '@utils/generateList';
 import {useStyles} from '@style/styling';
+import {modify} from '@utils/reducers';
 
 // TODO add this back in
 // selected={location === config[0]}>
@@ -44,18 +45,9 @@ export function PureSidebar({onNavigate, location}) {
   );
 }
 
-const navigate = location => ({
-  type: 'NAVIGATE',
-  location: location,
-});
-
-function actionDispatch(dispatch) {
-  return {
-    onNavigate: location => dispatch(navigate(location)),
-  };
-}
-
 export default connect(
   state => ({location: state.context.location}),
-  actionDispatch,
+  dispatch => ({
+    onNavigate: location => dispatch(modify('context', {location})),
+  }),
 )(PureSidebar);

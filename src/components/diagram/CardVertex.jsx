@@ -8,45 +8,58 @@ import CardContent from '@material-ui/core/CardContent';
 import {Chip, TextField} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {propsToStyle} from '@utils/helpers';
+import {removeSection, renameVertex, setText} from '@utils/reducers';
+import {createText} from '@utils/helpers';
 
 export function PureCardVertex({
   location,
+  library,
+  corpus,
   onChange,
   onChipDelete,
-  name,
+  uid,
   cardActions,
   sections,
-  id,
   styleProps,
 }) {
   let chipDisplay = [];
   for (const [index, section] of sections.entries()) {
-    const chipDelete = () => onChipDelete(location, id, section);
+    const chipDelete = () => onChipDelete({location, uid, section});
     chipDisplay.push(
       <Chip key={index} label={section} onDelete={chipDelete} />,
     );
   }
+
+  const edittext = createText({library, sections, corpus, uid});
+  const editfunc = text => setText({location, uid: uid, text: text});
+
   return (
     <Card style={propsToStyle(styleProps)}>
       <CardActionArea>
         <CardContent>
           <TextField
             label="Node name"
-            defaultValue={name}
+            defaultValue={uid}
             margin="normal"
-            onChange={event => onChange(id, event.target.value)}
+            onChange={event =>
+              onChange({location, uid, value: event.target.value})
+            }
           />
           {chipDisplay}
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" onClick={() => cardActions.onEditor()}>
+        <Button
+          size="small"
+          onClick={() => cardActions.onEditor({edittext, editfunc})}>
           Editor
         </Button>
-        {/* <Button size="small" onClick={() => cardActions.onBuild(state)}> */}
-        {/*   Build */}
-        {/* </Button> */}
-        <Button size="small" onClick={() => cardActions.onClear(id)}>
+        <Button size="small" onClick={() => cardActions.onBuild()}>
+          Build
+        </Button>
+        <Button
+          size="small"
+          onClick={() => cardActions.onClear({location, uid})}>
           Reset
         </Button>
       </CardActions>
@@ -54,30 +67,18 @@ export function PureCardVertex({
   );
 }
 
-export const removeSection = (location, id, sectionValue) => ({
-  type: 'REMOVE_SECTION',
-  location: location,
-  vertex: id,
-  section: sectionValue,
-});
-
-export const changeVertexName = (id, name) => ({
-  type: 'CHANGE_VERTEX_NAME',
-  id: id,
-  name: name,
-});
-
 function actionDispatch(dispatch) {
   return {
-    onChange: (id, name) => dispatch(changeVertexName(id, name)),
-    onChipDelete: (location, id, sectionValue) =>
-      dispatch(removeSection(location, id, sectionValue)),
+    onChange: payload => dispatch(renameVertex(payload)),
+    onChipDelete: payload => dispatch(removeSection(payload)),
   };
 }
 
 export default connect(
   state => ({
     location: state.context.location,
+    library: state.library[state.context.location],
+    corpus: state.corpus[state.context.location],
   }),
   actionDispatch,
 )(PureCardVertex);

@@ -36,3 +36,25 @@ export function getLastLine(string) {
     .split('\n')
     .slice(-1)[0];
 }
+
+export function createText({library, sections, corpus, uid}) {
+  if (_.has(corpus, uid)) return corpus[uid].text;
+  else {
+    let text = '';
+    sections.forEach(sectionUid => {
+      text += library[sectionUid].text;
+    });
+    return text;
+  }
+}
+
+export function generateCorpus({vertices, library, corpus}) {
+  let output = {};
+  _.values(vertices).forEach(vertex => {
+    let uid = vertex.uid;
+    output[uid] = {
+      text: createText({library, sections: vertex.sections, corpus, uid}),
+    };
+  });
+  return output;
+}

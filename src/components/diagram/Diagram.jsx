@@ -9,6 +9,7 @@ import Arrows from './Arrows';
 import Vertices from './Vertices';
 import {calculateDiagramPositions} from './diagramDrawing';
 import {useStyles} from '@style/styling';
+import {modify, addVertex} from '@utils/reducers';
 
 export function PureDiagram({
   location,
@@ -23,7 +24,7 @@ export function PureDiagram({
     accept: 'DepotItem',
     drop: (item, monitor) => {
       if (!monitor.didDrop()) {
-        onSectionDrop(location, item.id);
+        onSectionDrop({location, uid: item.uid});
       }
     },
     collect: monitor => ({
@@ -52,12 +53,6 @@ export function PureDiagram({
   );
 }
 
-export const addVertex = (location, section = null) => ({
-  type: 'ADD_VERTEX',
-  location: location,
-  section: section,
-});
-
 const getFocus = state => state.context.focus;
 const getLocation = state => state.context.location;
 const getBuildOrders = state => state.operations.build_orders;
@@ -68,7 +63,7 @@ const getActivity = createSelector(
   (focus, location, buildOrders, dagre) => ({
     focus: focus,
     location: location,
-    prepared: buildOrders.map(({id}) => id),
+    prepared: buildOrders.map(({uid}) => uid),
     dagre: dagre,
   }),
 );
@@ -76,11 +71,12 @@ const getActivity = createSelector(
 export default connect(
   state => ({
     location: state.context.location,
-    vertices: state.vertices.present[state.context.location],
+    vertices: state.vertices[state.context.location],
+    // vertices: state.vertices.present[state.context.location],
     activity: getActivity(state),
   }),
   dispatch => ({
-    clearFocus: () => dispatch({type: 'MODIFY_CONTEXT', update: {focus: null}}),
-    onSectionDrop: (loc, section) => dispatch(addVertex(loc, section)),
+    clearFocus: () => dispatch(modify('context', {focus: null})),
+    onSectionDrop: payload => dispatch(addVertex(payload)),
   }),
 )(PureDiagram);

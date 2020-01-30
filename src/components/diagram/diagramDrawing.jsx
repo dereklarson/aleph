@@ -1,5 +1,6 @@
 // @format
 import dagre from 'dagre';
+import _ from 'lodash';
 
 export function calculateDiagramPositions(vertices, dagre = false) {
   if (dagre === true) {
@@ -11,44 +12,48 @@ export function calculateDiagramPositions(vertices, dagre = false) {
     }
   }
 
-  for (const [index, vertex] of vertices.entries()) {
-    if (vertex.parents.length === 0) {
-      populateVertexGenerations(vertices, index, 0);
+  // Populate the generations of all vertices
+  _.values(vertices).forEach(function(vertex) {
+    // Only begin with roots
+    if (_.size(vertex.parents) === 0) {
+      // Recursive call, passing all vertices, starting key, and starting generation
+      populateVertexGenerations(vertices, vertex.uid, 0);
     }
-  }
+  });
 
   const width = 20; // Based on Fab size
   const height = 10; // Based on Fab size
   let row_shift = [0, 0, 0, 0, 0, 0, 0, 0];
   let arrows = [];
 
+  // Now we'll calculate positions of the vertices based on generation
   // First loop to calculate position of the node and its in/out anchors
-  vertices.forEach(function(entry) {
+  _.values(vertices).forEach(function(vertex) {
     // Calculate an offset for our 3 "tracks" (rows) of nodes
-    const x = row_shift[entry.generation] * width;
-    const y = entry.generation * height;
-    row_shift[entry.generation] += 1;
+    const x = row_shift[vertex.generation] * width;
+    const y = vertex.generation * height;
+    row_shift[vertex.generation] += 1;
 
-    entry['position'] = {x: x, y: y, height: height, width: width};
-    entry['in'] = {x: x + width / 2, y: y + height / 4};
-    entry['out'] = {x: x + width / 2, y: y + (3 * height) / 4};
+    vertex['position'] = {x: x, y: y, height: height, width: width};
+    vertex['in'] = {x: x + width / 2, y: y + height / 4};
+    vertex['out'] = {x: x + width / 2, y: y + (3 * height) / 4};
   });
 
   // Then loop to populate the arrows array from the anchor positions and vertex children
-  vertices.forEach(parent => {
-    parent.children.forEach(childIndex => {
-      arrows.push({start: parent.out, end: vertices[childIndex].in});
+  _.values(vertices).forEach(parent_vertex => {
+    _.keys(parent_vertex.children).forEach(childId => {
+      arrows.push({start: parent_vertex.out, end: vertices[childId].in});
     });
   });
 
   return arrows;
 }
 
-export function populateVertexGenerations(vertices, vIndex, current) {
-  vertices[vIndex]['generation'] = current;
-  for (let vChild of vertices[vIndex].children) {
-    populateVertexGenerations(vertices, vChild, current + 1);
-  }
+export function populateVertexGenerations(vertices, vId, curr_gen) {
+  vertices[vId]['generation'] = curr_gen;
+  _.keys(vertices[vId].children).forEach(function(child) {
+    populateVertexGenerations(vertices, child, curr_gen + 1);
+  });
 }
 
 function rescale(x, w, frac, draw, edge) {
@@ -64,20 +69,21 @@ function calculateDagre(vertices) {
   });
 
   // Populate nodes with two args: ID and metadata
-  for (const [index, vertex] of vertices.entries()) {
+  _.values(vertices).forEach(vertex => {
     // TODO Alter this to do something special for Cards?
     if (vertex !== null) {
-      g.setNode(index, {width: 20, height: 30});
+      g.setNode(vertex.uid, {width: 20, height: 30});
     }
-  }
+  });
 
   // Populate arrows
   let edges = [];
-  for (const [parentIndex, parent] of vertices.entries()) {
-    parent.children.forEach(childIndex => {
-      edges.push({outIndex: parentIndex, inIndex: childIndex});
+  _.values(vertices).forEach(parent_vertex => {
+    _.keys(parent_vertex.children).forEach(childId => {
+      edges.push({outIndex: parent_vertex.uid, inIndex: childId});
     });
-  }
+  });
+
   edges.forEach(function(entry) {
     g.setEdge(entry.outIndex, entry.inIndex);
   });

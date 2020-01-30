@@ -3,13 +3,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {AppBar, Toolbar, Typography} from '@material-ui/core';
 import _ from 'lodash';
-import {saveCheckpoint, loadCheckpoint, modify} from '@utils/loaders';
+import {useStyles} from '@style/styling';
+import {saveCheckpoint, loadCheckpoint} from '@utils/loaders';
 import {loadInputs, loadOrg} from '@utils/loaders';
 import {generateButtons} from '@utils/generateList';
 import {playTutorial} from '@utils/tutorial';
-import {useStyles} from '@style/styling';
 import {capitalizeFirstLetter} from '@utils/helpers';
 import {requestOrg, godMode} from '@utils/stateHelpers';
+import {modify} from '@utils/reducers';
 
 export function PureAppBar({
   config,
@@ -21,7 +22,6 @@ export function PureAppBar({
   onSetTheme,
   onText,
   onGodMode,
-  loc,
 }) {
   const classes = useStyles();
   const onInitialLoad = () => onLoadInputs(config);
@@ -34,10 +34,7 @@ export function PureAppBar({
   //   setSaved(true);
   //   saveCheckpoint('user', state);
   // };
-  const savefunc = fieldText => ({
-    type: 'MODIFY_CONFIG',
-    update: {organization: fieldText},
-  });
+  const savefunc = fieldText => modify('config', {organization: fieldText});
 
   const appBarOptions = [
     ['set_org', () => onText(savefunc)],
@@ -72,13 +69,13 @@ export function PureAppBar({
 export default connect(
   state => ({config: state.config, context: state.context}),
   dispatch => ({
-    onLoadInputs: state => dispatch(loadInputs(state)),
+    onLoadInputs: config => dispatch(loadInputs(config)),
     onLoadChk: () => loadCheckpoint('user', dispatch),
     onLoadOrg: org => dispatch(loadOrg(org)),
     onPlayTutorial: state => playTutorial('tutorial', state, false, dispatch),
     onSetTheme: theme => dispatch(modify('context', {theme: theme})),
     onText: savefunc =>
-      dispatch(modify('context', {...requestOrg, func: savefunc})),
+      dispatch(modify('context', {...requestOrg, editfunc: savefunc})),
     onGodMode: () => dispatch(modify('context', {...godMode})),
   }),
 )(PureAppBar);

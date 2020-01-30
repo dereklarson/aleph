@@ -3,18 +3,19 @@ import React from 'react';
 import {connect} from 'react-redux';
 import AceEditor from 'react-ace';
 import Popup from 'reactjs-popup';
-import _ from 'lodash';
-import {modify} from '@utils/loaders';
+// import _ from 'lodash';
+import {notEditingState} from '@utils/stateHelpers';
+import {modify} from '@utils/reducers';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
-export function Editor({location, editor, text, open, onClose}) {
-  let currtext = text;
-  const onChange = (value, event) => {
-    currtext = value;
+export function Editor({open, edittext, editfunc, dispatch}) {
+  let currText = edittext;
+  const closeModal = () => {
+    dispatch(editfunc(currText));
+    dispatch(modify('context', {...notEditingState}));
   };
-  const closeModal = () => onClose(location, editor, currtext);
   return (
     <Popup open={open} closeOnDocumentClick onClose={closeModal}>
       <div className="modal">
@@ -22,40 +23,17 @@ export function Editor({location, editor, text, open, onClose}) {
           width="100%"
           mode="yaml"
           theme="monokai"
-          defaultValue={text}
-          onChange={onChange}
+          defaultValue={edittext}
+          onChange={(value, event) => {
+            currText = value;
+          }}
         />
       </div>
     </Popup>
   );
 }
 
-const setNodeFulltext = (location, editor, text) => ({
-  type: 'WRITE_TEXT',
-  location: location,
-  editor: editor,
-  text: text,
-});
-
-function actionDispatch(dispatch) {
-  return {
-    onClose: (location, editor, text) => {
-      dispatch(setNodeFulltext(location, editor, text));
-      dispatch(modify('context', {editor: null, editing: false}));
-    },
-  };
-}
-
-export default connect(
-  state => ({
-    location: state.context.location,
-    editor: state.context.editor,
-    text:
-      state.context.editor === 'vertex'
-        ? state.corpus[state.context.location][state.context.focus]
-        : _.get(state.library[state.context.location], state.context.editor, {
-            text: '',
-          }).text,
-  }),
-  actionDispatch,
-)(Editor);
+export default connect(state => ({
+  edittext: state.context.edittext,
+  editfunc: state.context.editfunc,
+}))(Editor);

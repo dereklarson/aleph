@@ -1,6 +1,7 @@
 // @format
 import axios from 'axios';
-import {saveCheckpoint, loadCheckpoint, modify} from './loaders';
+import {saveCheckpoint, loadCheckpoint} from './loaders';
+import {modify} from './reducers';
 import {sleep} from './helpers';
 import {tutorialInitialState} from './stateReference';
 

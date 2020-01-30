@@ -1,14 +1,10 @@
 // @format
 import axios from 'axios';
 import _ from 'lodash';
-import {getLastLine} from './helpers';
+import {getLastLine, generateCorpus} from './helpers';
 import {blankOperations} from './stateReference';
 import {requestOrg} from './stateHelpers';
-
-export const modify = (loc, update) => ({
-  type: `MODIFY_${loc.toUpperCase()}`,
-  update: update,
-});
+import {modify} from './reducers';
 
 // Thunked: will return function taking dispatch
 export function loadInputs(config) {
@@ -45,6 +41,7 @@ export function loadOrg() {
 export function loadCore(source, location) {
   return function(dispatch, getState) {
     let org = getState()['config']['organization'];
+    console.log(org);
     if (['pipeline', 'docker'].includes(location)) {
       console.log(`---Loading ${location} ${source}---`);
       axios.get(`/coreload/${source}/${location}/${org.uid}`).then(response => {
@@ -70,44 +67,62 @@ export function loadCheckpoint(name, dispatch) {
   });
 }
 
-export function saveDiagram(location, name, partialState) {
-  console.log(`---Saving ${location} Diagrams---`);
-  return axios.post('/save_diagram', {
-    location: location,
-    name: name,
-    state: partialState,
-  });
+export function saveDiagram(location, name) {
+  return function(dispatch, getState) {
+    let state = getState();
+    let vertices = state.vertices.location;
+    let corpus = state.corpus.location;
+    console.log(`---Saving ${location} Diagrams---`);
+    return axios.post('/save_diagram', {
+      location: location,
+      name: name,
+      state: {vertices, corpus},
+    });
+  };
 }
 
-export function prepareBuildFocus(currentState, dispatch) {
-  if (currentState.location === 'docker') {
-    console.log('---Preparing build for current focus---');
-    axios
-      .post('/gen_build/docker', {
-        vertices: currentState.vertices.present.docker,
-        corpus: currentState.corpus.docker,
-        build_id: currentState.focus,
-      })
-      .then(response => {
-        dispatch(modify('operations', response.data));
+export function prepareFocusedBuild() {
+  return function(dispatch, getState) {
+    let state = getState();
+    let location = state.context.location;
+    if (location === 'docker') {
+      console.log('---Preparing build for current focus---');
+      let vertices = state.vertices[location];
+      let library = state.library[location];
+      let corpus = generateCorpus({
+        vertices,
+        library,
+        corpus: state.corpus[location],
       });
-  } else {
-    console.log('Not supported building non-docker');
-  }
+      console.log(corpus);
+      axios
+        .post('/gen_build/docker', {
+          vertices,
+          corpus,
+          build_id: state.context.focus,
+        })
+        .then(response => {
+          dispatch(modify('operations', response.data));
+        });
+    } else {
+      console.log('Not supported building non-docker');
+    }
+  };
 }
 
-export async function build(currentState, cancel, dispatch) {
-  let current_cache = {};
-  let location = currentState.location;
-  if (location === 'docker') {
-    console.log('---Building Docker Image---');
-    for (const [index, step] of currentState.build_orders.entries()) {
+export function buildDocker(operations, cancel) {
+  console.log('---Building Docker Image---');
+  return async function(dispatch, getState) {
+    let new_cache = {};
+    let location = getState().context.location;
+    let current_cache = getState().cache.build;
+    for (const [index, step] of operations.build_orders.entries()) {
       if (cancel.current === true) {
         cancel.current = false;
         break;
       }
       const percent = Math.floor(
-        (100 * index) / currentState.build_orders.length,
+        (100 * index) / operations.build_orders.length,
       );
       const ticker = getLastLine(step.text);
       dispatch(
@@ -117,7 +132,7 @@ export async function build(currentState, cancel, dispatch) {
           percent: percent,
         }),
       );
-      if (_.has(currentState.build_cache, step.hash)) {
+      if (_.has(current_cache, step.hash)) {
         continue;
       }
       await axios
@@ -125,15 +140,15 @@ export async function build(currentState, cancel, dispatch) {
         .then(response => {
           dispatch(modify('operations', response.data));
         });
-      current_cache[step.hash] = true;
-      dispatch(
-        modify('cache', {
-          build_cache: {...currentState.build_cache, ...current_cache},
-        }),
-      );
+      new_cache[step.hash] = true;
+      dispatch(modify('cache', {build: {...current_cache, ...new_cache}}));
     }
     dispatch(modify('operations', blankOperations));
-  } else if (location === 'pipeline') {
+  };
+}
+
+export function buildPipeline(operations, cancel) {
+  return async function(dispatch, getState) {
     console.log('---Building Pipeline---');
     let build_context = {};
     await axios
@@ -152,10 +167,5 @@ export async function build(currentState, cancel, dispatch) {
         console.log('...built');
       });
     dispatch(modify('operations', blankOperations));
-  } else {
-    console.log('Not supported building besides docker or pipeline locations');
-  }
+  };
 }
-
-// TODO Make this work across the board
-export const clearDiagram = location => modify('vertices', {[location]: []});

@@ -7,6 +7,7 @@ import _ from 'lodash';
 import DepotItem from './DepotItem';
 import {capitalizeFirstLetter} from '@utils/helpers';
 import {useStyles} from '@style/styling';
+import {removeVertex} from '@utils/reducers';
 
 const tooltips = {
   base: "Base items are starting points, OS's and public images",
@@ -39,7 +40,7 @@ export function PureDepot({location, onVertexDrop, library}) {
 
   const [{highlighted}, drop] = useDrop({
     accept: 'Vertex',
-    drop: item => onVertexDrop(location, item.id),
+    drop: item => onVertexDrop({location, uid: item.uid}),
     collect: monitor => ({
       highlighted: monitor.canDrop(),
     }),
@@ -61,18 +62,12 @@ export function PureDepot({location, onVertexDrop, library}) {
   );
 }
 
-export const removeVertex = (location, from) => ({
-  type: 'REMOVE_VERTEX',
-  location: location,
-  vertex: from,
-});
-
 export default connect(
   state => ({
     location: state.context.location,
     library: state.library[state.context.location],
   }),
   dispatch => ({
-    onVertexDrop: (loc, vertexId) => dispatch(removeVertex(loc, vertexId)),
+    onVertexDrop: payload => dispatch(removeVertex(payload)),
   }),
 )(PureDepot);

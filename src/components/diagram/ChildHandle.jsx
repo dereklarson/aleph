@@ -2,8 +2,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
-import {linkVertex} from '@utils/actions';
+import _ from 'lodash';
+import {addVertex, linkVertex} from '@utils/reducers';
 import {useStyles} from '@style/styling';
+import {getAncestry} from '@utils/vertexHelpers';
 
 export function ChildHandle({location, vertexId, vertices, onDrop}) {
   const classes = useStyles();
@@ -11,10 +13,11 @@ export function ChildHandle({location, vertexId, vertices, onDrop}) {
   const [{highlighted}, drop] = useDrop({
     accept: ['DepotItem'],
     drop: item => {
-      onDrop(location, vertexId, vertices.length, item.id);
+      onDrop(location, vertexId, item.uid);
     },
     canDrop: (item, monitor) => {
-      return true;
+      const anc_sec = getAncestry(vertices, vertexId)[1];
+      return !anc_sec.includes(item.uid);
     },
     collect: monitor => ({
       highlighted: monitor.canDrop(),
@@ -32,9 +35,9 @@ export function ChildHandle({location, vertexId, vertices, onDrop}) {
 
 function actionDispatch(dispatch) {
   return {
-    onDrop: (location, to, from, section) => {
-      dispatch({type: 'ADD_VERTEX', location: location, section: section});
-      dispatch(linkVertex(location, to, from));
+    onDrop: (location, parent, section) => {
+      dispatch(addVertex({location, uid: section}));
+      dispatch(linkVertex({location, child: section, parent}));
     },
   };
 }
@@ -42,7 +45,8 @@ function actionDispatch(dispatch) {
 export default connect(
   state => ({
     location: state.context.location,
-    vertices: state.vertices.present[state.context.location],
+    vertices: state.vertices[state.context.location],
+    // vertices: state.vertices.present[state.context.location],
   }),
   actionDispatch,
 )(ChildHandle);

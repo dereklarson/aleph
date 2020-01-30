@@ -16,10 +16,9 @@ export const blankContext = {
   focus: null,
   location: 'docker',
   editing: false,
-  editor: null,
   schema: {title: '', keys: {}},
   texting: false,
-  func: () => 0,
+  editfunc: () => 0,
 };
 
 export const blankOperations = {
@@ -31,7 +30,7 @@ export const blankOperations = {
 };
 
 export const blankCache = {
-  build_cache: [],
+  build: [],
 };
 
 export const blankConfig = {
@@ -46,7 +45,7 @@ export const blankConfig = {
 const categories = {
   vertices: vertexDataFromPaths([['Parent', 'Child']]),
   library: {},
-  corpus: new Map(),
+  corpus: {},
   diagrams: {},
 };
 const locations = ['docker', 'pipeline', 'data', 'configuration'];

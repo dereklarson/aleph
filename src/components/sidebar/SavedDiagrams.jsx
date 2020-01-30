@@ -4,14 +4,12 @@ import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
 import _ from 'lodash';
 import {generateList} from '@utils/generateList';
+import {addDiagram} from '@utils/reducers';
 
-function SavedDiagrams({location, diagrams, onAddSaved, onSetDiagram}) {
+function SavedDiagrams({location, diagrams, onAddDiagram}) {
   let items = [];
-  for (const [name, config] of Object.entries(diagrams)) {
-    let onClick = () => onAddSaved(config.vertexgroups);
-    if (_.has(config, 'vertices')) {
-      onClick = () => onSetDiagram(config);
-    }
+  for (const [name, content] of Object.entries(diagrams)) {
+    let onClick = () => onAddDiagram({location, paths: content.paths});
     items.push([name, onClick]);
   }
 
@@ -23,23 +21,12 @@ function SavedDiagrams({location, diagrams, onAddSaved, onSetDiagram}) {
   );
 }
 
-export const setDiagram = state_update => ({
-  type: 'MODIFY_STATE',
-  update: state_update,
-});
-
-export const addSaved = vertexgroups => ({
-  type: 'ADD_DIAGRAMS',
-  vertexgroups: vertexgroups,
-});
-
 export default connect(
   state => ({
     location: state.context.location,
     diagrams: state.diagrams[state.context.location],
   }),
   dispatch => ({
-    onAddSaved: vertexgroups => dispatch(addSaved(vertexgroups)),
-    onSetDiagram: state_update => dispatch(setDiagram(state_update)),
+    onAddDiagram: payload => dispatch(addDiagram(payload)),
   }),
 )(SavedDiagrams);

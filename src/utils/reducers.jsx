@@ -1,221 +1,118 @@
 // @format
-// NOTES
-// We generally use Object.assign at the base level, as spread {...} is shallow only
-
 import undoable from 'redux-undo';
-import {vertexAdder} from './vertexHelpers';
 import _ from 'lodash';
-import {initState} from './stateReference';
-// import {combineReducers} from 'redux';
+import {vertexDataFromPaths} from './vertexHelpers';
+import {genSlice, stateLoc} from './storeUtils';
 
-const config = (state, action) => {
-  switch (action.type) {
-    case 'MODIFY_CONFIG':
-      return Object.assign({}, state, action.update);
-    default:
-      return state;
-  }
+const configSlice = genSlice('config');
+const operationsSlice = genSlice('operations');
+const cacheSlice = genSlice('cache');
+const contextSlice = genSlice('context');
+const diagramsSlice = genSlice('diagrams');
+
+const libraryReducers = {
+  writeText(state, action) {
+    stateLoc(state, action.payload).text = action.payload.text;
+  },
+};
+const librarySlice = genSlice('library', libraryReducers);
+export const {writeText} = librarySlice.actions;
+
+const corpusReducers = {
+  setText(state, action) {
+    if (!_.has(state[action.payload.location], action.payload.uid)) {
+      state[action.payload.location][action.payload.uid] = {};
+    }
+    stateLoc(state, action.payload).text = action.payload.text;
+  },
+};
+const corpusSlice = genSlice('corpus', corpusReducers);
+export const {setText} = corpusSlice.actions;
+
+const vertexReducers = {
+  addDiagram(state, action) {
+    Object.assign(
+      state[action.payload.location],
+      vertexDataFromPaths(state, action.payload.vertexgroups),
+    );
+  },
+  addVertex(state, action) {
+    let uid = action.payload.uid;
+    // TODO figure out function to "create first uid"
+    if (_.has(state[action.payload.location], uid)) {
+      uid = uid + 'x';
+    }
+    state[action.payload.location][uid] = {
+      uid: uid,
+      children: {},
+      parents: {},
+      sections: [action.payload.uid],
+    };
+  },
+  removeVertex(state, action) {
+    let vertex = stateLoc(state, action.payload);
+    //Remove each parent link and child link, then delete the vertex
+    _.keys(vertex.parents).forEach(key => {
+      delete state[action.payload.location][key].children[vertex.uid];
+    });
+    _.keys(vertex.children).forEach(key => {
+      delete state[action.payload.location][key].parents[vertex.uid];
+    });
+    delete state[action.payload.location][vertex.uid];
+  },
+  renameVertex(state, action) {
+    //TODO
+    stateLoc(state, action.payload);
+  },
+  linkVertex(state, action) {
+    let child = state[action.payload.location][action.payload.child];
+    let parent = state[action.payload.location][action.payload.parent];
+    parent.children[action.payload.child] = true;
+    child.parents[action.payload.parent] = true;
+  },
+  unlinkVertex(state, action) {
+    let child = state[action.payload.location][action.payload.child];
+    let parent = state[action.payload.location][action.payload.parent];
+    delete child.parents[action.payload.parent];
+    delete parent.children[action.payload.child];
+  },
+  addSection(state, action) {
+    stateLoc(state, action.payload).sections.push(action.payload.section);
+  },
+  removeSection(state, action) {
+    let sections = stateLoc(state, action.payload).sections;
+    let index = sections.indexOf(action.payload.section);
+    if (index >= 0) sections.splice(index, 1);
+  },
+  removeAllSections(state, action) {
+    stateLoc(state, action.payload).sections = [];
+  },
 };
 
-const operations = (state, action) => {
-  switch (action.type) {
-    case 'MODIFY_OPERATIONS':
-      return Object.assign({}, state, action.update);
-    default:
-      return state;
-  }
-};
+const verticesSlice = genSlice('vertices', vertexReducers);
+export const {
+  addDiagram,
+  addVertex,
+  removeVertex,
+  renameVertex,
+  linkVertex,
+  unlinkVertex,
+  addSection,
+  removeSection,
+  removeAllSections,
+} = verticesSlice.actions;
 
-const cache = (state, action) => {
-  switch (action.type) {
-    case 'MODIFY_CACHE':
-      return Object.assign({}, state, action.update);
-    default:
-      return state;
-  }
+const modifiers = {
+  cache: cacheSlice.actions.modify_cache,
+  config: configSlice.actions.modify_config,
+  context: contextSlice.actions.modify_context,
+  operations: operationsSlice.actions.modify_operations,
+  library: librarySlice.actions.modify_library,
+  corpus: corpusSlice.actions.modify_corpus,
+  diagrams: diagramsSlice.actions.modify_diagrams,
+  vertices: verticesSlice.actions.modify_vertices,
 };
-
-const context = (state, action) => {
-  switch (action.type) {
-    case 'NAVIGATE':
-      return Object.assign({}, state, {location: action.location});
-    case 'MODIFY_CONTEXT':
-      return Object.assign({}, state, action.update);
-    default:
-      return state;
-  }
-};
-
-const library = (state, action) => {
-  switch (action.type) {
-    case 'MODIFY_LIBRARY':
-      return Object.assign({}, state, action.update);
-    case 'WRITE_TEXT':
-      return Object.assign({}, state, {
-        [action.location]: {
-          ...state[action.location],
-          [action.editor]: Object.assign(
-            {},
-            state[action.location][action.editor],
-            {text: action.text},
-          ),
-        },
-      });
-    default:
-      return state;
-  }
-};
-
-const corpus = (state, action) => {
-  switch (action.type) {
-    case 'SET_TEXT':
-      return Object.assign({}, state, {
-        [action.location]: {
-          ...state[action.location],
-          [state.context.focus]: action.text,
-        },
-      });
-    default:
-      return state;
-  }
-};
-
-const diagrams = (state, action) => {
-  switch (action.type) {
-    case 'MODIFY_DIAGRAMS':
-      return Object.assign({}, state, action.update);
-    default:
-      return state;
-  }
-};
-
-const verticesbase = (state, action) => {
-  switch (action.type) {
-    case 'MODIFY_VERTICES':
-      return Object.assign({}, state, action.update);
-    case 'ADD_DIAGRAMS':
-      const add_result = vertexAdder(state, action.vertexgroups);
-      return Object.assign({}, state, add_result);
-    case 'ADD_VERTEX':
-      return Object.assign({}, state, {
-        [action.location]: state[action.location].concat({
-          name: action.section,
-          children: [],
-          parents: [],
-          sections: [action.section],
-        }),
-      });
-    case 'CHANGE_VERTEX_NAME':
-      return Object.assign({}, state, {
-        [action.location]: state[action.location].map((vertex, index) => {
-          if (action.id === index) {
-            return Object.assign({}, vertex, {name: action.name});
-          }
-          return vertex;
-        }),
-      });
-    case 'ADD_SECTION':
-      return Object.assign({}, state, {
-        [action.location]: state[action.location].map((vertex, index) => {
-          if (action.target === index) {
-            return Object.assign({}, vertex, {
-              sections: vertex.sections.concat([action.section]),
-            });
-          }
-          return vertex;
-        }),
-      });
-    case 'REMOVE_SECTION':
-      return Object.assign({}, state, {
-        [action.location]: state[action.location].map((vertex, index) => {
-          if (action.vertex === index) {
-            return Object.assign({}, vertex, {
-              sections: vertex.sections.filter(
-                value => value !== action.section,
-              ),
-            });
-          }
-          return vertex;
-        }),
-      });
-    case 'REMOVE_ALL_SECTIONS':
-      return Object.assign({}, state, {
-        [action.location]: state[action.location].map((vertex, index) => {
-          if (action.vertex === index) {
-            return Object.assign({}, vertex, {sections: []});
-          }
-          return vertex;
-        }),
-      });
-    case 'REMOVE_VERTEX':
-      return Object.assign({}, state, {
-        [action.location]: state[action.location].reduce(
-          (result, vertex, index) => {
-            if (action.vertex !== index) {
-              result.push(
-                Object.assign({}, vertex, {
-                  children: vertex.children.reduce((result, child) => {
-                    if (child < action.vertex) {
-                      result.push(child);
-                    } else if (child > action.vertex) {
-                      result.push(child - 1);
-                    }
-                    return result;
-                  }, []),
-                  parents: vertex.parents.reduce((result, parent) => {
-                    if (parent < action.vertex) {
-                      result.push(parent);
-                    } else if (parent > action.vertex) {
-                      result.push(parent - 1);
-                    }
-                    return result;
-                  }, []),
-                }),
-              );
-            }
-            return result;
-          },
-          [],
-        ),
-      });
-    case 'LINK_VERTEX':
-      return Object.assign({}, state, {
-        [action.location]: state[action.location].map((vertex, index) => {
-          if (action.target === index) {
-            return Object.assign({}, vertex, {
-              children: vertex.children.concat([action.source]),
-            });
-          }
-          if (action.source === index) {
-            return Object.assign({}, vertex, {
-              parents: vertex.parents.concat([action.target]),
-            });
-          }
-          return vertex;
-        }),
-      });
-    case 'UNLINK_VERTEX':
-      return Object.assign({}, state, {
-        [action.location]: state[action.location].map((vertex, index) => {
-          if (action.target === index) {
-            return Object.assign({}, vertex, {
-              children: vertex.children.filter(
-                value => value !== action.source,
-              ),
-            });
-          }
-          if (action.source === index) {
-            return Object.assign({}, vertex, {
-              parents: vertex.parents.filter(value => value !== action.target),
-            });
-          }
-          return vertex;
-        }),
-      });
-    default:
-      return state;
-  }
-};
+export const modify = (name, payload) => modifiers[name](payload);
 
 function combineReducers(reducers) {
   return function(state, action) {
@@ -227,19 +124,18 @@ function combineReducers(reducers) {
 }
 
 // Give some parts of the store TimeTravel
-const vertices = undoable(verticesbase);
-// const config = undoable(confbase);
+// const vertices = undoable(verticesbase);
 
 // Combine all reducers
 const rootReducer = combineReducers({
-  context,
-  operations,
-  cache,
-  config,
-  vertices,
-  library,
-  corpus,
-  diagrams,
+  config: configSlice.reducer,
+  context: contextSlice.reducer,
+  operations: operationsSlice.reducer,
+  cache: cacheSlice.reducer,
+  corpus: corpusSlice.reducer,
+  diagrams: diagramsSlice.reducer,
+  library: librarySlice.reducer,
+  vertices: verticesSlice.reducer,
 });
 
 export default rootReducer;
