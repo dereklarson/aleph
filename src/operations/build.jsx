@@ -6,19 +6,19 @@ import {blankOperations} from '@data/reference';
 import {modify} from '@data/reducers';
 
 export function prepareFocusedBuild() {
-  return function(dispatch, getState) {
+  return async function(dispatch, getState) {
     let state = getState();
     let location = state.context.location;
+    let vertices = state.vertices[location];
+    let library = state.library[location];
+    let corpus = generateCorpus({
+      vertices,
+      library,
+      corpus: state.corpus[location],
+    });
+    console.log(corpus);
     if (location === 'docker') {
-      console.log('---Preparing build for current focus---');
-      let vertices = state.vertices[location];
-      let library = state.library[location];
-      let corpus = generateCorpus({
-        vertices,
-        library,
-        corpus: state.corpus[location],
-      });
-      console.log(corpus);
+      console.log('---Preparing docker build for current focus---');
       axios
         .post('/gen_build/docker', {
           vertices,
@@ -28,8 +28,27 @@ export function prepareFocusedBuild() {
         .then(response => {
           dispatch(modify('operations', response.data));
         });
+    } else if (location === 'pipeline') {
+      console.log('---Building Pipeline from Focus---');
+      let build_context = {};
+      await axios
+        .post('/gen_build/pipeline', {
+          vertices,
+          corpus,
+          build_id: state.focus,
+        })
+        .then(response => {
+          build_context = response.data.build_context;
+        });
+      console.log(build_context);
+      await axios
+        .post(`/build/${location}`, {build_context: build_context})
+        .then(response => {
+          console.log('...built');
+        });
+      dispatch(modify('operations', blankOperations));
     } else {
-      console.log('Not supported building non-docker');
+      console.log('Only docker and pipeline builds supported');
     }
   };
 }
@@ -37,9 +56,10 @@ export function prepareFocusedBuild() {
 export function buildDocker(operations, cancel) {
   console.log('---Building Docker Image---');
   return async function(dispatch, getState) {
+    let state = getState();
+    let location = state.context.location;
+    let current_cache = state.cache.build;
     let new_cache = {};
-    let location = getState().context.location;
-    let current_cache = getState().cache.build;
     for (const [index, step] of operations.build_orders.entries()) {
       if (cancel.current === true) {
         cancel.current = false;
@@ -70,26 +90,3 @@ export function buildDocker(operations, cancel) {
     dispatch(modify('operations', blankOperations));
   };
 }
-
-// export function buildPipeline(operations, cancel) {
-//   return async function(dispatch, getState) {
-//     console.log('---Building Pipeline---');
-//     let build_context = {};
-//     await axios
-//       .post('/gen_build/pipeline', {
-//         vertices: currentState.vertices.present.pipeline,
-//         corpus: currentState.corpus.pipeline,
-//         build_id: currentState.focus,
-//       })
-//       .then(response => {
-//         build_context = response.data.build_context;
-//       });
-//     console.log(build_context);
-//     await axios
-//       .post(`/build/${location}`, {build_context: build_context})
-//       .then(response => {
-//         console.log('...built');
-//       });
-//     dispatch(modify('operations', blankOperations));
-//   };
-// }

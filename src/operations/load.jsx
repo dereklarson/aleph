@@ -53,7 +53,7 @@ export function loadCore(source, location) {
   };
 }
 
-export function saveCheckpoint(name, state) {
+export function saveCheckpoint(name) {
   return function(dispatch, getState) {
     console.log('---Saving Full State Checkpoint---');
     let state = getState();
@@ -62,11 +62,14 @@ export function saveCheckpoint(name, state) {
   };
 }
 
-export function loadCheckpoint(name, dispatch) {
-  console.log('---Loading Full State Checkpoint---');
-  axios.get(`/checkpoint/load/${name}`).then(response => {
-    dispatch(modify('vertices', response.data));
-  });
+export function loadCheckpoint(name) {
+  return function(dispatch, getState) {
+    console.log('---Loading Full State Checkpoint---');
+    axios.get(`/checkpoint/load/${name}`).then(response => {
+      dispatch(modify('vertices', response.data.vertices));
+      dispatch(modify('library', response.data.library));
+    });
+  };
 }
 
 export function saveDiagram(location, name) {

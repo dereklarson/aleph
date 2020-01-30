@@ -80,12 +80,12 @@ function calculateDagre(vertices) {
   let edges = [];
   _.values(vertices).forEach(parent_vertex => {
     _.keys(parent_vertex.children).forEach(childId => {
-      edges.push({outIndex: parent_vertex.uid, inIndex: childId});
+      edges.push({outId: parent_vertex.uid, inId: childId});
     });
   });
 
   edges.forEach(function(entry) {
-    g.setEdge(entry.outIndex, entry.inIndex);
+    g.setEdge(entry.outId, entry.inId);
   });
 
   //Calculates all of the positions we need
@@ -93,10 +93,10 @@ function calculateDagre(vertices) {
 
   // Get some scale factors to convert positions to percentages, with some buffer
   // transition helps us start in the upper left and center out as vertices are added
-  const transition_scale = 0.5;
-  const transition = Math.min(1, vertices.length / 10);
-  const hScale = Math.min(10, 100 / g.graph().width);
-  const vScale = Math.min(10, 100 / g.graph().height);
+  const transition_scale = 0.7;
+  const transition = Math.min(1, _.size(vertices) / 10);
+  const hScale = Math.min(1, 100 / g.graph().width);
+  const vScale = Math.min(1, 100 / g.graph().height);
   const hZoom = 0.2 + (1 - transition) * transition_scale;
   const vZoom = 0.3 + (1 - transition) * transition_scale;
   const h0 = 0 + (1 - transition) * transition_scale;

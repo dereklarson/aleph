@@ -5,48 +5,36 @@ import {AppBar, Toolbar, Typography} from '@material-ui/core';
 // import _ from 'lodash';
 import {useStyles} from '@style/styling';
 import {modify} from '@data/reducers';
-// import {saveCheckpoint, loadCheckpoint} from '@ops/load';
+import {saveCheckpoint, loadCheckpoint} from '@ops/load';
 import {loadInputs, loadOrg} from '@ops/load';
 import {generateButtons} from '@utils/generateList';
 import {playTutorial} from '@utils/tutorial';
 import {capitalizeFirstLetter} from '@utils/helpers';
 import {requestOrg, godMode} from '@utils/state';
 
-export function PureAppBar({
-  config,
-  context,
-  onLoadInputs,
-  onLoadChk,
-  onLoadOrg,
-  onPlayTutorial,
-  onSetTheme,
-  onText,
-  onGodMode,
-}) {
+export function PureAppBar({config, context, dispatch}) {
   const classes = useStyles();
-  const onInitialLoad = () => onLoadInputs(config);
+  const onInitialLoad = () => dispatch(loadInputs(config));
 
   // Performs loads on mount
-  React.useEffect(onInitialLoad, [onLoadOrg]);
+  React.useEffect(onInitialLoad, []);
 
-  // const [saved, setSaved] = React.useState(false);
-  // const onSaveChk = () => {
-  //   setSaved(true);
-  //   saveCheckpoint('user', state);
-  // };
+  const [saved, setSaved] = React.useState(false);
+  const onSaveCheckpoint = () => {
+    setSaved(true);
+    dispatch(saveCheckpoint('user'));
+  };
   const editfunc = fieldText => modify('config', {organization: fieldText});
 
+  const nextTheme = context.theme === 'light' ? 'dark' : 'light';
   const appBarOptions = [
-    ['set_org', () => onText(editfunc)],
-    ['load_org', () => onLoadOrg(config.organization)],
-    [
-      'set_theme',
-      () => onSetTheme(context.theme === 'light' ? 'dark' : 'light'),
-    ],
-    // ['save_checkpoint', onSaveChk],
-    // ['load_checkpoint', onLoadChk, saved],
-    // ['play_tutorial', () => onPlayTutorial(state)],
-    ['god_mode', () => onGodMode()],
+    ['set_org', () => dispatch(modify('context', {...requestOrg, editfunc}))],
+    ['load_org', () => dispatch(loadOrg(config.organization))],
+    ['set_theme', () => dispatch(modify('context', {theme: nextTheme}))],
+    ['save_checkpoint', onSaveCheckpoint],
+    ['load_checkpoint', () => dispatch(loadCheckpoint('user')), saved],
+    ['play_tutorial', () => playTutorial('tutorial')],
+    ['god_mode', () => dispatch(modify('context', {...godMode}))],
   ];
 
   return (
@@ -66,15 +54,7 @@ export function PureAppBar({
   );
 }
 
-export default connect(
-  state => ({config: state.config, context: state.context}),
-  dispatch => ({
-    onLoadInputs: config => dispatch(loadInputs(config)),
-    // onLoadChk: () => loadCheckpoint('user', dispatch),
-    onLoadOrg: org => dispatch(loadOrg(org)),
-    onPlayTutorial: state => playTutorial('tutorial', state, false, dispatch),
-    onSetTheme: theme => dispatch(modify('context', {theme: theme})),
-    onText: editfunc => dispatch(modify('context', {...requestOrg, editfunc})),
-    onGodMode: () => dispatch(modify('context', {...godMode})),
-  }),
-)(PureAppBar);
+export default connect(state => ({
+  config: state.config,
+  context: state.context,
+}))(PureAppBar);

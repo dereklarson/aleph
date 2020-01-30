@@ -6,6 +6,8 @@ import {blankState} from '@data/reference';
 
 export const coveredState = {
   building: null,
+  solo_vertex: vertexDataFromPaths([['solo']]),
+  pair_vertices: vertexDataFromPaths([['parent', 'child']]),
   small_vertices: vertexDataFromPaths([
     ['Parent', 'Child1'],
     ['Parent', 'Child2'],
@@ -74,6 +76,6 @@ export const excitedState = {
     building: 2,
     build_orders: [{id: 1}],
   },
-  vertices: {present: {docker: _.cloneDeep(coveredState.large_vertices)}},
+  vertices: {docker: _.cloneDeep(coveredState.large_vertices)},
   library: {docker: _.cloneDeep(coveredState.medium_library)},
 };

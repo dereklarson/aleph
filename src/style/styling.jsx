@@ -51,7 +51,9 @@ export const useStyles = makeStyles(theme => ({
   chipDepot: {
     width: '100%',
     zIndex: 1,
+    border: '1px solid grey',
   },
+  badge: {},
   box: {
     alignItems: 'center',
     textAlign: 'center',
@@ -77,6 +79,7 @@ export const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
+    // border: '1px dashed red',
   },
   paper: {
     padding: theme.spacing(2),
