@@ -39,5 +39,4 @@ export const dynamic = () =>
   genStory({
     themeStr: text('theme', 'dark'),
     editing: boolean('editing', false),
-    texting: boolean('texting', false),
   });

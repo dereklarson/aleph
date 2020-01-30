@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
 import {blankOperations} from '@data/reference';
 import {modify} from '@data/reducers';
-import {saveDiagram, loadCore} from '@ops/load';
+import {loadCore} from '@ops/load';
 import {buildDocker} from '@ops/build';
 import {generateList} from '@utils/generateList';
 import {requestSave} from '@utils/state';

@@ -1,5 +1,5 @@
 // @format
-import undoable from 'redux-undo';
+// import undoable from 'redux-undo';
 import _ from 'lodash';
 import {vertexDataFromPaths} from '@utils/vertex';
 import {genSlice, stateLoc} from './tools';

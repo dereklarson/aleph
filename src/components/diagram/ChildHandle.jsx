@@ -2,7 +2,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
-import _ from 'lodash';
+// import _ from 'lodash';
 import {addVertex, linkVertex} from '@data/reducers';
 import {useStyles} from '@style/styling';
 import {getAncestry} from '@utils/vertex';

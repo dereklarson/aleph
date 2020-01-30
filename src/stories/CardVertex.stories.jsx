@@ -4,7 +4,7 @@ import {action} from '@storybook/addon-actions';
 import {text} from '@storybook/addon-knobs';
 import {genStoryEntry, getCollageGenerator} from './testHelpers';
 import {excitedState} from './testStates';
-import {PureCardVertex} from '@comp/diagram/CardVertex';
+import {PureCardVertex} from '@diagram/CardVertex';
 
 const TestComponent = PureCardVertex;
 // Generate a Storybook entry based on the following key args (order, component, state)

@@ -2,10 +2,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {AppBar, Toolbar, Typography} from '@material-ui/core';
-import _ from 'lodash';
+// import _ from 'lodash';
 import {useStyles} from '@style/styling';
 import {modify} from '@data/reducers';
-import {saveCheckpoint, loadCheckpoint} from '@ops/load';
+// import {saveCheckpoint, loadCheckpoint} from '@ops/load';
 import {loadInputs, loadOrg} from '@ops/load';
 import {generateButtons} from '@utils/generateList';
 import {playTutorial} from '@utils/tutorial';
@@ -29,22 +29,22 @@ export function PureAppBar({
   // Performs loads on mount
   React.useEffect(onInitialLoad, [onLoadOrg]);
 
-  const [saved, setSaved] = React.useState(false);
+  // const [saved, setSaved] = React.useState(false);
   // const onSaveChk = () => {
   //   setSaved(true);
   //   saveCheckpoint('user', state);
   // };
-  const savefunc = fieldText => modify('config', {organization: fieldText});
+  const editfunc = fieldText => modify('config', {organization: fieldText});
 
   const appBarOptions = [
-    ['set_org', () => onText(savefunc)],
+    ['set_org', () => onText(editfunc)],
     ['load_org', () => onLoadOrg(config.organization)],
     [
       'set_theme',
       () => onSetTheme(context.theme === 'light' ? 'dark' : 'light'),
     ],
     // ['save_checkpoint', onSaveChk],
-    ['load_checkpoint', onLoadChk, saved],
+    // ['load_checkpoint', onLoadChk, saved],
     // ['play_tutorial', () => onPlayTutorial(state)],
     ['god_mode', () => onGodMode()],
   ];
@@ -70,12 +70,11 @@ export default connect(
   state => ({config: state.config, context: state.context}),
   dispatch => ({
     onLoadInputs: config => dispatch(loadInputs(config)),
-    onLoadChk: () => loadCheckpoint('user', dispatch),
+    // onLoadChk: () => loadCheckpoint('user', dispatch),
     onLoadOrg: org => dispatch(loadOrg(org)),
     onPlayTutorial: state => playTutorial('tutorial', state, false, dispatch),
     onSetTheme: theme => dispatch(modify('context', {theme: theme})),
-    onText: savefunc =>
-      dispatch(modify('context', {...requestOrg, editfunc: savefunc})),
+    onText: editfunc => dispatch(modify('context', {...requestOrg, editfunc})),
     onGodMode: () => dispatch(modify('context', {...godMode})),
   }),
 )(PureAppBar);

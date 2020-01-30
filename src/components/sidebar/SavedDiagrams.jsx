@@ -2,7 +2,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
-import _ from 'lodash';
+// import _ from 'lodash';
 import {generateList} from '@utils/generateList';
 import {addDiagram} from '@data/reducers';
 

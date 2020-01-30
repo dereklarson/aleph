@@ -6,14 +6,13 @@ import {ThemeProvider} from '@material-ui/core/styles';
 import AppBar from './AppBar';
 import Workspace from '@comp/Workspace';
 import Sidebar from '@sidebar/Sidebar';
-import Editor from '@common/Editor';
 import TextEntry from '@common/TextEntry';
 import {GlobalHotKeys} from 'react-hotkeys';
 import {useStyles} from '@style/styling';
 import {themePicker} from '@style/theme';
 import {ActionCreators as UndoAC} from 'redux-undo';
 
-export function PureInterface({themeStr, editing, texting, dispatch}) {
+export function PureInterface({themeStr, editing, dispatch}) {
   const classes = useStyles();
 
   const theme = themePicker[themeStr];
@@ -39,8 +38,7 @@ export function PureInterface({themeStr, editing, texting, dispatch}) {
       <GlobalHotKeys keyMap={globalKeyMap} handlers={globalHandlers} />
       <div className={classes.root}>
         <CssBaseline />
-        <Editor open={editing} />
-        <TextEntry open={texting} />
+        <TextEntry open={editing} />
         <AppBar />
         <Sidebar />
         <Workspace />
@@ -52,5 +50,4 @@ export function PureInterface({themeStr, editing, texting, dispatch}) {
 export default connect(state => ({
   themeStr: state.context.theme,
   editing: state.context.editing,
-  texting: state.context.texting,
 }))(PureInterface);

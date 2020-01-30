@@ -7,15 +7,22 @@ import AceEditor from 'react-ace';
 import _ from 'lodash';
 import {modify} from '@data/reducers';
 import {useStyles} from '@style/styling';
-import {notTextingState} from '@utils/state';
+import {notEditingState} from '@utils/state';
 import {saveDiagram} from '@ops/load';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
-export function PureTextEntry({open, location, schema, editfunc, dispatch}) {
+export function PureTextEntry({
+  open,
+  location,
+  schema,
+  edittext,
+  editfunc,
+  dispatch,
+}) {
   const classes = useStyles();
-  let [fieldText, setFieldText] = React.useState({});
+  const [fieldText, setFieldText] = React.useState({});
 
   let itemDisplay = [];
   for (const keystr of Object.keys(_.get(schema, 'keys', []))) {
@@ -35,32 +42,37 @@ export function PureTextEntry({open, location, schema, editfunc, dispatch}) {
       />,
     );
   }
-
-  let callfunc = editfunc;
   if (_.has(schema, 'godmode')) {
-    callfunc = text => modify('context', JSON.parse(text));
+    editfunc = text => modify('context', JSON.parse(text));
+  }
+
+  let currText = edittext;
+  if (!_.has(schema, 'keys')) {
     itemDisplay.push(
       <AceEditor
+        key="god"
         className={classes.editor}
+        width="100%"
         mode="yaml"
         theme="monokai"
-        defaultValue='{"dagre": true}'
+        defaultValue={edittext}
         onChange={(value, event) => {
-          fieldText = value;
+          currText = value;
         }}
       />,
     );
   }
 
-  const onCancel = () => dispatch(modify('context', {...notTextingState}));
+  const onCancel = () => dispatch(modify('context', {...notEditingState}));
   const onDone = () => {
-    if (_.has(fieldText, 'savename')) {
-      console.log('Triggering save');
+    if (_.has(_.get(schema, 'keys', {}), 'savename')) {
       dispatch(saveDiagram(location, fieldText.savename));
+    } else if (!_.has(schema, 'keys')) {
+      dispatch(editfunc(currText));
     } else {
-      dispatch(callfunc(fieldText));
+      dispatch(editfunc(fieldText));
     }
-    dispatch(modify('context', {...notTextingState}));
+    dispatch(modify('context', {...notEditingState}));
   };
 
   return (
@@ -82,5 +94,6 @@ export function PureTextEntry({open, location, schema, editfunc, dispatch}) {
 export default connect(state => ({
   location: state.context.location,
   schema: state.context.schema,
+  edittext: state.context.edittext,
   editfunc: state.context.editfunc,
 }))(PureTextEntry);

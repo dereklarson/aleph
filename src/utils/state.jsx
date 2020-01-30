@@ -42,14 +42,8 @@ export const notEditingState = {
   editfunc: () => 0,
 };
 
-export const notTextingState = {
-  texting: false,
-  edittext: '',
-  editfunc: () => 0,
-};
-
 export const requestSave = {
-  texting: true,
+  editing: true,
   schema: {
     title: 'Save the current diagram',
     keys: {
@@ -59,7 +53,7 @@ export const requestSave = {
 };
 
 export const requestOrg = {
-  texting: true,
+  editing: true,
   schema: {
     title: 'Enter Org Info',
     keys: {
@@ -71,7 +65,7 @@ export const requestOrg = {
 };
 
 export const godMode = {
-  texting: true,
+  editing: true,
   schema: {
     title: 'Godmode',
     godmode: 1,

@@ -24,10 +24,7 @@ let genStory = getStoryGenerator(TestComponent, boxProps, testData);
 
 export const test = () => genStory();
 export const many = () =>
-  genStory({
-    context: {open: true, schema: {title: 'Z', keys: {a: 1, b: 2, c: 3}}},
-  });
+  genStory({open: true, schema: {title: 'Z', keys: {a: 1, b: 2, c: 3}}});
 export const god = () =>
-  genStory({
-    context: {open: true, schema: {title: 'God', godmode: true, keys: {}}},
-  });
+  genStory({open: true, schema: {title: 'God', godmode: true}});
+export const code = () => genStory({open: true, schema: {title: 'Edit text'}});

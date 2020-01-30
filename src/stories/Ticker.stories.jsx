@@ -2,7 +2,7 @@
 import {text, number} from '@storybook/addon-knobs';
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
 import {excitedState} from './testStates';
-import {PureTicker} from '@comp/depot/Ticker';
+import {PureTicker} from '@depot/Ticker';
 
 const TestComponent = PureTicker;
 // Generate a Storybook entry based on the following key args (order, component, state)

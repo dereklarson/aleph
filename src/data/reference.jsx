@@ -16,8 +16,7 @@ export const blankContext = {
   focus: null,
   location: 'docker',
   editing: false,
-  schema: {title: '', keys: {}},
-  texting: false,
+  schema: {title: 'Editing'},
   editfunc: () => 0,
 };
 
