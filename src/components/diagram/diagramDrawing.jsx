@@ -72,7 +72,7 @@ function calculateDagre(vertices) {
   _.values(vertices).forEach(vertex => {
     // TODO Alter this to do something special for Cards?
     if (vertex !== null) {
-      g.setNode(vertex.uid, {width: 20, height: 30});
+      g.setNode(vertex.uid, {width: 8, height: 20});
     }
   });
 

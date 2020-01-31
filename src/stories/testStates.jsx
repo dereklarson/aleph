@@ -14,8 +14,6 @@ export const coveredState = {
   ]),
   medium_vertices: vertexDataFromPaths([
     ['Ubuntu', 'Python', 'React', 'Flask'],
-    ['Ubuntu', 'Python', 'Python_sci', 'gcp', 'JupyterLab'],
-    ['Ubuntu', 'Python', 'Python_sci', 'gcp', 'Modeler'],
     ['Ubuntu', 'Python', 'gcp', 'Worker'],
   ]),
   large_vertices: vertexDataFromPaths([

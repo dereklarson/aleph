@@ -4,13 +4,38 @@ import _ from 'lodash';
 import {requestOrg} from '@utils/state';
 import {modify} from '@data/reducers';
 
-// Thunked: will return function taking dispatch
+// All of these are thunked to give access to state and asynchronicity
+
+export function loadOrg() {
+  return function(dispatch, getState) {
+    let org = getState()['config']['organization'];
+    console.log(`---Loading Organization---`);
+    axios
+      .post(`/repo/pull/${org.uid}`, {repository: org.repository})
+      .then(response => {
+        dispatch(modify('config', response.data));
+      });
+  };
+}
+
+export function loadCore(source, location) {
+  return function(dispatch, getState) {
+    let org = getState()['config']['organization'];
+    if (['pipeline', 'docker'].includes(location)) {
+      console.log(`---Loading ${location} ${source}---`);
+      axios.get(`/coreload/${source}/${location}/${org.uid}`).then(response => {
+        dispatch(modify(source, response.data));
+      });
+    }
+  };
+}
+
 export function loadInputs(config) {
   let org = _.cloneDeep(config.organization);
   const savefunc = fieldText => modify('config', {organization: fieldText});
-  return function(dispatch) {
+  return async function(dispatch) {
     console.log('---Loading Inputs ---');
-    axios.get('/input').then(response => {
+    await axios.get('/input').then(response => {
       dispatch(modify('config', response.data));
       Object.assign(org, _.get(response.data, 'organization', {}));
       if (org.name.includes('<')) {
@@ -18,38 +43,12 @@ export function loadInputs(config) {
         dispatch(modify('context', {...requestOrg, func: savefunc}));
       }
     });
-  };
-}
-
-// Thunked: will return function taking dispatch
-export function loadOrg() {
-  return function(dispatch, getState) {
-    let org = getState()['config']['organization'];
-    console.log(`---Loading Organization---`);
-    console.log(org);
-    axios
-      .post(`/repo/${org.uid}`, {repository: org.repository})
-      .then(response => {
-        dispatch(modify('config', response.data));
-      });
-  };
-}
-
-// Thunked: will return function taking dispatch
-export function loadCore(source, location) {
-  return function(dispatch, getState) {
-    let org = getState()['config']['organization'];
-    console.log(org);
-    if (['pipeline', 'docker'].includes(location)) {
-      console.log(`---Loading ${location} ${source}---`);
-      axios.get(`/coreload/${source}/${location}/${org.uid}`).then(response => {
-        dispatch(modify(source, response.data));
-      });
-    }
-    console.log(`---Loading Docker Images---`);
-    axios.get('/docker_images').then(response => {
-      dispatch(modify('operations', response.data));
-    });
+    console.log('Performing initial refresh');
+    dispatch(loadCore('library', 'docker'));
+    dispatch(loadCore('library', 'pipeline'));
+    dispatch(loadCore('diagrams', 'docker'));
+    dispatch(loadCore('diagrams', 'pipeline'));
+    console.log('...Finished');
   };
 }
 
