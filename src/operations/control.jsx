@@ -5,11 +5,10 @@ import {requestOrg} from '@utils/state';
 import {modify} from '@data/reducers';
 
 // Thunked: will return function taking dispatch
-export function pushImages(config, match_string = '') {
-  let org = _.cloneDeep(config.organization);
+export function pushImages(organization, match_string) {
   return async function(dispatch, getState) {
-    console.log('---Loading Inputs ---');
-    axios.post('/docker/push/', {match_string}).then(response => {
+    console.log('---Pushing Docker images ---');
+    axios.post('/docker/push', {organization, match_string}).then(response => {
       dispatch(modify('context', response.data));
     });
   };
@@ -18,7 +17,7 @@ export function pushImages(config, match_string = '') {
 export function getImages() {
   return function(dispatch) {
     console.log(`---Loading Docker Images---`);
-    axios.get('/docker/list/').then(response => {
+    axios.get('/docker/list').then(response => {
       dispatch(modify('operations', response.data));
     });
   };
