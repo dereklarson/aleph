@@ -17,7 +17,6 @@ import NodeVertex from './NodeVertex';
 import ConfigNodeVertex from './ConfigNodeVertex';
 import ChildHandle from './ChildHandle';
 import ParentHandle from './ParentHandle';
-import {HotKeys} from 'react-hotkeys';
 import {getAncestry} from '@utils/vertex';
 
 export function PureVertex({
@@ -87,33 +86,24 @@ export function PureVertex({
   const CurrentComponent = components[type];
   const zIndex = type === 'card' ? 4 : 3;
 
-  const deleteNode = React.useCallback(() => {
-    cardActions.onClear({location, uid});
-  }, [location, cardActions, uid]);
-
-  const handlers = {
-    DELETE_NODE: deleteNode,
-  };
-
   return (
     <div ref={ref} style={{zIndex: zIndex}} onMouseEnter={setFocus}>
-      <HotKeys handlers={handlers}>
-        <ParentHandle vertexId={uid} />
-        <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
-        <div
-          onClick={event => {
-            event.stopPropagation();
-            onClick(uid);
-          }}>
-          <CurrentComponent
-            uid={uid}
-            cardActions={cardActions}
-            sections={sections}
-            styleProps={styleProps}
-          />
-        </div>
-        <ChildHandle vertexId={uid} />
-      </HotKeys>
+      <ParentHandle vertexId={uid} />
+      <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
+      <div
+        onClick={event => {
+          event.stopPropagation();
+          onClick(uid);
+        }}>
+        <CurrentComponent
+          uid={uid}
+          idlist={_.keys(vertices)}
+          cardActions={cardActions}
+          sections={sections}
+          styleProps={styleProps}
+        />
+      </div>
+      <ChildHandle vertexId={uid} />
     </div>
   );
 }

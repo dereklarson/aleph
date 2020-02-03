@@ -71,8 +71,22 @@ const vertexReducers = {
     delete state[action.payload.location][vertex.uid];
   },
   renameVertex(state, action) {
-    //TODO
-    stateLoc(state, action.payload);
+    let vertex = stateLoc(state, action.payload);
+    let oldId = vertex.uid;
+    let newId = action.payload.newId;
+    vertex['uid'] = newId;
+    //Swap each parent link and child link, then swap the vertex
+    _.keys(vertex.parents).forEach(key => {
+      delete state[action.payload.location][key].children[oldId];
+      state[action.payload.location][key].children[newId] = true;
+    });
+    _.keys(vertex.children).forEach(key => {
+      delete state[action.payload.location][key].parents[oldId];
+      state[action.payload.location][key].parents[newId] = true;
+    });
+    delete Object.assign(state[action.payload.location], {[newId]: vertex})[
+      oldId
+    ];
   },
   linkVertex(state, action) {
     let child = state[action.payload.location][action.payload.child];

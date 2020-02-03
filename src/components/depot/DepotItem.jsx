@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrag, DragPreviewImage} from 'react-dnd';
 import Chip from '@material-ui/core/Chip';
-import {capitalizeFirstLetter} from '@utils/helpers';
+import {titlize} from '@utils/helpers';
 import {modify, writeText} from '@data/reducers';
 import {useStyles} from '@style/styling';
 
@@ -25,7 +25,7 @@ export function DepotItem({itemProps, location, onClick}) {
       <Chip
         className={classes.chipDepot}
         title={itemProps.text}
-        label={capitalizeFirstLetter(itemProps.uid)}
+        label={titlize(itemProps.uid)}
         style={{opacity: isDragging ? 0.5 : 1}}
         onClick={() => onClick({editfunc, edittext: itemProps.text})}
       />

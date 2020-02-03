@@ -13,7 +13,7 @@ export function ParentHandle({location, vertexId, vertices, onDrop}) {
   const [{highlighted}, drop] = useDrop({
     accept: ['DepotItem'],
     drop: item => {
-      onDrop(location, vertexId, _.size(vertices), item.uid);
+      onDrop(location, vertexId, item.uid);
     },
     canDrop: (item, monitor) => {
       if (_.size(vertices[vertexId].parents) !== 0) {
@@ -39,9 +39,9 @@ export function ParentHandle({location, vertexId, vertices, onDrop}) {
 
 function actionDispatch(dispatch) {
   return {
-    onDrop: (location, to, from, section) => {
+    onDrop: (location, child, section) => {
       dispatch(addVertex({location, uid: section}));
-      dispatch(linkVertex({location, from, to}));
+      dispatch(linkVertex({location, child, parent: section}));
     },
   };
 }

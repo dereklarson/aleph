@@ -18,6 +18,7 @@ export function PureCardVertex({
   onChange,
   onChipDelete,
   uid,
+  idlist,
   cardActions,
   sections,
   styleProps,
@@ -30,20 +31,30 @@ export function PureCardVertex({
     );
   }
 
+  const [texterr, setErr] = React.useState(false);
   const edittext = createText({library, sections, corpus, uid});
   const editfunc = text => setText({location, uid: uid, text: text});
 
   return (
-    <Card style={propsToStyle(styleProps)}>
+    <Card
+      style={propsToStyle(styleProps)}
+      onClick={event => event.stopPropagation()}>
       <CardActionArea>
         <CardContent>
           <TextField
             label="Node name"
             defaultValue={uid}
+            error={texterr}
+            helperText={texterr ? 'Already in use' : '<Enter> to set'}
             margin="normal"
-            onChange={event =>
-              onChange({location, uid, value: event.target.value})
-            }
+            onKeyPress={event => {
+              if (!texterr && event.key === 'Enter') {
+                onChange({location, uid, newId: event.target.value});
+              }
+            }}
+            onChange={event => {
+              setErr(idlist.includes(event.target.value));
+            }}
           />
           {chipDisplay}
         </CardContent>
