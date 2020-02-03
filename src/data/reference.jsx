@@ -42,7 +42,7 @@ export const blankConfig = {
 };
 
 const categories = {
-  vertices: vertexDataFromPaths([['Parent', 'Child']]),
+  vertices: vertexDataFromPaths([['parent', 'child']]),
   library: {},
   corpus: {},
   diagrams: {},
@@ -69,6 +69,5 @@ console.log(initState);
 export const tutorialInitialState = {
   context: _.cloneDeep(blankContext),
   operations: _.cloneDeep(blankOperations),
-  docker_vertices: [],
-  docker_fulltext: new Map(),
+  vertices: {},
 };

@@ -31,7 +31,7 @@ export function PureAppBar({config, context, dispatch}) {
     ['set_theme', () => dispatch(modify('context', {theme: nextTheme}))],
     ['save_checkpoint', onSaveCheckpoint],
     ['load_checkpoint', () => dispatch(loadCheckpoint('user')), saved],
-    ['play_tutorial', () => playTutorial('tutorial')],
+    ['play_tutorial', () => dispatch(playTutorial('tutorial'))],
     ['god_mode', () => dispatch(modify('context', {...godMode}))],
   ];
 

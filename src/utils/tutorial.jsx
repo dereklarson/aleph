@@ -1,35 +1,37 @@
 // @format
 import axios from 'axios';
+import _ from 'lodash';
 import {saveCheckpoint, loadCheckpoint} from '@ops/load';
 import {modify} from '@data/reducers';
 import {tutorialInitialState} from '@data/reference';
 import {sleep} from './helpers';
 
-export async function playTutorial(tutorialName, state, cancel, dispatch) {
-  console.log('---Building---', tutorialName);
-  let steps = [];
-  await axios
-    .post('/play_tutorial', {tutorial_name: tutorialName})
-    .then(response => {
-      steps = steps.concat(response.data);
+export function playTutorial(tutorialName, cancel = {current: false}) {
+  return async function(dispatch, getState) {
+    console.log('---Building Tutorial---', tutorialName);
+    let steps = [];
+    await axios
+      .post('/play_tutorial', {tutorial_name: tutorialName})
+      .then(response => {
+        steps = steps.concat(response.data);
+      });
+    console.log(steps);
+    saveCheckpoint('system');
+    _.keys(tutorialInitialState).forEach(key => {
+      dispatch(modify(key, tutorialInitialState[key]));
     });
-  console.log(steps);
-  saveCheckpoint('system', state);
-  dispatch(modify('vertices', tutorialInitialState));
-  for (const [index, step] of steps.entries()) {
-    if (cancel.current === true) {
-      cancel.current = false;
-      break;
+    for (const [index, step] of steps.entries()) {
+      if (cancel.current === true) {
+        cancel.current = false;
+        break;
+      }
+      const percent = Math.floor((100 * index) / steps.length);
+      dispatch(modify('operations', {tickertext: step.text, percent: percent}));
+      _.keys(step.state).forEach(key => {
+        dispatch(modify(key, step.state[key]));
+      });
+      await sleep(1000);
     }
-    const percent = Math.floor((100 * index) / steps.length);
-    dispatch(
-      modify('operations', {
-        tickertext: step.text,
-        percent: percent,
-        ...step.state,
-      }),
-    );
-    await sleep(1000);
-  }
-  loadCheckpoint('system', dispatch);
+    loadCheckpoint('system');
+  };
 }
