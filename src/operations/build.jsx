@@ -50,7 +50,6 @@ export function buildDocker(operations, cancel) {
   console.log('---Building Docker Image---');
   return async function(dispatch, getState) {
     let state = getState();
-    let location = state.context.location;
     let current_cache = state.cache.build;
     let new_cache = {};
     for (const [index, step] of operations.build_orders.entries()) {
@@ -72,11 +71,9 @@ export function buildDocker(operations, cancel) {
       if (_.has(current_cache, step.hash)) {
         continue;
       }
-      await axios
-        .post(`/build/${location}`, {build_order: step})
-        .then(response => {
-          dispatch(modify('operations', response.data));
-        });
+      await axios.post('/build/docker', {build_order: step}).then(response => {
+        dispatch(modify('operations', response.data));
+      });
       new_cache[step.hash] = true;
       dispatch(modify('cache', {build: {...current_cache, ...new_cache}}));
     }

@@ -53,6 +53,16 @@ export const requestSave = {
   },
 };
 
+export const imagePush = {
+  editing: true,
+  schema: {
+    title: 'Enter match string for image push',
+    keys: {
+      match: 1,
+    },
+  },
+};
+
 export const requestOrg = {
   editing: true,
   schema: {

@@ -55,9 +55,8 @@ export function loadInputs(config) {
 export function saveCheckpoint(name) {
   return function(dispatch, getState) {
     console.log('---Saving Full State Checkpoint---');
-    let state = getState();
-    delete state.context;
-    axios.post(`/checkpoint/save/${name}`, state);
+    let {context, ...saveState} = getState();
+    axios.post(`/checkpoint/save/${name}`, saveState);
   };
 }
 

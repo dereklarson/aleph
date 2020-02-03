@@ -8,7 +8,7 @@ import {loadCore, loadOrg} from '@ops/load';
 import {buildDocker} from '@ops/build';
 import {pushOrg, pushImages} from '@ops/control';
 import {generateList} from '@utils/generateList';
-import {requestSave, requestOrg} from '@utils/state';
+import {imagePush, requestSave, requestOrg} from '@utils/state';
 
 function BulkActions({organization, operations, location, dispatch}) {
   const cancel = React.useRef(false);
@@ -21,10 +21,13 @@ function BulkActions({organization, operations, location, dispatch}) {
     ['refresh', () => dispatch(loadCore('diagrams', location))],
   ];
   const orgSet = fieldText => modify('config', {organization: fieldText});
-  const imagePush = fieldText => modify('config', {organization: fieldText});
+  const imagePusher = fieldText => pushImages(organization, fieldText.match);
   const locationOptions = {
     configuration: [
-      ['set_org', () => dispatch(modify('context', {...requestOrg, orgSet}))],
+      [
+        'set_org',
+        () => dispatch(modify('context', {...requestOrg, editfunc: orgSet})),
+      ],
       ['load_org', () => dispatch(loadOrg(organization))],
       ['push_org', () => dispatch(pushOrg())],
     ],
@@ -32,7 +35,11 @@ function BulkActions({organization, operations, location, dispatch}) {
     docker: [
       ['build_marked', () => dispatch(buildDocker(operations, cancel))],
       ['cancel_build', onCancel],
-      ['push_images', () => dispatch(pushImages(organization, 'ubuntux'))],
+      [
+        'push_images',
+        () =>
+          dispatch(modify('context', {...imagePush, editfunc: imagePusher})),
+      ],
     ],
     pipeline: [],
   };
