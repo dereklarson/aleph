@@ -12,9 +12,10 @@ export default genStoryEntry(10, TestComponent, excitedState);
 
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
-  name: 'Test name',
+  uid: 'Test name',
   sections: ['react'],
-  id: 1,
+  idlist: [],
+  library: {cornelius: 'Scipio', julius: 'Caesar', fabius: 'Cunctator'},
   cardActions: {
     onEditor: action('Editor'),
     onBuild: action('Build'),
@@ -39,18 +40,20 @@ let genCollage = getCollageGenerator(
 );
 
 export const dynamic = () => (
-  <TestComponent {...testData} name={text('name', 'a')} />
+  <TestComponent {...testData} uid={text('uid', 'a')} />
 );
 export const names = () =>
   genCollage([
-    {name: 'a'},
-    {name: 'Normal'},
-    {name: 'Cornelius Scipio Africanus'},
+    {uid: 'a'},
+    {uid: 'Normal'},
+    {uid: 'Cornelius Scipio Africanus'},
   ]);
 export const sections = () =>
   genCollage([
     {sections: []},
-    {sections: ['Cornelius', 'Fabius', 'Julius', 'Quinctius', 'Cato']},
+    {
+      sections: ['cornelius', 'fabius', 'julius', 'cato_the_middle-aged'],
+    },
   ]);
 export const states = () =>
   genCollage([

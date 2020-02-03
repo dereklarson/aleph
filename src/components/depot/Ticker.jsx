@@ -3,27 +3,32 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import SettingsOverscanIcon from '@material-ui/icons/SettingsOverscan';
-import SubjectIcon from '@material-ui/icons/Subject';
-import Fab from '@material-ui/core/Fab';
 import {Progress} from 'react-sweet-progress';
+import {Paper} from '@material-ui/core';
 import 'react-sweet-progress/lib/style.css';
 import LogPopup from '@common/LogPopup';
 import {modify} from '@data/reducers';
 import {useStyles} from '@style/styling';
 import {loadCore} from '@ops/load';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import {generateList} from '@utils/generateList';
 
 export function PureTicker({
   location,
   dagre,
   operations,
+  onClear,
   onDagre,
   onLoadLibrary,
 }) {
   const classes = useStyles();
 
   const [logOpen, openLog] = React.useState(false);
+  const actionOptions = [
+    ['show_logs', () => openLog(true)],
+    ['toggle_dagre', () => onDagre(dagre)],
+    ['refresh', () => onLoadLibrary(location)],
+    ['clear_diagram', () => onClear(location)],
+  ];
 
   return (
     <div>
@@ -41,15 +46,9 @@ export function PureTicker({
         text={operations.logs}
         onClose={() => openLog(false)}
       />
-      <Fab onClick={() => openLog(true)}>
-        <SubjectIcon />
-      </Fab>
-      <Fab onClick={() => onDagre(dagre)}>
-        <SettingsOverscanIcon />
-      </Fab>
-      <Fab onClick={() => onLoadLibrary(location)}>
-        <RefreshIcon />
-      </Fab>
+      <Paper className={classes.tickerActions}>
+        {generateList('fab', actionOptions)}
+      </Paper>
     </div>
   );
 }
@@ -61,6 +60,7 @@ export default connect(
     operations: state.operations,
   }),
   dispatch => ({
+    onClear: location => dispatch(modify('vertices', {[location]: {}})),
     onDagre: dagre => dispatch(modify('context', {dagre: !dagre})),
     onLoadLibrary: location => dispatch(loadCore('library', location)),
   }),

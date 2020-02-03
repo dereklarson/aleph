@@ -1,15 +1,12 @@
 // @format
 import React from 'react';
 import {connect} from 'react-redux';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import {Chip, TextField} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import {propsToStyle} from '@utils/helpers';
+import {Button, Card, Chip, Paper, TextField} from '@material-ui/core';
+import {CardActionArea, CardActions, CardContent} from '@material-ui/core';
+import _ from 'lodash';
 import {removeSection, renameVertex, setText, clearText} from '@data/reducers';
-import {createText} from '@utils/helpers';
+import {createText, titlize, propsToStyle} from '@utils/helpers';
+import {useStyles} from '@style/styling';
 
 export function PureCardVertex({
   location,
@@ -23,17 +20,31 @@ export function PureCardVertex({
   sections,
   styleProps,
 }) {
+  const classes = useStyles();
+  const [texterr, setErr] = React.useState(false);
+
   let chipDisplay = [];
+  let libError = false;
   for (const [index, section] of sections.entries()) {
+    let libraryMissing = !_.has(library, section);
+    libError = libError || libraryMissing;
     const chipDelete = () => onChipDelete({location, uid, section});
     chipDisplay.push(
-      <Chip key={index} label={section} onDelete={chipDelete} />,
+      <Chip
+        key={index}
+        label={titlize(section)}
+        color={libraryMissing ? 'secondary' : 'default'}
+        onDelete={chipDelete}
+      />,
     );
   }
 
-  const [texterr, setErr] = React.useState(false);
-  const edittext = createText({library, sections, corpus, uid});
-  const editfunc = text => setText({location, uid: uid, text: text});
+  let edittext = '';
+  let editfunc = () => 0;
+  if (!libError) {
+    edittext = createText({library, sections, corpus, uid});
+    editfunc = text => setText({location, uid: uid, text: text});
+  }
 
   return (
     <Card
@@ -56,7 +67,7 @@ export function PureCardVertex({
               setErr(idlist.includes(event.target.value));
             }}
           />
-          {chipDisplay}
+          <Paper className={classes.paper}>{chipDisplay}</Paper>
         </CardContent>
       </CardActionArea>
       <CardActions>

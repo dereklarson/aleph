@@ -3,22 +3,19 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {AppBar, Toolbar, Typography} from '@material-ui/core';
 // import _ from 'lodash';
-import {useStyles} from '@style/styling';
 import {modify} from '@data/reducers';
-import {loadInputs, loadOrg} from '@ops/load';
-import {pushOrg, pushImages} from '@ops/control';
-import {saveCheckpoint, loadCheckpoint} from '@ops/load';
-import {generateButtons} from '@utils/generateList';
+import {loadInputs, saveCheckpoint, loadCheckpoint} from '@ops/load';
+import {generateList} from '@utils/generateList';
 import {playTutorial} from '@utils/tutorial';
-import {capitalizeFirstLetter} from '@utils/helpers';
-import {requestOrg, godMode} from '@utils/state';
+import {godMode} from '@utils/state';
+import {titlize} from '@utils/helpers';
+import {useStyles} from '@style/styling';
 
 export function PureAppBar({config, context, dispatch}) {
   const classes = useStyles();
   const onInitialLoad = () => {
     dispatch(loadInputs(config));
   };
-  let organization = config.organization;
 
   // Performs loads on mount
   React.useEffect(onInitialLoad, []);
@@ -28,14 +25,9 @@ export function PureAppBar({config, context, dispatch}) {
     setSaved(true);
     dispatch(saveCheckpoint('user'));
   };
-  const editfunc = fieldText => modify('config', {organization: fieldText});
 
   const nextTheme = context.theme === 'light' ? 'dark' : 'light';
   const appBarOptions = [
-    ['set_org', () => dispatch(modify('context', {...requestOrg, editfunc}))],
-    ['load_org', () => dispatch(loadOrg(organization))],
-    ['push_org', () => dispatch(pushOrg())],
-    ['push_images', () => dispatch(pushImages(organization, 'ubuntux'))],
     ['set_theme', () => dispatch(modify('context', {theme: nextTheme}))],
     ['save_checkpoint', onSaveCheckpoint],
     ['load_checkpoint', () => dispatch(loadCheckpoint('user')), saved],
@@ -52,9 +44,9 @@ export function PureAppBar({config, context, dispatch}) {
           color="inherit"
           noWrap
           className={classes.title}>
-          {organization.name} - {capitalizeFirstLetter(context.location)}
+          {config.organization.name} - {titlize(context.location)}
         </Typography>
-        {generateButtons(appBarOptions)}
+        {generateList('button', appBarOptions)}
       </Toolbar>
     </AppBar>
   );

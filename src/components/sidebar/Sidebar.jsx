@@ -35,7 +35,12 @@ export function PureSidebar({onNavigate, location}) {
       <Divider />
       <List>
         <ListSubheader inset> Locations </ListSubheader>
-        {generateList(sidebarOptions, 'Switch to the <> environment')}
+        {generateList(
+          'list',
+          sidebarOptions,
+          'def',
+          'Switch to the <> environment',
+        )}
       </List>
       <Divider />
       <BulkActions setMenuOpen={setOpen} />

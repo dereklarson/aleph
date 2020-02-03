@@ -81,6 +81,13 @@ export const useStyles = makeStyles(theme => ({
     position: 'absolute',
     // border: '1px dashed red',
   },
+  tickerActions: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    overflow: 'auto',
+    padding: theme.spacing(0),
+  },
   paper: {
     padding: theme.spacing(2),
     display: 'flex',
