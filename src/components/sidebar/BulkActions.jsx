@@ -6,7 +6,7 @@ import {blankOperations} from '@data/reference';
 import {modify} from '@data/reducers';
 import {loadCore, loadOrg, pushOrg, pushImages} from '@ops/load';
 import {saveDiagram} from '@ops/load';
-import {buildDocker} from '@ops/build';
+import {buildDocker, runPipeline} from '@ops/build';
 import {generateList} from '@utils/generateList';
 import {genTextEdit} from '@utils/state';
 
@@ -38,7 +38,10 @@ function BulkActions({organization, operations, location, dispatch}) {
       ['cancel_build', onCancel],
       ['push_images', () => dispatch(genTextEdit('pushImages', imagePusher))],
     ],
-    pipeline: [['testing_mode', () => setTesting(true)]],
+    pipeline: [
+      ['testing_mode', () => setTesting(!testing)],
+      ['run_pipeline', () => dispatch(runPipeline())],
+    ],
   };
 
   const actionOptions = baseOptions.concat(locationOptions[location]);

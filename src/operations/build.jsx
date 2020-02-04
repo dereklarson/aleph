@@ -46,6 +46,20 @@ export function prepareFocusedBuild() {
   };
 }
 
+export function runPipeline() {
+  return async function(dispatch, getState) {
+    let state = getState();
+    let location = state.context.location;
+    let focus = state.context.focus;
+    if (location === 'pipeline') {
+      console.log('---Running Pipeline---');
+      await axios.post('/run/pipeline', {}).then(response => {
+        dispatch(modify('operations', response.data));
+      });
+    }
+  };
+}
+
 export function buildDocker(operations, cancel) {
   console.log('---Building Docker Image---');
   return async function(dispatch, getState) {
