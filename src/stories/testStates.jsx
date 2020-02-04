@@ -87,4 +87,5 @@ export const excitedState = {
   },
   vertices: {docker: _.cloneDeep(coveredState.large_vertices)},
   library: {docker: _.cloneDeep(coveredState.medium_library)},
+  diagrams: {docker: _.cloneDeep(coveredState.large_diagrams)},
 };

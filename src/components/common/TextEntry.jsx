@@ -60,7 +60,12 @@ export function PureTextEntry({open, context, dispatch}) {
   const title = _.get(schema, 'title', 'TextEntry');
 
   return (
-    <Dialog open={open} onClose={onCancel}>
+    <Dialog
+      open={open}
+      onClose={onCancel}
+      onKeyPress={event => {
+        if (event.key === 'Enter') onDone();
+      }}>
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>{itemDisplay}</DialogContent>
       <DialogActions>

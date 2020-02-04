@@ -74,6 +74,12 @@ export const useStyles = makeStyles(theme => ({
   paperDrawing: {
     position: 'relative', // Let's us use coordinates to draw the Diagram
   },
+  avatar: {
+    margin: theme.spacing(-0.5),
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    zIndex: 1,
+  },
   vertex: {
     display: 'flex',
     alignItems: 'center',
