@@ -1,7 +1,9 @@
 // @format
 import React from 'react';
 import {ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
-import {Fab, IconButton} from '@material-ui/core';
+import {ListItemAvatar, ListItemSecondaryAction} from '@material-ui/core';
+import {Fab, IconButton, Avatar} from '@material-ui/core';
+// import DeleteIcon from '@material-ui/icons/Delete';
 import _ from 'lodash';
 import {iconSource} from '@style/icons';
 import {applyTooltip} from '@style/tooltips';
@@ -14,6 +16,22 @@ function listItem(name, onClick, defIcon) {
         {_.get(iconSource, name, _.get(iconSource, defIcon))}
       </ListItemIcon>
       <ListItemText primary={titlize(name)} />
+    </ListItem>
+  );
+}
+
+function listWithDeleteIcon(name, onClick, defIcon) {
+  return (
+    <ListItem button onClick={onClick}>
+      <ListItemAvatar>
+        <Avatar>{_.get(iconSource, name, _.get(iconSource, defIcon))}</Avatar>
+      </ListItemAvatar>
+      <ListItemText primary={titlize(name)} />
+      {/* <ListItemSecondaryAction> */}
+      {/*   <IconButton edge="end" aria-label="delete"> */}
+      {/*     <DeleteIcon /> */}
+      {/*   </IconButton> */}
+      {/* </ListItemSecondaryAction> */}
     </ListItem>
   );
 }
@@ -36,6 +54,7 @@ function autoFab(name, onClick, defIcon) {
 
 const kinds = {
   list: listItem,
+  listDel: listWithDeleteIcon,
   button: iconButton,
   fab: autoFab,
 };

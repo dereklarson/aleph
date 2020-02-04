@@ -1,7 +1,7 @@
 // @format
 import axios from 'axios';
 import _ from 'lodash';
-import {requestOrg} from '@utils/state';
+import {genTextEdit} from '@utils/state';
 import {modify} from '@data/reducers';
 
 // All of these are thunked to give access to state and asynchronicity
@@ -12,6 +12,22 @@ export function loadOrg() {
     console.log(`---Loading Organization---`);
     axios
       .post(`/repo/pull/${org.uid}`, {repository: org.repository})
+      .then(response => {
+        dispatch(modify('config', response.data));
+      });
+  };
+}
+
+export function pushOrg({branch, commit_msg}) {
+  return function(dispatch, getState) {
+    let org = getState()['config']['organization'];
+    console.log(`---Pushing to Organization Repo---`);
+    axios
+      .post(`/repo/push/${org.uid}`, {
+        branch,
+        commit_msg,
+        repository: org.repository,
+      })
       .then(response => {
         dispatch(modify('config', response.data));
       });
@@ -40,7 +56,7 @@ export function loadInputs(config) {
       Object.assign(org, _.get(response.data, 'organization', {}));
       if (org.name.includes('<')) {
         console.log('Requesting org...');
-        dispatch(modify('context', {...requestOrg, func: savefunc}));
+        dispatch(genTextEdit('fetchOrg', savefunc));
       }
     });
     console.log('Performing initial refresh');
@@ -81,6 +97,25 @@ export function saveDiagram(location, name) {
       location: location,
       name: name,
       state: {vertices, corpus},
+    });
+  };
+}
+
+export function getImages() {
+  return function(dispatch) {
+    console.log(`---Loading Docker Images---`);
+    axios.get('/docker/list').then(response => {
+      dispatch(modify('operations', response.data));
+    });
+  };
+}
+
+// Thunked: will return function taking dispatch
+export function pushImages(organization, match_string) {
+  return async function(dispatch, getState) {
+    console.log('---Pushing Docker images ---');
+    axios.post('/docker/push', {organization, match_string}).then(response => {
+      dispatch(modify('context', response.data));
     });
   };
 }

@@ -2,6 +2,9 @@
 # Vim swap files
 *.swp
 
+# ctags
+tags
+
 # dependencies
 /node_modules
 /.pnp

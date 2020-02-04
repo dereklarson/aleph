@@ -18,9 +18,10 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import BusinessIcon from '@material-ui/icons/Business';
 import CancelIcon from '@material-ui/icons/Cancel';
 import BuildIcon from '@material-ui/icons/Build';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import GitHubIcon from '@material-ui/icons/GitHub';
+import FolderIcon from '@material-ui/icons/Folder';
+// import AssignmentIcon from '@material-ui/icons/Assignment';
 // Ticker
 import SubjectIcon from '@material-ui/icons/Subject';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -49,7 +50,7 @@ export const iconSource = {
   cancel_build: <CancelIcon />,
   push_images: <CloudUploadIcon />,
   // Saved items
-  assignment: <AssignmentIcon />,
+  saved_item: <FolderIcon />,
   // Ticker
   show_logs: <SubjectIcon />,
   clear_diagram: <DeleteOutlineIcon />,

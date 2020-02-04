@@ -7,7 +7,6 @@ import {modify} from '@data/reducers';
 import {loadInputs, saveCheckpoint, loadCheckpoint} from '@ops/load';
 import {generateList} from '@utils/generateList';
 import {playTutorial} from '@utils/tutorial';
-import {godMode} from '@utils/state';
 import {titlize} from '@utils/helpers';
 import {useStyles} from '@style/styling';
 
@@ -32,7 +31,6 @@ export function PureAppBar({config, context, dispatch}) {
     ['save_checkpoint', onSaveCheckpoint],
     ['load_checkpoint', () => dispatch(loadCheckpoint('user')), saved],
     ['play_tutorial', () => dispatch(playTutorial('tutorial'))],
-    ['god_mode', () => dispatch(modify('context', {...godMode}))],
   ];
 
   return (

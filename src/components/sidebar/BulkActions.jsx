@@ -4,44 +4,41 @@ import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
 import {blankOperations} from '@data/reference';
 import {modify} from '@data/reducers';
-import {loadCore, loadOrg} from '@ops/load';
+import {loadCore, loadOrg, pushOrg, pushImages} from '@ops/load';
+import {saveDiagram} from '@ops/load';
 import {buildDocker} from '@ops/build';
-import {pushOrg, pushImages} from '@ops/control';
 import {generateList} from '@utils/generateList';
-import {imagePush, requestSave, requestOrg} from '@utils/state';
+import {genTextEdit} from '@utils/state';
 
 function BulkActions({organization, operations, location, dispatch}) {
   const cancel = React.useRef(false);
+  const [testing, setTesting] = React.useState(false);
   const onCancel = () => {
     if (operations.building !== null) cancel.current = true;
     else dispatch(modify('operations', blankOperations));
   };
+
+  const saveDiag = fieldText => saveDiagram(location, fieldText.savename);
   const baseOptions = [
-    ['save_diagram', () => dispatch(modify('context', {...requestSave}))],
+    ['save_diagram', () => dispatch(genTextEdit('saveDiagram', saveDiag))],
     ['refresh', () => dispatch(loadCore('diagrams', location))],
   ];
   const orgSet = fieldText => modify('config', {organization: fieldText});
+  const orgCommit = fieldText => pushOrg(fieldText);
   const imagePusher = fieldText => pushImages(organization, fieldText.match);
   const locationOptions = {
     configuration: [
-      [
-        'set_org',
-        () => dispatch(modify('context', {...requestOrg, editfunc: orgSet})),
-      ],
+      ['set_org', () => dispatch(genTextEdit('fetchOrg', orgSet))],
       ['load_org', () => dispatch(loadOrg(organization))],
-      ['push_org', () => dispatch(pushOrg())],
+      ['push_org', () => dispatch(genTextEdit('commit', orgCommit))],
     ],
     data: [],
     docker: [
       ['build_marked', () => dispatch(buildDocker(operations, cancel))],
       ['cancel_build', onCancel],
-      [
-        'push_images',
-        () =>
-          dispatch(modify('context', {...imagePush, editfunc: imagePusher})),
-      ],
+      ['push_images', () => dispatch(genTextEdit('pushImages', imagePusher))],
     ],
-    pipeline: [],
+    pipeline: [['testing_mode', () => setTesting(true)]],
   };
 
   const actionOptions = baseOptions.concat(locationOptions[location]);

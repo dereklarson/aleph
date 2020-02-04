@@ -9,26 +9,26 @@ export const coveredState = {
   solo_vertex: vertexDataFromPaths([['solo']]),
   pair_vertices: vertexDataFromPaths([['parent', 'child']]),
   small_vertices: vertexDataFromPaths([
-    ['Parent', 'Child1'],
-    ['Parent', 'Child2'],
+    ['parent', 'child1'],
+    ['parent', 'child2'],
   ]),
   medium_vertices: vertexDataFromPaths([
-    ['Ubuntu', 'Python', 'React', 'Flask'],
-    ['Ubuntu', 'Python', 'gcp', 'Worker'],
+    ['ubuntu', 'python', 'teact', 'flask'],
+    ['ubuntu', 'python', 'gcp', 'worker'],
   ]),
   large_vertices: vertexDataFromPaths([
-    ['Ubuntu', 'Python', 'React', 'Flask', 'End1'],
-    ['Ubuntu', 'Python', 'Python_sci', 'gcp', 'JupyterLab', 'End2'],
-    ['Ubuntu', 'Python', 'Python_sci', 'gcp', 'Modeler'],
-    ['Ubuntu', 'Python', 'gcp', 'Worker'],
-    ['Ubuntu', 'Go', 'Protobuf', 'Work', 'End3'],
-    ['Protobuf', 'Service', 'Host'],
+    ['ubuntu', 'python', 'React', 'flask', 'End1'],
+    ['ubuntu', 'python', 'python_sci', 'gcp', 'jupyterLab', 'end2'],
+    ['ubuntu', 'python', 'python_sci', 'gcp', 'modeler'],
+    ['ubuntu', 'python', 'gcp', 'worker'],
+    ['ubuntu', 'go', 'protobuf', 'work', 'end3'],
+    ['protobuf', 'service', 'host'],
   ]),
   small_library: genLibrary(['a']),
   medium_library: genLibrary([
     'a',
-    'Ubuntu',
-    'JupyterLab',
+    'ubuntu',
+    'jupyterLab',
     'Cornelius Scipio Africanus Maximus',
     'gcp',
     'python',
@@ -63,12 +63,23 @@ export const sectionState = {
   ...sectionedVertices,
 };
 
+export const testOutput = {
+  test_output: {
+    ubuntu: '{building: true, failed: false}',
+    python: 'This test failed to yield any results',
+    gcp: '',
+    worker:
+      'This result is considerably longer than average, which tests wordwrap',
+  },
+};
+
 export const excitedState = {
   ...blankState,
   config: {organization: {name: 'Top Dog'}},
   context: {...blankState.context, dagre: true, focus: 0},
   operations: {
     ...blankState.operations,
+    ...testOutput,
     tickertext: 'The most fabulous state in town',
     percent: 80,
     building: 2,

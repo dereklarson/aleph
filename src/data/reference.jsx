@@ -25,6 +25,7 @@ export const blankOperations = {
   percent: 100,
   building: null,
   build_orders: [],
+  test_output: {},
   stdout: '',
 };
 

@@ -8,21 +8,14 @@ import _ from 'lodash';
 import {modify} from '@data/reducers';
 import {useStyles} from '@style/styling';
 import {notEditingState} from '@utils/state';
-import {saveDiagram} from '@ops/load';
 
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 
-export function PureTextEntry({
-  open,
-  location,
-  schema,
-  edittext,
-  editfunc,
-  dispatch,
-}) {
+export function PureTextEntry({open, context, dispatch}) {
   const classes = useStyles();
   const [fieldText, setFieldText] = React.useState({});
+  const {schema, edittext, editfunc} = context;
 
   let itemDisplay = [];
   for (const keystr of Object.keys(_.get(schema, 'keys', []))) {
@@ -42,10 +35,6 @@ export function PureTextEntry({
       />,
     );
   }
-  if (_.has(schema, 'godmode')) {
-    editfunc = text => modify('context', JSON.parse(text));
-  }
-
   let currText = edittext;
   if (!_.has(schema, 'keys')) {
     itemDisplay.push(
@@ -65,13 +54,7 @@ export function PureTextEntry({
 
   const onCancel = () => dispatch(modify('context', {...notEditingState}));
   const onDone = () => {
-    if (_.has(_.get(schema, 'keys', {}), 'savename')) {
-      dispatch(saveDiagram(location, fieldText.savename));
-    } else if (!_.has(schema, 'keys')) {
-      dispatch(editfunc(currText));
-    } else {
-      dispatch(editfunc(fieldText));
-    }
+    dispatch(editfunc(fieldText));
     dispatch(modify('context', {...notEditingState}));
   };
   const title = _.get(schema, 'title', 'TextEntry');
@@ -92,9 +75,4 @@ export function PureTextEntry({
   );
 }
 
-export default connect(state => ({
-  location: state.context.location,
-  schema: state.context.schema,
-  edittext: state.context.edittext,
-  editfunc: state.context.editfunc,
-}))(PureTextEntry);
+export default connect(state => ({context: state.context}))(PureTextEntry);

@@ -1,5 +1,6 @@
 // @format
 import _ from 'lodash';
+import {modify} from '@data/reducers';
 
 export function genCoreData(categories, locations) {
   let output = {};
@@ -12,15 +13,14 @@ export function genCoreData(categories, locations) {
   return output;
 }
 
-export const librarySample = {
-  sample: {
-    uid: 'sample',
-    dependencies: [],
-    text: '#Functional text will be here\n',
-  },
-};
-
 export function genLibrary(names) {
+  const librarySample = {
+    sample: {
+      uid: 'sample',
+      dependencies: [],
+      text: '#Functional text will be here\n',
+    },
+  };
   return names.reduce((library, uid) => {
     library[uid] = _.cloneDeep(librarySample.sample);
     library[uid]['uid'] = uid;
@@ -39,46 +39,27 @@ export function genGreatLibrary(locations, namedict = {def: ['sample']}) {
 export const notEditingState = {
   editing: false,
   edittext: '',
-  editfunc: () => 0,
-  schema: {},
+  editfunc: null,
+  schema: {title: 'TextEntry'},
 };
 
-export const requestSave = {
-  editing: true,
-  schema: {
-    title: 'Save the current diagram',
-    keys: {
-      savename: 1,
-    },
-  },
+const textEditScenarios = {
+  // Each row contains the title and array of keys
+  saveDiagram: ['Save the current diagram', ['savename']],
+  commit: ['Enter commit information', ['branch', 'commit_msg']],
+  pushImages: ['Enter a match string', ['match']],
+  fetchOrg: ['Enter Org info', ['name', 'uid', 'repository']],
 };
 
-export const imagePush = {
-  editing: true,
-  schema: {
-    title: 'Enter match string for image push',
-    keys: {
-      match: 1,
-    },
-  },
-};
-
-export const requestOrg = {
-  editing: true,
-  schema: {
-    title: 'Enter Org Info',
-    keys: {
-      name: 1,
-      uid: 1,
-      repository: 1,
-    },
-  },
-};
-
-export const godMode = {
-  editing: true,
-  schema: {
-    title: 'Godmode',
-    godmode: 1,
-  },
-};
+export function genTextEdit(name, editfunc) {
+  let keys = {};
+  const [title, keynames] = textEditScenarios[name];
+  keynames.forEach(key => {
+    keys[key] = true;
+  });
+  return modify('context', {
+    editing: true,
+    editfunc: editfunc,
+    schema: {title, keys},
+  });
+}

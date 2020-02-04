@@ -2,17 +2,16 @@
 import {text} from '@storybook/addon-knobs';
 import {genStoryEntry, getCollageGenerator} from './testHelpers';
 import {excitedState} from './testStates';
-import NodeVertex from '@diagram/NodeVertex';
+import {PureNodeVertex} from '@diagram/NodeVertex';
 
-const TestComponent = NodeVertex;
+const TestComponent = PureNodeVertex;
 // Generate a Storybook entry based on the following key args (order, component, state)
 export default genStoryEntry(12, TestComponent, excitedState);
 
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
-  name: 'Test Node',
+  uid: 'test_node',
   sections: ['react'],
-  id: 1,
   styleProps: {
     highlighted: false,
     isDragging: false,
@@ -22,7 +21,7 @@ export const testData = {
 };
 
 // Produce a function 'genStory' that can generate a story from hand-tweaked properties
-const boxProps = {squaresize: 300};
+const boxProps = {height: 150, width: 300};
 const windowProps = {squaresize: 800};
 let genCollage = getCollageGenerator(
   TestComponent,
@@ -31,13 +30,15 @@ let genCollage = getCollageGenerator(
   testData,
 );
 
-export const dynamicName = () => genCollage([{name: text('Name', 'Default')}]);
-export const names = () =>
+export const dynamic = () =>
   genCollage([
-    {name: ''},
-    {name: 'Normal'},
-    {name: 'Cornelius Scipio Africanus'},
+    {
+      uid: text('Uid', 'default'),
+      output: {default: text('Test output', '154.1234')},
+    },
   ]);
+export const uids = () =>
+  genCollage([{uid: ''}, {uid: 'Normal'}, {uid: 'Cornelius Scipio Africanus'}]);
 export const sections = () =>
   genCollage([
     {sections: []},
@@ -45,8 +46,8 @@ export const sections = () =>
   ]);
 export const states = () =>
   genCollage([
-    {name: 'dragging', styleProps: {isDragging: true}},
-    {name: 'highlighed', styleProps: {highlighted: true}},
-    {name: 'building', styleProps: {building: true}},
-    {name: 'prepared', styleProps: {prepared: true}},
+    {uid: 'dragging', styleProps: {isDragging: true}},
+    {uid: 'highlighed', styleProps: {highlighted: true}},
+    {uid: 'building', styleProps: {building: true}},
+    {uid: 'prepared', styleProps: {prepared: true}},
   ]);

@@ -16,7 +16,7 @@ function SavedDiagrams({location, diagrams, onAddDiagram}) {
   return (
     <List>
       <ListSubheader inset>Saved Diagrams</ListSubheader>
-      {generateList('list', items, 'assignment', 'Load the diagram called <>')}
+      {generateList('listDel', items, 'saved_item', 'Load the diagram <>')}
     </List>
   );
 }
