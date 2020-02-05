@@ -10,6 +10,8 @@ export function propsToStyle(styleProps) {
       ? 'green'
       : _.get(styleProps, 'prepared')
       ? 'lightgreen'
+      : _.get(styleProps, 'testing')
+      ? 'gray'
       : null,
   };
 }

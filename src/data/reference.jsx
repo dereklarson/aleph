@@ -25,6 +25,7 @@ export const blankOperations = {
   percent: 100,
   building: null,
   build_orders: [],
+  testing: false,
   test_output: {},
   stdout: '',
 };
@@ -64,7 +65,6 @@ export const initState = {
   ..._.cloneDeep(blankState),
   library: genGreatLibrary(locations),
 };
-console.log(initState);
 
 // State a tutorial will set prior to running
 export const tutorialInitialState = {

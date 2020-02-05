@@ -92,13 +92,16 @@ export const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     overflow: 'auto',
-    padding: theme.spacing(0),
+    padding: theme.spacing(1),
   },
   paper: {
     padding: theme.spacing(2),
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
+  },
+  testTooltip: {
+    maxWidth: 700,
   },
   textField: {},
   editor: {

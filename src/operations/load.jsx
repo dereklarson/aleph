@@ -49,8 +49,9 @@ export function loadCore(source, location) {
 export function loadInputs(config) {
   let org = _.cloneDeep(config.organization);
   const savefunc = fieldText => modify('config', {organization: fieldText});
+  console.log('--- Performing Initial Data Load ---');
   return async function(dispatch) {
-    console.log('---Loading Inputs ---');
+    console.log('  -Loading Inputs-');
     await axios.get('/input').then(response => {
       dispatch(modify('config', response.data));
       Object.assign(org, _.get(response.data, 'organization', {}));
@@ -59,12 +60,11 @@ export function loadInputs(config) {
         dispatch(genTextEdit('fetchOrg', savefunc));
       }
     });
-    console.log('Performing initial refresh');
+    console.log('  -Loadinging each source/location-');
     dispatch(loadCore('library', 'docker'));
     dispatch(loadCore('library', 'pipeline'));
     dispatch(loadCore('diagrams', 'docker'));
     dispatch(loadCore('diagrams', 'pipeline'));
-    console.log('...Finished');
   };
 }
 

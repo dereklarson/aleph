@@ -65,11 +65,12 @@ export const sectionState = {
 
 export const testOutput = {
   test_output: {
-    ubuntu: '{building: true, failed: false}',
+    ubuntu:
+      'Newlines\n(User1, 1452343234663, 23)\n(User2, 19873846372, 35)\n...\n...',
     python: 'This test failed to yield any results',
     gcp: '',
     worker:
-      'This result is considerably longer than average, which tests wordwrap',
+      'This result is considerably longer than average, which tests wordwrap and size, as well as generally just being as annoying as possible to represent on the screen in any kind of reasonable way',
   },
 };
 
@@ -80,6 +81,7 @@ export const excitedState = {
   operations: {
     ...blankState.operations,
     ...testOutput,
+    testing: true,
     tickertext: 'The most fabulous state in town',
     percent: 80,
     building: 2,

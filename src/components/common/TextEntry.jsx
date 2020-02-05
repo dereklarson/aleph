@@ -17,6 +17,7 @@ export function PureTextEntry({open, context, dispatch}) {
   const [fieldText, setFieldText] = React.useState({});
   const {schema, edittext, editfunc} = context;
 
+  let currText = edittext;
   let itemDisplay = [];
   for (const keystr of Object.keys(_.get(schema, 'keys', []))) {
     let defProps = {};
@@ -35,7 +36,6 @@ export function PureTextEntry({open, context, dispatch}) {
       />,
     );
   }
-  let currText = edittext;
   if (!_.has(schema, 'keys')) {
     itemDisplay.push(
       <AceEditor
@@ -52,9 +52,12 @@ export function PureTextEntry({open, context, dispatch}) {
     );
   }
 
+  // TODO Perhaps blend this better to allow both types of entry?
+  if (_.keys(fieldText).length > 0) currText = fieldText;
+
   const onCancel = () => dispatch(modify('context', {...notEditingState}));
   const onDone = () => {
-    dispatch(editfunc(fieldText));
+    dispatch(editfunc(currText));
     dispatch(modify('context', {...notEditingState}));
   };
   const title = _.get(schema, 'title', 'TextEntry');

@@ -12,7 +12,6 @@ import {genTextEdit} from '@utils/state';
 
 function BulkActions({organization, operations, location, dispatch}) {
   const cancel = React.useRef(false);
-  const [testing, setTesting] = React.useState(false);
   const onCancel = () => {
     if (operations.building !== null) cancel.current = true;
     else dispatch(modify('operations', blankOperations));
@@ -26,6 +25,7 @@ function BulkActions({organization, operations, location, dispatch}) {
   const orgSet = fieldText => modify('config', {organization: fieldText});
   const orgCommit = fieldText => pushOrg(fieldText);
   const imagePusher = fieldText => pushImages(organization, fieldText.match);
+  const testmode = operations.testing;
   const locationOptions = {
     configuration: [
       ['set_org', () => dispatch(genTextEdit('fetchOrg', orgSet))],
@@ -39,7 +39,7 @@ function BulkActions({organization, operations, location, dispatch}) {
       ['push_images', () => dispatch(genTextEdit('pushImages', imagePusher))],
     ],
     pipeline: [
-      ['testing_mode', () => setTesting(!testing)],
+      ['test_mode', () => dispatch(modify('operations', {testing: !testmode}))],
       ['run_pipeline', () => dispatch(runPipeline())],
     ],
   };

@@ -21,6 +21,8 @@ import BuildIcon from '@material-ui/icons/Build';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import FolderIcon from '@material-ui/icons/Folder';
+import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
+import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 // import AssignmentIcon from '@material-ui/icons/Assignment';
 // Ticker
 import SubjectIcon from '@material-ui/icons/Subject';
@@ -49,6 +51,8 @@ export const iconSource = {
   build_marked: <BuildIcon />,
   cancel_build: <CancelIcon />,
   push_images: <CloudUploadIcon />,
+  test_mode: <ToggleOffIcon />,
+  run_pipeline: <DirectionsRunIcon />,
   // Saved items
   saved_item: <FolderIcon />,
   // Ticker

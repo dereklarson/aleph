@@ -13,7 +13,6 @@ export function genSlice(name, extraReducers = {}) {
       },
     },
   });
-  console.log(slice);
   return slice;
 }
 

@@ -21,14 +21,17 @@ function ListItemGen({name, onClick, defIcon}) {
   );
 }
 
-function ListWithDeleteIcon({name, onClick, defIcon}) {
+function StyledAvatar({item}) {
   const classes = useStyles();
+  return <Avatar className={classes.avatar}>{item}</Avatar>;
+}
+
+function ListWithDeleteIcon({name, onClick, defIcon}) {
+  let item = _.get(iconSource, name, _.get(iconSource, defIcon));
   return (
     <ListItem button onClick={onClick}>
       <ListItemAvatar>
-        <Avatar className={classes.avatar}>
-          {_.get(iconSource, name, _.get(iconSource, defIcon))}
-        </Avatar>
+        <StyledAvatar item={item} />
       </ListItemAvatar>
       <ListItemText primary={titlize(name)} />
       <ListItemSecondaryAction>
