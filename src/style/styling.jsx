@@ -100,12 +100,16 @@ export const useStyles = makeStyles(theme => ({
     overflow: 'auto',
     flexDirection: 'column',
   },
+  oofTooltip: {
+    maxHeight: 100,
+    maxWidth: 200,
+  },
   testTooltip: {
+    maxHeight: 400,
     maxWidth: 700,
   },
   textField: {},
   editor: {
-    minWidth: '40vh',
-    width: '100%',
+    minWidth: 700, // This will ensure ~88 characters a line on all screens
   },
 }));

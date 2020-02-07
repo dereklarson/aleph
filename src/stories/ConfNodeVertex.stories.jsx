@@ -31,11 +31,7 @@ let genCollage = getCollageGenerator(
 );
 
 export const names = () =>
-  genCollage([
-    {name: ''},
-    {name: 'Normal'},
-    {name: 'Cornelius Scipio Africanus'},
-  ]);
+  genCollage([{uid: ''}, {uid: 'Normal'}, {uid: 'Cornelius Scipio Africanus'}]);
 export const sections = () =>
   genCollage([
     {sections: []},
@@ -43,8 +39,8 @@ export const sections = () =>
   ]);
 export const states = () =>
   genCollage([
-    {name: 'dragging', styleProps: {isDragging: true}},
-    {name: 'highlighed', styleProps: {highlighted: true}},
-    {name: 'building', styleProps: {building: true}},
-    {name: 'prepared', styleProps: {prepared: true}},
+    {uid: 'dragging', styleProps: {isDragging: true}},
+    {uid: 'highlighed', styleProps: {highlighted: true}},
+    {uid: 'building', styleProps: {building: true}},
+    {uid: 'prepared', styleProps: {prepared: true}},
   ]);

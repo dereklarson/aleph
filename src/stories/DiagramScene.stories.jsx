@@ -23,7 +23,7 @@ const dagreTest = _.cloneDeep(testData);
 dagreTest.activity.dagre = true;
 
 // Produce a function 'genStory' that can generate a story from hand-tweaked properties
-const boxProps = {squaresize: 2000};
+const boxProps = {squaresize: 1000};
 let genStory = getStoryGenerator(TestComponent, boxProps, testData);
 let genStoryDagre = getStoryGenerator(TestComponent, boxProps, dagreTest);
 

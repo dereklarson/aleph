@@ -4,7 +4,15 @@ import {connect} from 'react-redux';
 import {Button, Card, Chip, Paper, TextField} from '@material-ui/core';
 import {CardActionArea, CardActions, CardContent} from '@material-ui/core';
 import _ from 'lodash';
-import {removeSection, renameVertex, setText, clearText} from '@data/reducers';
+import {prepareFocusedBuild} from '@ops/build';
+import {genCodeEdit} from '@utils/state';
+import {
+  removeSection,
+  removeAllSections,
+  renameVertex,
+  setText,
+  clearText,
+} from '@data/reducers';
 import {createText, titlize, propsToStyle} from '@utils/helpers';
 import {useStyles} from '@style/styling';
 
@@ -12,11 +20,13 @@ export function PureCardVertex({
   location,
   library,
   corpus,
+  onBuild,
+  onEditor,
+  onClear,
   onChange,
   onChipDelete,
   uid,
   idlist,
-  cardActions,
   sections,
   styleProps,
 }) {
@@ -71,17 +81,13 @@ export function PureCardVertex({
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button
-          size="small"
-          onClick={() => cardActions.onEditor({edittext, editfunc})}>
+        <Button size="small" onClick={() => onEditor({edittext, editfunc})}>
           Editor
         </Button>
-        <Button size="small" onClick={() => cardActions.onBuild()}>
+        <Button size="small" onClick={onBuild}>
           Build
         </Button>
-        <Button
-          size="small"
-          onClick={() => cardActions.onClear({location, uid})}>
+        <Button size="small" onClick={() => onClear({location, uid})}>
           Reset
         </Button>
       </CardActions>
@@ -89,7 +95,7 @@ export function PureCardVertex({
   );
 }
 
-function actionDispatch(dispatch) {
+function actionDispatch(dispatch, props) {
   return {
     onChange: payload => {
       dispatch(renameVertex(payload));
@@ -97,6 +103,12 @@ function actionDispatch(dispatch) {
     },
     onChipDelete: payload => {
       dispatch(removeSection(payload));
+      dispatch(clearText(payload));
+    },
+    onEditor: payload => dispatch(genCodeEdit('nodeEdit', payload)),
+    onBuild: () => dispatch(prepareFocusedBuild()),
+    onClear: payload => {
+      dispatch(removeAllSections(payload));
       dispatch(clearText(payload));
     },
   };

@@ -3,15 +3,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrag, useDrop, DragPreviewImage} from 'react-dnd';
 import _ from 'lodash';
-import {prepareFocusedBuild} from '@ops/build';
 import {modify} from '@data/reducers';
-import {
-  addSection,
-  removeAllSections,
-  clearText,
-  linkVertex,
-  unlinkVertex,
-} from '@data/reducers';
+import {addSection, clearText, linkVertex, unlinkVertex} from '@data/reducers';
 import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigNodeVertex from './ConfigNodeVertex';
@@ -34,9 +27,6 @@ export function PureVertex({
 }) {
   // First define the Drag-n-Drop functionality
   const ref = React.useRef(null);
-  const setFocus = () => {
-    ref.current && ref.current.focus();
-  };
   const [{isDragging}, drag, preview] = useDrag({
     item: {type: 'Vertex', uid: uid, parents: parents},
     collect: monitor => ({
@@ -71,11 +61,12 @@ export function PureVertex({
     }),
   });
   drag(drop(ref));
-
+  const [isOver, setOver] = React.useState(false);
   const styleProps = {
     building: operations.building === uid,
     isDragging: isDragging,
     highlighted: highlighted,
+    isOver: isOver,
     prepared: prepared.includes(uid),
   };
   const components = {
@@ -87,7 +78,11 @@ export function PureVertex({
   const zIndex = type === 'card' ? 4 : 3;
 
   return (
-    <div ref={ref} style={{zIndex: zIndex}} onMouseEnter={setFocus}>
+    <div
+      ref={ref}
+      style={{zIndex: zIndex}}
+      onMouseLeave={() => setOver(false)}
+      onMouseEnter={() => setOver(true)}>
       <ParentHandle vertexId={uid} />
       <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
       <div
@@ -113,15 +108,6 @@ export function PureVertex({
 function actionDispatch(dispatch) {
   return {
     onClick: uid => dispatch(modify('context', {focus: uid})),
-    cardActions: {
-      onEditor: payload =>
-        dispatch(modify('context', {...payload, editing: true})),
-      onBuild: () => dispatch(prepareFocusedBuild()),
-      onClear: payload => {
-        dispatch(removeAllSections(payload));
-        dispatch(clearText(payload));
-      },
-    },
     dropActions: {
       Vertex: payload => dispatch(linkVertex(payload)),
       DepotItem: payload => {

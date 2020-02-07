@@ -10,10 +10,12 @@ export default genStoryEntry(20, TestComponent, excitedState);
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
   open: true,
-  schema: {
-    title: 'Saving Diagram',
-    keys: {
-      savename: 1,
+  context: {
+    schema: {
+      title: 'Saving Diagram',
+      keys: {
+        savename: 1,
+      },
     },
   },
 };
@@ -24,7 +26,9 @@ let genStory = getStoryGenerator(TestComponent, boxProps, testData);
 
 export const test = () => genStory();
 export const many = () =>
-  genStory({open: true, schema: {title: 'Z', keys: {a: 1, b: 2, c: 3}}});
-export const god = () =>
-  genStory({open: true, schema: {title: 'God', godmode: true}});
-export const code = () => genStory({open: true, schema: {title: 'Edit text'}});
+  genStory({
+    open: true,
+    context: {schema: {title: 'Z', keys: {a: 1, b: 2, c: 3}}},
+  });
+export const code = () =>
+  genStory({open: true, context: {schema: {title: 'Edit Code'}}});

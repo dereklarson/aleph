@@ -13,7 +13,7 @@ export const coveredState = {
     ['parent', 'child2'],
   ]),
   medium_vertices: vertexDataFromPaths([
-    ['ubuntu', 'python', 'teact', 'flask'],
+    ['ubuntu', 'python', 'react', 'flask'],
     ['ubuntu', 'python', 'gcp', 'worker'],
   ]),
   large_vertices: vertexDataFromPaths([

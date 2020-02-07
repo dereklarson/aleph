@@ -10,6 +10,7 @@ import {useStyles} from '@style/styling';
 import {notEditingState} from '@utils/state';
 
 import 'ace-builds/src-noconflict/mode-yaml';
+import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-monokai';
 
 export function PureTextEntry({open, context, dispatch}) {
@@ -17,6 +18,7 @@ export function PureTextEntry({open, context, dispatch}) {
   const [fieldText, setFieldText] = React.useState({});
   const {schema, edittext, editfunc} = context;
 
+  let editor = _.get(schema, 'editor', 'false');
   let currText = edittext;
   let itemDisplay = [];
   for (const keystr of Object.keys(_.get(schema, 'keys', []))) {
@@ -36,13 +38,12 @@ export function PureTextEntry({open, context, dispatch}) {
       />,
     );
   }
-  if (!_.has(schema, 'keys')) {
+  if (editor) {
     itemDisplay.push(
       <AceEditor
-        key="god"
+        key="codeEdit"
         className={classes.editor}
-        width="100%"
-        mode="yaml"
+        mode={_.get(schema, 'mode', 'yaml')}
         theme="monokai"
         defaultValue={edittext}
         onChange={(value, event) => {
@@ -64,10 +65,11 @@ export function PureTextEntry({open, context, dispatch}) {
 
   return (
     <Dialog
+      maxWidth={'lg'}
       open={open}
       onClose={onCancel}
       onKeyPress={event => {
-        if (event.key === 'Enter') onDone();
+        if (!editor && event.key === 'Enter') onDone();
       }}>
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>{itemDisplay}</DialogContent>

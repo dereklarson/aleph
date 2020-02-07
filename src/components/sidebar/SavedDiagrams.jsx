@@ -4,12 +4,12 @@ import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
 // import _ from 'lodash';
 import {generateList} from '@utils/generateList';
-import {addDiagram} from '@data/reducers';
+import {modify, loadDiagram} from '@data/reducers';
 
-function SavedDiagrams({location, diagrams, onAddDiagram}) {
+function SavedDiagrams({location, diagrams, onLoadDiagram}) {
   let items = [];
   for (const [name, content] of Object.entries(diagrams)) {
-    let onClick = () => onAddDiagram({location, content});
+    let onClick = () => onLoadDiagram({location, content, name});
     items.push([name, onClick]);
   }
 
@@ -27,6 +27,9 @@ export default connect(
     diagrams: state.diagrams[state.context.location],
   }),
   dispatch => ({
-    onAddDiagram: payload => dispatch(addDiagram(payload)),
+    onLoadDiagram: payload => {
+      dispatch(loadDiagram(payload));
+      dispatch(modify('context', {name: payload.name}));
+    },
   }),
 )(SavedDiagrams);

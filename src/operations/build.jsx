@@ -9,10 +9,13 @@ export function prepareFocusedBuild() {
   return async function(dispatch, getState) {
     let state = getState();
     let location = state.context.location;
-    let build_id = state.context.focus;
-    let testing = state.operations.testing;
     let vertices = state.vertices[location];
     let library = state.library[location];
+    let metadata = {
+      build_id: state.context.focus,
+      name: state.context.name,
+      testing: state.operations.testing,
+    };
     let corpus = generateCorpus({
       vertices,
       library,
@@ -22,7 +25,7 @@ export function prepareFocusedBuild() {
     if (location === 'docker') {
       console.log('---Preparing docker build for current focus---');
       axios
-        .post('/gen_build/docker', {vertices, corpus, build_id, testing})
+        .post('/gen_build/docker', {vertices, corpus, metadata})
         .then(response => {
           dispatch(modify('operations', response.data));
         });
@@ -30,7 +33,7 @@ export function prepareFocusedBuild() {
       console.log('---Building Pipeline from Focus---');
       let build_context = {};
       await axios
-        .post('/gen_build/pipeline', {vertices, corpus, build_id, testing})
+        .post('/gen_build/pipeline', {vertices, corpus, metadata})
         .then(response => {
           build_context = response.data.build_context;
         });
@@ -51,9 +54,12 @@ export function runPipeline() {
     let state = getState();
     let location = state.context.location;
     let focus = state.context.focus;
+    let metadata = {
+      name: state.context.name,
+    };
     if (location === 'pipeline') {
       console.log('---Running Pipeline---');
-      await axios.post('/run/pipeline', {}).then(response => {
+      await axios.post('/run/pipeline', {metadata}).then(response => {
         dispatch(modify('operations', response.data));
       });
     }

@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import {Progress} from 'react-sweet-progress';
 import {Paper} from '@material-ui/core';
 import 'react-sweet-progress/lib/style.css';
-import LogPopup from '@common/LogPopup';
+import {genCodeEdit} from '@utils/state';
 import {modify} from '@data/reducers';
 import {useStyles} from '@style/styling';
 import {loadCore} from '@ops/load';
@@ -17,14 +17,15 @@ export function PureTicker({
   dagre,
   operations,
   onClear,
+  onLogs,
   onDagre,
   onLoadLibrary,
 }) {
   const classes = useStyles();
 
-  const [logOpen, openLog] = React.useState(false);
+  // const [logOpen, openLog] = React.useState(false);
   const actionOptions = [
-    ['show_logs', () => openLog(true)],
+    ['show_logs', () => onLogs(operations.logs)],
     ['toggle_dagre', () => onDagre(dagre)],
     ['refresh', () => onLoadLibrary(location)],
     ['clear_diagram', () => onClear(location)],
@@ -41,11 +42,6 @@ export function PureTicker({
         </Typography>
       </Tooltip>
       <Progress percent={operations.percent} />
-      <LogPopup
-        open={logOpen}
-        text={operations.logs}
-        onClose={() => openLog(false)}
-      />
       <Paper className={classes.tickerActions}>
         {generateList('fab', actionOptions)}
       </Paper>
@@ -62,6 +58,8 @@ export default connect(
   dispatch => ({
     onClear: location => dispatch(modify('vertices', {[location]: {}})),
     onDagre: dagre => dispatch(modify('context', {dagre: !dagre})),
+    onLogs: text =>
+      dispatch(genCodeEdit('logs', {edittext: text, editfunc: t => 0})),
     onLoadLibrary: location => dispatch(loadCore('library', location)),
   }),
 )(PureTicker);

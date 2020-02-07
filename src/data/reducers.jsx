@@ -35,7 +35,7 @@ const corpusSlice = genSlice('corpus', corpusReducers);
 export const {setText, clearText} = corpusSlice.actions;
 
 const vertexReducers = {
-  addDiagram(state, action) {
+  loadDiagram(state, action) {
     let content = action.payload.content;
     if (_.has(content, 'paths')) {
       Object.assign(
@@ -115,7 +115,7 @@ const vertexReducers = {
 
 const verticesSlice = genSlice('vertices', vertexReducers);
 export const {
-  addDiagram,
+  loadDiagram,
   addVertex,
   removeVertex,
   renameVertex,

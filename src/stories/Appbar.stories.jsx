@@ -12,7 +12,7 @@ export default genStoryEntry(2, TestComponent, excitedState);
 export const testData = {
   config: excitedState.config,
   context: excitedState.context,
-  onLoadInputs: action('Load'),
+  dispatch: action('Send'),
 };
 
 // Produce a function 'genStory' that can generate a story from hand-tweaked properties

@@ -63,3 +63,20 @@ export function genTextEdit(name, editfunc) {
     schema: {title, keys},
   });
 }
+
+const codeEditScenarios = {
+  // Each row contains the title and a set of additional props
+  nodeEdit: ['Edit Node Code', {mode: 'python'}],
+  logs: ['Logs', {mode: 'text'}],
+};
+
+export function genCodeEdit(name, {editfunc, edittext}) {
+  const [title, props] = codeEditScenarios[name];
+  return modify('context', {
+    editing: true,
+    editor: true,
+    editfunc: editfunc,
+    edittext: edittext,
+    schema: {...props, title},
+  });
+}

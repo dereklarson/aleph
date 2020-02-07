@@ -17,7 +17,9 @@ export const testData = {
     isDragging: false,
     building: false,
     prepared: false,
+    isOver: false,
   },
+  ops: {testing: true, test_output: {}},
 };
 
 // Produce a function 'genStory' that can generate a story from hand-tweaked properties
@@ -34,7 +36,7 @@ export const dynamic = () =>
   genCollage([
     {
       uid: text('Uid', 'default'),
-      output: {default: text('Test output', '154.1234')},
+      ops: {default: text('Test output', '154.1234')},
     },
   ]);
 export const uids = () =>
@@ -50,4 +52,9 @@ export const states = () =>
     {uid: 'highlighed', styleProps: {highlighted: true}},
     {uid: 'building', styleProps: {building: true}},
     {uid: 'prepared', styleProps: {prepared: true}},
+    {
+      uid: 'testing',
+      ops: {testing: true, test_output: {testing: 'abc'}},
+      styleProps: {isOver: true},
+    },
   ]);

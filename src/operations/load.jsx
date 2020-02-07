@@ -93,6 +93,7 @@ export function saveDiagram(location, name) {
     let vertices = state.vertices[location];
     let corpus = state.corpus[location];
     console.log(vertices, corpus);
+    dispatch(modify('context', {name}))
     axios.post('/save_diagram', {
       location: location,
       name: name,

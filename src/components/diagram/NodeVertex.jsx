@@ -8,12 +8,14 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import DonutSmallIcon from '@material-ui/icons/DonutSmall';
+import clsx from 'clsx';
 import _ from 'lodash';
 import {propsToStyle} from '@utils/helpers';
 import {useStyles} from '@style/styling';
 
-function genTTList(text) {
-  let lines = text.split('\n').slice(0, 3);
+function genTTList(text, isOver) {
+  let count = 'isOver' ? 5 : 1;
+  let lines = text.split('\n').slice(0, count);
   let itemDisplay = [];
   lines.forEach((line, index) => {
     itemDisplay.push(
@@ -29,13 +31,18 @@ export function PureNodeVertex({uid, sections, styleProps, ops}) {
   const classes = useStyles();
   const icon = <DonutSmallIcon style={{padding: 3}} />;
   let ttText = _.get(ops.test_output, uid, '');
-  let ttDiv = genTTList(ttText);
-  let ttOpen = ops.testing && ttText;
+  let ttOpen = ops.testing && ttText.length > 0;
+  let ttDiv = genTTList(ttText, styleProps.isOver);
   return (
     <Tooltip
-      classes={{tooltip: classes.testTooltip}}
+      classes={{
+        tooltip: clsx(
+          classes.oofTooltip,
+          styleProps.isOver && classes.testTooltip,
+        ),
+      }}
       arrow
-      placement="right-end"
+      placement="right-start"
       open={ttOpen}
       title={ttDiv}>
       <Badge
