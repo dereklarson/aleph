@@ -4,7 +4,8 @@ import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
 // import _ from 'lodash';
 import {generateList} from '@utils/generateList';
-import {modify, loadDiagram} from '@data/reducers';
+import {modify, loadDiagramVertices, loadDiagramCorpus} from '@data/reducers';
+import {loadDiagram} from '@ops/load';
 
 function SavedDiagrams({location, diagrams, onLoadDiagram}) {
   let items = [];
@@ -26,10 +27,5 @@ export default connect(
     location: state.context.location,
     diagrams: state.diagrams[state.context.location],
   }),
-  dispatch => ({
-    onLoadDiagram: payload => {
-      dispatch(loadDiagram(payload));
-      dispatch(modify('context', {name: payload.name}));
-    },
-  }),
+  dispatch => ({onLoadDiagram: payload => dispatch(loadDiagram(payload))}),
 )(SavedDiagrams);

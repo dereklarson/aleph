@@ -80,14 +80,8 @@ export function buildDocker(operations, cancel) {
       const percent = Math.floor(
         (100 * index) / operations.build_orders.length,
       );
-      const ticker = getLastLine(step.text);
-      dispatch(
-        modify('operations', {
-          building: step.uid,
-          tickertext: ticker,
-          percent: percent,
-        }),
-      );
+      const tickertext = getLastLine(step.text);
+      dispatch(modify('operations', {tickertext, percent, building: step.uid}));
       if (_.has(current_cache, step.hash)) {
         continue;
       }

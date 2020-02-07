@@ -11,7 +11,7 @@ import _ from 'lodash';
 // location: data associated with diagram-building based on the current location
 
 export const blankContext = {
-  dagre: false,
+  dagre: true,
   theme: 'dark',
   focus: null,
   location: 'docker',
@@ -45,7 +45,8 @@ export const blankConfig = {
 };
 
 const categories = {
-  vertices: vertexDataFromPaths([['parent', 'child']]),
+  // vertices: vertexDataFromPaths([['parent', 'child']]),
+  vertices: {},
   library: {},
   corpus: {},
   diagrams: {},

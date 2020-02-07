@@ -19,6 +19,12 @@ const librarySlice = genSlice('library', libraryReducers);
 export const {writeText} = librarySlice.actions;
 
 const corpusReducers = {
+  loadDiagramCorpus(state, action) {
+    let content = action.payload.content;
+    if (_.has(content, 'corpus')) {
+      Object.assign(state[action.payload.location], content.corpus);
+    }
+  },
   setText(state, action) {
     if (!_.has(state[action.payload.location], action.payload.uid)) {
       state[action.payload.location][action.payload.uid] = {};
@@ -32,10 +38,10 @@ const corpusReducers = {
   },
 };
 const corpusSlice = genSlice('corpus', corpusReducers);
-export const {setText, clearText} = corpusSlice.actions;
+export const {loadDiagramCorpus, setText, clearText} = corpusSlice.actions;
 
 const vertexReducers = {
-  loadDiagram(state, action) {
+  loadDiagramVertices(state, action) {
     let content = action.payload.content;
     if (_.has(content, 'paths')) {
       Object.assign(
@@ -115,7 +121,7 @@ const vertexReducers = {
 
 const verticesSlice = genSlice('vertices', vertexReducers);
 export const {
-  loadDiagram,
+  loadDiagramVertices,
   addVertex,
   removeVertex,
   renameVertex,

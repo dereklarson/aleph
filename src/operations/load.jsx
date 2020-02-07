@@ -2,7 +2,7 @@
 import axios from 'axios';
 import _ from 'lodash';
 import {genTextEdit} from '@utils/state';
-import {modify} from '@data/reducers';
+import {modify, loadDiagramVertices, loadDiagramCorpus} from '@data/reducers';
 
 // All of these are thunked to give access to state and asynchronicity
 
@@ -46,11 +46,30 @@ export function loadCore(source, location) {
   };
 }
 
+export function loadDiagram({location, content, name}) {
+  return async function(dispatch, getState) {
+    let content = getState().diagrams[location][name];
+    dispatch(modify('vertices', {[location]: {}}));
+    dispatch(modify('corpus', {[location]: {}}));
+    dispatch(loadDiagramVertices({location, content, name}));
+    dispatch(loadDiagramCorpus({location, content, name}));
+    dispatch(modify('context', {name}));
+  };
+}
+
+function delay(millis) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, millis);
+  });
+}
+
 export function loadInputs(config) {
   let org = _.cloneDeep(config.organization);
   const savefunc = fieldText => modify('config', {organization: fieldText});
   console.log('--- Performing Initial Data Load ---');
-  return async function(dispatch) {
+  return async function(dispatch, getState) {
     console.log('  -Loading Inputs-');
     await axios.get('/input').then(response => {
       dispatch(modify('config', response.data));
@@ -60,11 +79,16 @@ export function loadInputs(config) {
         dispatch(genTextEdit('fetchOrg', savefunc));
       }
     });
-    console.log('  -Loadinging each source/location-');
-    dispatch(loadCore('library', 'docker'));
-    dispatch(loadCore('library', 'pipeline'));
-    dispatch(loadCore('diagrams', 'docker'));
-    dispatch(loadCore('diagrams', 'pipeline'));
+    console.log('  -Loading each source/location-');
+    await Promise.all([
+      dispatch(loadCore('library', 'docker')),
+      dispatch(loadCore('library', 'pipeline')),
+      dispatch(loadCore('diagrams', 'docker')),
+      dispatch(loadCore('diagrams', 'pipeline')),
+      delay(1000),
+    ]);
+    console.log('  -Loading user checkpoint-');
+    dispatch(loadCheckpoint('user'));
   };
 }
 
@@ -77,11 +101,11 @@ export function saveCheckpoint(name) {
 }
 
 export function loadCheckpoint(name) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     console.log('---Loading Full State Checkpoint---');
     axios.get(`/checkpoint/load/${name}`).then(response => {
       dispatch(modify('vertices', response.data.vertices));
-      dispatch(modify('library', response.data.library));
+      dispatch(modify('corpus', response.data.corpus));
     });
   };
 }
@@ -93,7 +117,7 @@ export function saveDiagram(location, name) {
     let vertices = state.vertices[location];
     let corpus = state.corpus[location];
     console.log(vertices, corpus);
-    dispatch(modify('context', {name}))
+    dispatch(modify('context', {name}));
     axios.post('/save_diagram', {
       location: location,
       name: name,
