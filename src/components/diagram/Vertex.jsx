@@ -33,6 +33,7 @@ export function PureVertex({
       isDragging: monitor.isDragging(),
     }),
   });
+  const maxParents = location === 'docker' ? 1 : 3;
   const [{highlighted}, drop] = useDrop({
     accept: ['Vertex', 'DepotItem'],
     drop: (item, monitor) => {
@@ -48,7 +49,7 @@ export function PureVertex({
       if (item.type === 'Vertex') {
         if (item.uid === uid) return false;
         if (_.has(item.parents, uid)) return true;
-        if (_.size(item.parents) !== 0) return false;
+        if (_.size(item.parents) >= maxParents) return false;
         return true;
       } else if (item.type === 'DepotItem') {
         const anc_sec = getAncestry(vertices, uid)[1];

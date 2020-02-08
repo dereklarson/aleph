@@ -4,14 +4,14 @@ import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
 // import _ from 'lodash';
 import {generateList} from '@utils/generateList';
-import {modify, loadDiagramVertices, loadDiagramCorpus} from '@data/reducers';
-import {loadDiagram} from '@ops/load';
+import {loadDiagram, deleteSavedDiagram} from '@ops/load';
 
-function SavedDiagrams({location, diagrams, onLoadDiagram}) {
+function SavedDiagrams({location, diagrams, onLoadDiagram, onDeleteDiagram}) {
   let items = [];
-  for (const [name, content] of Object.entries(diagrams)) {
-    let onClick = () => onLoadDiagram({location, content, name});
-    items.push([name, onClick]);
+  for (const [uid, content] of Object.entries(diagrams)) {
+    let onClick = () => onLoadDiagram({location, content, uid});
+    let onDelete = () => onDeleteDiagram({location, uid});
+    items.push([uid, onClick, onDelete]);
   }
 
   return (
@@ -27,5 +27,8 @@ export default connect(
     location: state.context.location,
     diagrams: state.diagrams[state.context.location],
   }),
-  dispatch => ({onLoadDiagram: payload => dispatch(loadDiagram(payload))}),
+  dispatch => ({
+    onDeleteDiagram: payload => dispatch(deleteSavedDiagram(payload)),
+    onLoadDiagram: payload => dispatch(loadDiagram(payload)),
+  }),
 )(SavedDiagrams);

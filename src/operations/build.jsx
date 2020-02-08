@@ -53,7 +53,6 @@ export function runPipeline() {
   return async function(dispatch, getState) {
     let state = getState();
     let location = state.context.location;
-    let focus = state.context.focus;
     let metadata = {
       name: state.context.name,
     };

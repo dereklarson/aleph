@@ -41,15 +41,15 @@ export const sectionedVertices = {
     present: {
       docker: [
         {
-          children: [1],
-          name: 'ubuntu',
+          children: {python: true},
+          uid: 'ubuntu',
           parents: [],
           sections: ['ubuntu'],
         },
         {
           children: [],
-          name: 'python',
-          parents: [0],
+          uid: 'python',
+          parents: {ubuntu: true},
           sections: ['python'],
         },
       ],

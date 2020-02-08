@@ -2,7 +2,12 @@
 import axios from 'axios';
 import _ from 'lodash';
 import {genTextEdit} from '@utils/state';
-import {modify, loadDiagramVertices, loadDiagramCorpus} from '@data/reducers';
+import {
+  modify,
+  removeDiagram,
+  loadDiagramVertices,
+  loadDiagramCorpus,
+} from '@data/reducers';
 
 // All of these are thunked to give access to state and asynchronicity
 
@@ -46,14 +51,22 @@ export function loadCore(source, location) {
   };
 }
 
-export function loadDiagram({location, content, name}) {
+export function loadDiagram({location, content, uid}) {
   return async function(dispatch, getState) {
-    let content = getState().diagrams[location][name];
+    let content = getState().diagrams[location][uid];
     dispatch(modify('vertices', {[location]: {}}));
     dispatch(modify('corpus', {[location]: {}}));
-    dispatch(loadDiagramVertices({location, content, name}));
-    dispatch(loadDiagramCorpus({location, content, name}));
-    dispatch(modify('context', {name}));
+    dispatch(loadDiagramVertices({location, content, uid}));
+    dispatch(loadDiagramCorpus({location, content, uid}));
+    dispatch(modify('context', {uid}));
+  };
+}
+
+export function deleteSavedDiagram({location, uid}) {
+  return async function(dispatch) {
+    let source = 'diagrams';
+    dispatch(removeDiagram({location, uid}));
+    axios.get(`/delete/${source}/${location}/${uid}`);
   };
 }
 
@@ -63,6 +76,14 @@ function delay(millis) {
       resolve('resolved');
     }, millis);
   });
+}
+
+export function loadDatasets() {
+  return function(dispatch) {
+    axios.get('/datasets').then(response => {
+      dispatch(modify('datasets', response.data));
+    });
+  };
 }
 
 export function loadInputs(config) {
@@ -85,6 +106,7 @@ export function loadInputs(config) {
       dispatch(loadCore('library', 'pipeline')),
       dispatch(loadCore('diagrams', 'docker')),
       dispatch(loadCore('diagrams', 'pipeline')),
+      dispatch(loadDatasets()),
       delay(1000),
     ]);
     console.log('  -Loading user checkpoint-');

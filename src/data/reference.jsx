@@ -1,5 +1,5 @@
 // @format
-import {vertexDataFromPaths} from '@utils/vertex';
+// import {vertexDataFromPaths} from '@utils/vertex';
 import {genCoreData, genGreatLibrary} from '@utils/state';
 import _ from 'lodash';
 
@@ -66,6 +66,7 @@ export const blankState = {
 export const initState = {
   ..._.cloneDeep(blankState),
   library: genGreatLibrary(locations),
+  datasets: {},
 };
 
 // State a tutorial will set prior to running

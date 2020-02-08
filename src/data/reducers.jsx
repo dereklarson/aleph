@@ -8,7 +8,15 @@ const configSlice = genSlice('config');
 const operationsSlice = genSlice('operations');
 const cacheSlice = genSlice('cache');
 const contextSlice = genSlice('context');
-const diagramsSlice = genSlice('diagrams');
+const datasetsSlice = genSlice('datasets');
+
+const diagramsReducers = {
+  removeDiagram(state, action) {
+    delete state[action.payload.location][action.payload.uid];
+  },
+};
+const diagramsSlice = genSlice('diagrams', diagramsReducers);
+export const {removeDiagram} = diagramsSlice.actions;
 
 const libraryReducers = {
   writeText(state, action) {
@@ -141,6 +149,7 @@ const modifiers = {
   corpus: corpusSlice.actions.modify_corpus,
   diagrams: diagramsSlice.actions.modify_diagrams,
   vertices: verticesSlice.actions.modify_vertices,
+  datasets: datasetsSlice.actions.modify_datasets,
 };
 export const modify = (name, payload) => modifiers[name](payload);
 
@@ -166,6 +175,7 @@ const rootReducer = combineReducers({
   diagrams: diagramsSlice.reducer,
   library: librarySlice.reducer,
   vertices: verticesSlice.reducer,
+  datasets: datasetsSlice.reducer,
 });
 
 export default rootReducer;

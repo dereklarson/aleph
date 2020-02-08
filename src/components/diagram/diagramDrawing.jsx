@@ -50,7 +50,8 @@ export function calculateDiagramPositions(vertices, dagre = false) {
 }
 
 export function populateVertexGenerations(vertices, vId, curr_gen) {
-  vertices[vId]['generation'] = curr_gen;
+  let existing_gen = _.get(vertices[vId], 'generation', 0);
+  vertices[vId]['generation'] = Math.max(curr_gen, existing_gen);
   _.keys(vertices[vId].children).forEach(function(child) {
     populateVertexGenerations(vertices, child, curr_gen + 1);
   });
@@ -102,7 +103,7 @@ function calculateDagre(vertices) {
   const h0 = 0 + (1 - transition) * transition_scale;
   const v0 = 0.2 + (1 - transition) * transition_scale;
 
-  console.log('Graph: ' + hScale + ', ' + vScale);
+  // console.log('Graph: ' + hScale + ', ' + vScale);
 
   g.nodes().forEach(v => {
     vertices[v]['position'] = {
@@ -111,7 +112,7 @@ function calculateDagre(vertices) {
       width: Math.floor(g.node(v).width * hScale),
       height: Math.floor(g.node(v).height * vScale),
     };
-    console.log('Node ' + v + ': ' + JSON.stringify(vertices[v]['position']));
+    // console.log('Node ' + v + ': ' + JSON.stringify(vertices[v]['position']));
   });
 
   let arrows = [];
@@ -128,9 +129,9 @@ function calculateDagre(vertices) {
         y: rescale(end.y, 0, vScale, vZoom, v0),
       },
     });
-    console.log(
-      'Edge ' + edge.v + ' -> ' + edge.w + ': ' + JSON.stringify(g.edge(edge)),
-    );
+    // console.log(
+    //   'Edge ' + edge.v + ' -> ' + edge.w + ': ' + JSON.stringify(g.edge(edge)),
+    // );
   });
 
   return arrows;

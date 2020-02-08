@@ -10,13 +10,15 @@ import {getAncestry} from '@utils/vertex';
 export function ParentHandle({location, vertexId, vertices, onDrop}) {
   const classes = useStyles();
 
+  const maxParents = location === 'docker' ? 1 : 3;
+
   const [{highlighted}, drop] = useDrop({
     accept: ['DepotItem'],
     drop: item => {
       onDrop(location, vertexId, item.uid);
     },
     canDrop: (item, monitor) => {
-      if (_.size(vertices[vertexId].parents) !== 0) {
+      if (_.size(vertices[vertexId].parents) >= maxParents) {
         return false;
       } else {
         const anc_sec = getAncestry(vertices, vertexId)[1];

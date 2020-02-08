@@ -11,17 +11,17 @@ export default genStoryEntry(7, TestComponent, excitedState);
 export const testData = {
   vertices: [
     {
-      name: 'parent',
-      children: [1],
-      parents: [],
-      sections: [],
+      uid: 'parent',
+      children: {focus_child: true},
+      parents: {},
+      sections: {},
       position: {x: 0, y: 0, height: 10, width: 10},
     },
     {
-      name: 'focus child',
-      children: [],
-      parents: [0],
-      sections: [],
+      uid: 'focus_child',
+      children: {},
+      parents: {parent: true},
+      sections: {},
       position: {x: 10, y: 10, height: 10, width: 10},
     },
   ],

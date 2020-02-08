@@ -26,7 +26,7 @@ function StyledAvatar({item}) {
   return <Avatar className={classes.avatar}>{item}</Avatar>;
 }
 
-function ListWithDeleteIcon({name, onClick, defIcon}) {
+function ListWithDeleteIcon({name, onClick, defIcon, onSecondary}) {
   let item = _.get(iconSource, name, _.get(iconSource, defIcon));
   return (
     <ListItem button onClick={onClick}>
@@ -35,7 +35,7 @@ function ListWithDeleteIcon({name, onClick, defIcon}) {
       </ListItemAvatar>
       <ListItemText primary={titlize(name)} />
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="delete">
+        <IconButton edge="end" aria-label="delete" onClick={onSecondary}>
           <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>
@@ -69,7 +69,9 @@ const kinds = {
 export function generateList(kind, options, listIcon = 'def', ttBase = '') {
   let itemDisplay = [];
   options.forEach(function(config, index) {
-    const props = {name: config[0], onClick: config[1], defIcon: listIcon};
+    let props = {name: config[0], onClick: config[1], defIcon: listIcon};
+    if (config.length >= 3) props['onSecondary'] = config[2];
+    else props['onSecondary'] = () => 0;
     itemDisplay.push(
       <div key={index}>
         {applyTooltip(kinds[kind](props), config[0], ttBase)}
