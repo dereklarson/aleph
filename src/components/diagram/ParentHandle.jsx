@@ -7,10 +7,15 @@ import {addVertex, linkVertex} from '@data/reducers';
 import {useStyles} from '@style/styling';
 import {getAncestry} from '@utils/vertex';
 
-export function ParentHandle({location, vertexId, vertices, onDrop}) {
+export function ParentHandle({
+  location,
+  maxParents,
+  vertexId,
+  vertices,
+  associations,
+  onDrop,
+}) {
   const classes = useStyles();
-
-  const maxParents = location === 'docker' ? 1 : 3;
 
   const [{highlighted}, drop] = useDrop({
     accept: ['DepotItem'],
@@ -21,7 +26,7 @@ export function ParentHandle({location, vertexId, vertices, onDrop}) {
       if (_.size(vertices[vertexId].parents) >= maxParents) {
         return false;
       } else {
-        const anc_sec = getAncestry(vertices, vertexId)[1];
+        const anc_sec = getAncestry(vertices, associations, vertexId)[1];
         return !anc_sec.includes(item.uid);
       }
     },
@@ -41,9 +46,9 @@ export function ParentHandle({location, vertexId, vertices, onDrop}) {
 
 function actionDispatch(dispatch) {
   return {
-    onDrop: (location, child, section) => {
-      dispatch(addVertex({location, uid: section}));
-      dispatch(linkVertex({location, child, parent: section}));
+    onDrop: (location, child, association) => {
+      dispatch(addVertex({location, uid: association}));
+      dispatch(linkVertex({location, child, parent: association}));
     },
   };
 }
@@ -52,6 +57,7 @@ export default connect(
   state => ({
     location: state.context.location,
     vertices: state.vertices[state.context.location],
+    associations: state.associations[state.context.location],
     // vertices: state.vertices.present[state.context.location],
   }),
   actionDispatch,

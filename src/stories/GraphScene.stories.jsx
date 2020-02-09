@@ -1,9 +1,9 @@
 // @format
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
 import {excitedState} from './testStates';
-import Vertices from '@diagram/Vertices';
+import Graph from '@diagram/Graph';
 
-const TestComponent = Vertices;
+const TestComponent = Graph;
 // Generate a Storybook entry based on the following key args (order, component, state)
 export default genStoryEntry(7, TestComponent, excitedState);
 
@@ -14,14 +14,12 @@ export const testData = {
       uid: 'parent',
       children: {focus_child: true},
       parents: {},
-      sections: {},
       position: {x: 0, y: 0, height: 10, width: 10},
     },
     {
       uid: 'focus_child',
       children: {},
       parents: {parent: true},
-      sections: {},
       position: {x: 10, y: 10, height: 10, width: 10},
     },
   ],

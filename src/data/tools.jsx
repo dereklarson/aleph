@@ -16,6 +16,10 @@ export function genSlice(name, extraReducers = {}) {
   return slice;
 }
 
+export function stateLocnew(state, payload) {
+  return state[payload.location];
+}
+
 export function stateLoc(state, payload) {
   return state[payload.location][payload.uid];
 }

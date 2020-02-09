@@ -6,6 +6,7 @@ import {
   modify,
   removeDiagram,
   loadDiagramVertices,
+  loadDiagramAssociations,
   loadDiagramCorpus,
 } from '@data/reducers';
 
@@ -55,8 +56,10 @@ export function loadDiagram({location, content, uid}) {
   return async function(dispatch, getState) {
     let content = getState().diagrams[location][uid];
     dispatch(modify('vertices', {[location]: {}}));
+    dispatch(modify('associations', {[location]: {}}));
     dispatch(modify('corpus', {[location]: {}}));
     dispatch(loadDiagramVertices({location, content, uid}));
+    dispatch(loadDiagramAssociations({location, content, uid}));
     dispatch(loadDiagramCorpus({location, content, uid}));
     dispatch(modify('context', {uid}));
   };
@@ -127,6 +130,7 @@ export function loadCheckpoint(name) {
     console.log('---Loading Full State Checkpoint---');
     axios.get(`/checkpoint/load/${name}`).then(response => {
       dispatch(modify('vertices', response.data.vertices));
+      dispatch(modify('associations', response.data.associations));
       dispatch(modify('corpus', response.data.corpus));
     });
   };
@@ -137,13 +141,14 @@ export function saveDiagram(location, name) {
     console.log(`---Saving ${location} Diagram---`);
     let state = getState();
     let vertices = state.vertices[location];
+    let associations = state.associations[location];
     let corpus = state.corpus[location];
     console.log(vertices, corpus);
     dispatch(modify('context', {name}));
     axios.post('/save_diagram', {
       location: location,
       name: name,
-      state: {vertices, corpus},
+      state: {vertices, associations, corpus},
     });
   };
 }

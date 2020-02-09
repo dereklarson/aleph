@@ -2,18 +2,20 @@
 import _ from 'lodash';
 
 // Looks back through the vertex lineage to get all ancestors associated with it
-export function getAncestry(vertices, vertexId) {
+export function getAncestry(vertices, associations, vertexId) {
   let currVertex = vertices[vertexId];
   let ancestors = [];
-  let sections = _.clone(currVertex.sections);
+  let currAssociations = _.clone(_.get(associations, vertexId, []));
   let aIdx = 0;
   while (_.size(currVertex.parents) !== 0) {
     ancestors = ancestors.concat(_.keys(currVertex.parents));
     currVertex = vertices[ancestors[aIdx]];
-    sections = sections.concat(_.clone(currVertex.sections));
+    currAssociations = currAssociations.concat(
+      _.clone(_.get(associations, ancestors[aIdx], [])),
+    );
     aIdx++;
   }
-  return [ancestors, sections];
+  return [ancestors, currAssociations];
 }
 
 // Useful for generating static initialization and test data, this will produce a set of
@@ -23,12 +25,10 @@ export function vertexDataFromPaths(paths) {
   for (const path of paths.values()) {
     let parent = '';
     for (const vertex of path.values()) {
-      // Simplest case, vertex is just a uid string, and there are no sections
+      // Simplest case, vertex is just a uid string
       let uid = vertex;
-      let sections = [];
       if (typeof vertex === 'object') {
         uid = vertex['uid'];
-        sections = vertex['sections'];
       }
       if (_.has(outputVertices, uid)) {
         parent = uid;
@@ -38,7 +38,6 @@ export function vertexDataFromPaths(paths) {
         uid: uid,
         children: {},
         parents: parent ? {[parent]: true} : {},
-        sections: sections,
       };
       if (parent) outputVertices[parent].children[uid] = true;
       parent = uid;

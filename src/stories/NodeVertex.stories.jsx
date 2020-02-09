@@ -11,7 +11,7 @@ export default genStoryEntry(12, TestComponent, excitedState);
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
   uid: 'test_node',
-  sections: ['react'],
+  associations: ['react'],
   styleProps: {
     highlighted: false,
     isDragging: false,
@@ -41,10 +41,10 @@ export const dynamic = () =>
   ]);
 export const uids = () =>
   genCollage([{uid: ''}, {uid: 'Normal'}, {uid: 'Cornelius Scipio Africanus'}]);
-export const sections = () =>
+export const associations = () =>
   genCollage([
-    {sections: []},
-    {sections: ['Cornelius', 'Fabius', 'Julius', 'Quinctius', 'Cato']},
+    {associations: []},
+    {associations: ['Cornelius', 'Fabius', 'Julius', 'Quinctius', 'Cato']},
   ]);
 export const states = () =>
   genCollage([

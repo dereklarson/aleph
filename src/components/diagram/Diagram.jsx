@@ -6,15 +6,15 @@ import {Paper} from '@material-ui/core';
 import {createSelector} from 'reselect';
 import _ from 'lodash';
 import Arrows from './Arrows';
-import Vertices from './Vertices';
+import Graph from './Graph';
 import {calculateDiagramPositions} from './diagramDrawing';
 import {useStyles} from '@style/styling';
-import {modify, addVertex} from '@data/reducers';
+import {modify, addVertex, addAssociation} from '@data/reducers';
 
 export function PureDiagram({
   location,
   clearFocus,
-  onSectionDrop,
+  onDepotDrop,
   vertices,
   activity,
 }) {
@@ -24,7 +24,7 @@ export function PureDiagram({
     accept: 'DepotItem',
     drop: (item, monitor) => {
       if (!monitor.didDrop()) {
-        onSectionDrop({location, uid: item.uid});
+        onDepotDrop({location, uid: item.uid, association: item.uid});
       }
     },
     collect: monitor => ({
@@ -47,7 +47,7 @@ export function PureDiagram({
         className={classes.paperDrawing}
         style={{backgroundColor: highlighted ? '#E0FBE0' : null}}>
         <Arrows arrows={arrows} />
-        <Vertices vertices={verticesToDisplay} activity={activity} />
+        <Graph vertices={verticesToDisplay} activity={activity} />
       </Paper>
     </div>
   );
@@ -77,6 +77,9 @@ export default connect(
   }),
   dispatch => ({
     clearFocus: () => dispatch(modify('context', {focus: null})),
-    onSectionDrop: payload => dispatch(addVertex(payload)),
+    onDepotDrop: payload => {
+      dispatch(addVertex(payload));
+      dispatch(addAssociation(payload));
+    },
   }),
 )(PureDiagram);

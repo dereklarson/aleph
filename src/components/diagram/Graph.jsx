@@ -16,7 +16,6 @@ function renderVertex(vertex, activity, className) {
     <Vertex
       type={type}
       uid={vertex.uid}
-      sections={vertex.sections}
       parents={vertex.parents}
       prepared={activity.prepared}
     />
@@ -36,7 +35,7 @@ function renderVertex(vertex, activity, className) {
   );
 }
 
-export default function Vertices({vertices, activity}) {
+export default function Graph({vertices, activity}) {
   const classes = useStyles();
   const vertexDisplay = [];
   _.values(vertices).forEach(vertex => {

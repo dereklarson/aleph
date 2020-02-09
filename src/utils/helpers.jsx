@@ -39,23 +39,24 @@ export function getLastLine(string) {
     .slice(-1)[0];
 }
 
-export function createText({library, sections, corpus, uid}) {
+export function createText({library, associations, corpus, uid}) {
   if (_.has(corpus, uid)) return corpus[uid].text;
   else {
     let text = '';
-    sections.forEach(sectionUid => {
-      text += library[sectionUid].text;
+    associations.forEach(associationUid => {
+      text += library[associationUid].text;
     });
     return text;
   }
 }
 
-export function generateCorpus({vertices, library, corpus}) {
+export function generateCorpus({vertices, associations, library, corpus}) {
   let output = {};
   _.values(vertices).forEach(vertex => {
     let uid = vertex.uid;
+    let localAssoc = associations[uid];
     output[uid] = {
-      text: createText({library, sections: vertex.sections, corpus, uid}),
+      text: createText({library, associations: localAssoc, corpus, uid}),
     };
   });
   return output;

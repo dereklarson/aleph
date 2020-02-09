@@ -7,8 +7,9 @@ import _ from 'lodash';
 import {prepareFocusedBuild} from '@ops/build';
 import {genCodeEdit} from '@utils/state';
 import {
-  removeSection,
-  removeAllSections,
+  removeAssociation,
+  removeAllAssociations,
+  relinkAssociations,
   renameVertex,
   setText,
   clearText,
@@ -27,7 +28,7 @@ export function PureCardVertex({
   onChipDelete,
   uid,
   idlist,
-  sections,
+  associations,
   styleProps,
 }) {
   const classes = useStyles();
@@ -35,14 +36,14 @@ export function PureCardVertex({
 
   let chipDisplay = [];
   let libError = false;
-  for (const [index, section] of sections.entries()) {
-    let libraryMissing = !_.has(library, section);
+  for (const [index, association] of associations.entries()) {
+    let libraryMissing = !_.has(library, association);
     libError = libError || libraryMissing;
-    const chipDelete = () => onChipDelete({location, uid, section});
+    const chipDelete = () => onChipDelete({location, uid, association});
     chipDisplay.push(
       <Chip
         key={index}
-        label={titlize(section)}
+        label={titlize(association)}
         color={libraryMissing ? 'secondary' : 'default'}
         onDelete={chipDelete}
       />,
@@ -52,7 +53,7 @@ export function PureCardVertex({
   let edittext = '';
   let editfunc = () => 0;
   if (!libError) {
-    edittext = createText({library, sections, corpus, uid});
+    edittext = createText({library, associations, corpus, uid});
     editfunc = text => setText({location, uid: uid, text: text});
   }
 
@@ -99,16 +100,17 @@ function actionDispatch(dispatch, props) {
   return {
     onChange: payload => {
       dispatch(renameVertex(payload));
+      dispatch(relinkAssociations(payload));
       dispatch(clearText(payload));
     },
     onChipDelete: payload => {
-      dispatch(removeSection(payload));
+      dispatch(removeAssociation(payload));
       dispatch(clearText(payload));
     },
     onEditor: payload => dispatch(genCodeEdit('nodeEdit', payload)),
     onBuild: () => dispatch(prepareFocusedBuild()),
     onClear: payload => {
-      dispatch(removeAllSections(payload));
+      dispatch(removeAllAssociations(payload));
       dispatch(clearText(payload));
     },
   };

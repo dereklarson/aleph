@@ -5,8 +5,8 @@ import CallMergeIcon from '@material-ui/icons/CallMerge';
 import {propsToStyle} from '@utils/helpers';
 import {useStyles} from '@style/styling';
 
-export default function ConfigNodeVertex({uid, sections, styleProps}) {
-  const nodelabel = `${uid}(${sections.length})`;
+export default function ConfigVertex({uid, associations, styleProps}) {
+  const nodelabel = `${uid}(${associations.length})`;
   const icon = <CallMergeIcon />;
   const classes = useStyles();
 

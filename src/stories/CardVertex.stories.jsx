@@ -13,7 +13,7 @@ export default genStoryEntry(10, TestComponent, excitedState);
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
   uid: 'Test name',
-  sections: ['react'],
+  associations: ['react'],
   idlist: [],
   library: {cornelius: 'Scipio', julius: 'Caesar', fabius: 'Cunctator'},
   cardActions: {
@@ -48,11 +48,11 @@ export const names = () =>
     {uid: 'Normal'},
     {uid: 'Cornelius Scipio Africanus'},
   ]);
-export const sections = () =>
+export const associations = () =>
   genCollage([
-    {sections: []},
+    {associations: []},
     {
-      sections: ['cornelius', 'fabius', 'julius', 'cato_the_middle-aged'],
+      associations: ['cornelius', 'fabius', 'julius', 'cato_the_middle-aged'],
     },
   ]);
 export const states = () =>

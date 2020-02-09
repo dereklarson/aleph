@@ -1,16 +1,16 @@
 // @format
 import {genStoryEntry, getCollageGenerator} from './testHelpers';
 import {excitedState} from './testStates';
-import ConfigNodeVertex from '@diagram/ConfigNodeVertex';
+import ConfigVertex from '@diagram/ConfigVertex';
 
-const TestComponent = ConfigNodeVertex;
+const TestComponent = ConfigVertex;
 // Generate a Storybook entry based on the following key args (order, component, state)
 export default genStoryEntry(11, TestComponent, excitedState);
 
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
   name: 'Test Node',
-  sections: ['react'],
+  associations: ['react'],
   id: 1,
   styleProps: {
     highlighted: false,
@@ -32,10 +32,10 @@ let genCollage = getCollageGenerator(
 
 export const names = () =>
   genCollage([{uid: ''}, {uid: 'Normal'}, {uid: 'Cornelius Scipio Africanus'}]);
-export const sections = () =>
+export const associations = () =>
   genCollage([
-    {sections: []},
-    {sections: ['Cornelius', 'Fabius', 'Julius', 'Quinctius', 'Cato']},
+    {associations: []},
+    {associations: ['Cornelius', 'Fabius', 'Julius', 'Quinctius', 'Cato']},
   ]);
 export const states = () =>
   genCollage([

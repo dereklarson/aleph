@@ -1,11 +1,11 @@
 // @format
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
-import {sectionState} from './testStates';
 import Workspace from '@comp/Workspace';
+import {excitedState} from './testStates';
 
 const TestComponent = Workspace;
 // Generate a Storybook entry based on the following key args (order, component, state)
-export default genStoryEntry(4, TestComponent, sectionState);
+export default genStoryEntry(4, TestComponent, excitedState);
 
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {};

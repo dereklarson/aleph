@@ -22,6 +22,8 @@ const store = configureStore({
   preloadedState: initState,
 });
 
+console.log("Initial State:", initState);
+
 const keyMap = {
   DELETE_NODE: ['del', 'backspace'],
 };

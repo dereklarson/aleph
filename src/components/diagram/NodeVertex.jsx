@@ -14,7 +14,7 @@ import {propsToStyle} from '@utils/helpers';
 import {useStyles} from '@style/styling';
 
 function genTTList(text, isOver) {
-  let count = 'isOver' ? 5 : 1;
+  let count = isOver ? 5 : 1;
   let lines = text.split('\n').slice(0, count);
   let itemDisplay = [];
   lines.forEach((line, index) => {
@@ -27,7 +27,7 @@ function genTTList(text, isOver) {
   return <List dense={true}> {itemDisplay} </List>;
 }
 
-export function PureNodeVertex({uid, sections, styleProps, ops}) {
+export function PureNodeVertex({uid, associations, styleProps, ops}) {
   const classes = useStyles();
   const icon = <DonutSmallIcon style={{padding: 3}} />;
   let ttText = _.get(ops.test_output, uid, '');
@@ -49,7 +49,7 @@ export function PureNodeVertex({uid, sections, styleProps, ops}) {
         color="primary"
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
         className={classes.badge}
-        badgeContent={sections.length}>
+        badgeContent={associations.length}>
         <Fab
           variant="extended"
           style={propsToStyle({...styleProps, testing: ops.testing})}>

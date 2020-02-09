@@ -36,33 +36,6 @@ export const coveredState = {
   large_diagrams: {a: {}, b: {}, c: {}, d: {}, e: {}, f: {}},
 };
 
-export const sectionedVertices = {
-  vertices: {
-    present: {
-      docker: [
-        {
-          children: {python: true},
-          uid: 'ubuntu',
-          parents: [],
-          sections: ['ubuntu'],
-        },
-        {
-          children: [],
-          uid: 'python',
-          parents: {ubuntu: true},
-          sections: ['python'],
-        },
-      ],
-    },
-  },
-  library: {docker: genLibrary(['ubuntu', 'python', 'capnproto'])},
-};
-
-export const sectionState = {
-  ...blankState,
-  ...sectionedVertices,
-};
-
 export const testOutput = {
   test_output: {
     ubuntu:

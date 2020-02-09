@@ -11,119 +11,126 @@ const contextSlice = genSlice('context');
 const datasetsSlice = genSlice('datasets');
 
 const diagramsReducers = {
-  removeDiagram(state, action) {
-    delete state[action.payload.location][action.payload.uid];
+  removeDiagram(state, {payload: {location, uid}}) {
+    delete state[location][uid];
   },
 };
 const diagramsSlice = genSlice('diagrams', diagramsReducers);
 export const {removeDiagram} = diagramsSlice.actions;
 
 const libraryReducers = {
-  writeText(state, action) {
-    stateLoc(state, action.payload).text = action.payload.text;
+  writeText(state, {payload: {location, uid, text}}) {
+    state[location][uid].text = text;
   },
 };
 const librarySlice = genSlice('library', libraryReducers);
 export const {writeText} = librarySlice.actions;
 
 const corpusReducers = {
-  loadDiagramCorpus(state, action) {
-    let content = action.payload.content;
+  loadDiagramCorpus(state, {payload: {location, uid, content}}) {
     if (_.has(content, 'corpus')) {
-      Object.assign(state[action.payload.location], content.corpus);
+      Object.assign(state[location], content.corpus);
     }
   },
-  setText(state, action) {
-    if (!_.has(state[action.payload.location], action.payload.uid)) {
-      state[action.payload.location][action.payload.uid] = {};
+  setText(state, {payload: {location, uid, text}}) {
+    if (!_.has(state[location], uid)) {
+      state[location][uid] = {};
     }
-    stateLoc(state, action.payload).text = action.payload.text;
+    state[location][uid].text = text;
   },
-  clearText(state, action) {
-    if (_.has(state[action.payload.location], action.payload.uid)) {
-      delete state[action.payload.location][action.payload.uid];
+  clearText(state, {payload: {location, uid}}) {
+    if (_.has(state[location], uid)) {
+      delete state[location][uid];
     }
   },
 };
 const corpusSlice = genSlice('corpus', corpusReducers);
 export const {loadDiagramCorpus, setText, clearText} = corpusSlice.actions;
 
-const vertexReducers = {
-  loadDiagramVertices(state, action) {
-    let content = action.payload.content;
-    if (_.has(content, 'paths')) {
-      Object.assign(
-        state[action.payload.location],
-        vertexDataFromPaths(content.paths),
-      );
-    } else if (_.has(content, 'vertices')) {
-      Object.assign(state[action.payload.location], content.vertices);
+const associationsReducers = {
+  loadDiagramAssociations(state, {payload: {location, uid, content}}) {
+    if (_.has(content, 'associations')) {
+      Object.assign(state[location], content.associations);
     }
   },
-  addVertex(state, action) {
-    let uid = action.payload.uid;
+  addAssociation(state, {payload: {location, uid, association}}) {
+    if (!_.has(state[location], uid)) {
+      state[location][uid] = [];
+    }
+    state[location][uid].push(association);
+  },
+  removeAssociation(state, {payload: {location, uid, association}}) {
+    let index = state[location][uid].indexOf(association);
+    if (index >= 0) state[location][uid].splice(index, 1);
+  },
+  removeAllAssociations(state, {payload: {location, uid}}) {
+    state[location][uid] = [];
+  },
+  relinkAssociations(state, {payload: {location, uid, newId}}) {
+    let associations = state[location][uid];
+    delete Object.assign(state[location], {[newId]: associations})[uid];
+  },
+};
+const associationsSlice = genSlice('associations', associationsReducers);
+export const {
+  loadDiagramAssociations,
+  addAssociation,
+  removeAssociation,
+  removeAllAssociations,
+  relinkAssociations,
+} = associationsSlice.actions;
+
+const vertexReducers = {
+  loadDiagramVertices(state, {payload: {location, uid, content}}) {
+    if (_.has(content, 'paths')) {
+      Object.assign(state[location], vertexDataFromPaths(content.paths));
+    } else if (_.has(content, 'vertices')) {
+      Object.assign(state[location], content.vertices);
+    }
+  },
+  addVertex(state, {payload: {location, uid}}) {
     // TODO figure out function to "create first uid"
-    if (_.has(state[action.payload.location], uid)) {
+    if (_.has(state[location], uid)) {
       uid = uid + 'x';
     }
-    state[action.payload.location][uid] = {
+    state[location][uid] = {
       uid: uid,
       children: {},
       parents: {},
-      sections: [action.payload.uid],
     };
   },
-  removeVertex(state, action) {
-    let vertex = stateLoc(state, action.payload);
+  removeVertex(state, {payload: {location, uid}}) {
+    let vertex = state[location][uid];
     //Remove each parent link and child link, then delete the vertex
     _.keys(vertex.parents).forEach(key => {
-      delete state[action.payload.location][key].children[vertex.uid];
+      delete state[location][key].children[vertex.uid];
     });
     _.keys(vertex.children).forEach(key => {
-      delete state[action.payload.location][key].parents[vertex.uid];
+      delete state[location][key].parents[vertex.uid];
     });
-    delete state[action.payload.location][vertex.uid];
+    delete state[location][vertex.uid];
   },
-  renameVertex(state, action) {
-    let vertex = stateLoc(state, action.payload);
-    let oldId = vertex.uid;
-    let newId = action.payload.newId;
+  renameVertex(state, {payload: {location, uid, newId}}) {
+    let vertex = state[location][uid];
     vertex['uid'] = newId;
     //Swap each parent link and child link, then swap the vertex
     _.keys(vertex.parents).forEach(key => {
-      delete state[action.payload.location][key].children[oldId];
-      state[action.payload.location][key].children[newId] = true;
+      delete state[location][key].children[uid];
+      state[location][key].children[newId] = true;
     });
     _.keys(vertex.children).forEach(key => {
-      delete state[action.payload.location][key].parents[oldId];
-      state[action.payload.location][key].parents[newId] = true;
+      delete state[location][key].parents[uid];
+      state[location][key].parents[newId] = true;
     });
-    delete Object.assign(state[action.payload.location], {[newId]: vertex})[
-      oldId
-    ];
+    delete Object.assign(state[location], {[newId]: vertex})[uid];
   },
-  linkVertex(state, action) {
-    let child = state[action.payload.location][action.payload.child];
-    let parent = state[action.payload.location][action.payload.parent];
-    parent.children[action.payload.child] = true;
-    child.parents[action.payload.parent] = true;
+  linkVertex(state, {payload: {location, child, parent}}) {
+    state[location][child].parents[parent] = true;
+    state[location][parent].children[child] = true;
   },
-  unlinkVertex(state, action) {
-    let child = state[action.payload.location][action.payload.child];
-    let parent = state[action.payload.location][action.payload.parent];
-    delete child.parents[action.payload.parent];
-    delete parent.children[action.payload.child];
-  },
-  addSection(state, action) {
-    stateLoc(state, action.payload).sections.push(action.payload.section);
-  },
-  removeSection(state, action) {
-    let sections = stateLoc(state, action.payload).sections;
-    let index = sections.indexOf(action.payload.section);
-    if (index >= 0) sections.splice(index, 1);
-  },
-  removeAllSections(state, action) {
-    stateLoc(state, action.payload).sections = [];
+  unlinkVertex(state, {payload: {location, child, parent}}) {
+    delete state[location][child].parents[parent];
+    delete state[location][parent].children[child];
   },
 };
 
@@ -135,9 +142,6 @@ export const {
   renameVertex,
   linkVertex,
   unlinkVertex,
-  addSection,
-  removeSection,
-  removeAllSections,
 } = verticesSlice.actions;
 
 const modifiers = {
@@ -149,6 +153,7 @@ const modifiers = {
   corpus: corpusSlice.actions.modify_corpus,
   diagrams: diagramsSlice.actions.modify_diagrams,
   vertices: verticesSlice.actions.modify_vertices,
+  associations: associationsSlice.actions.modify_associations,
   datasets: datasetsSlice.actions.modify_datasets,
 };
 export const modify = (name, payload) => modifiers[name](payload);
@@ -175,6 +180,7 @@ const rootReducer = combineReducers({
   diagrams: diagramsSlice.reducer,
   library: librarySlice.reducer,
   vertices: verticesSlice.reducer,
+  associations: associationsSlice.reducer,
   datasets: datasetsSlice.reducer,
 });
 

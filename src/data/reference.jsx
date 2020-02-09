@@ -47,6 +47,7 @@ export const blankConfig = {
 const categories = {
   // vertices: vertexDataFromPaths([['parent', 'child']]),
   vertices: {},
+  associations: {},
   library: {},
   corpus: {},
   diagrams: {},
@@ -62,10 +63,11 @@ export const blankState = {
   ..._.cloneDeep(locationData),
 };
 
+const defaults = {def: ['ubuntu', 'sample']};
 // State we would first see if nothing else is loaded via Axios
 export const initState = {
   ..._.cloneDeep(blankState),
-  library: genGreatLibrary(locations),
+  library: genGreatLibrary(locations, defaults),
   datasets: {},
 };
 

@@ -56,7 +56,11 @@ export default connect(
     operations: state.operations,
   }),
   dispatch => ({
-    onClear: location => dispatch(modify('vertices', {[location]: {}})),
+    onClear: location => {
+      dispatch(modify('vertices', {[location]: {}}));
+      dispatch(modify('associations', {[location]: {}}));
+      dispatch(modify('corpus', {[location]: {}}));
+    },
     onDagre: dagre => dispatch(modify('context', {dagre: !dagre})),
     onLogs: text =>
       dispatch(genCodeEdit('logs', {edittext: text, editfunc: t => 0})),

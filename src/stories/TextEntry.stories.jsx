@@ -12,6 +12,7 @@ export const testData = {
   open: true,
   context: {
     schema: {
+      editor: false,
       title: 'Saving Diagram',
       keys: {
         savename: 1,
@@ -28,7 +29,7 @@ export const test = () => genStory();
 export const many = () =>
   genStory({
     open: true,
-    context: {schema: {title: 'Z', keys: {a: 1, b: 2, c: 3}}},
+    context: {schema: {editor: false, title: 'Z', keys: {a: 1, b: 2, c: 3}}},
   });
 export const code = () =>
-  genStory({open: true, context: {schema: {title: 'Edit Code'}}});
+  genStory({open: true, context: {schema: {editor: true, title: 'Edit Code'}}});

@@ -10,6 +10,7 @@ export function prepareFocusedBuild() {
     let state = getState();
     let location = state.context.location;
     let vertices = state.vertices[location];
+    let associations = state.associations[location];
     let library = state.library[location];
     let metadata = {
       build_id: state.context.focus,
@@ -18,6 +19,7 @@ export function prepareFocusedBuild() {
     };
     let corpus = generateCorpus({
       vertices,
+      associations,
       library,
       corpus: state.corpus[location],
     });

@@ -7,7 +7,7 @@ import _ from 'lodash';
 import DepotItem from './DepotItem';
 import {capitalizeFirstLetter} from '@utils/helpers';
 import {useStyles} from '@style/styling';
-import {removeVertex, clearText} from '@data/reducers';
+import {removeVertex, removeAllAssociations, clearText} from '@data/reducers';
 
 const tooltips = {
   base: "Base items are starting points, OS's and public images",
@@ -25,7 +25,7 @@ export function PureDepot({location, onVertexDrop, library}) {
       dividers[itemtype] = itemtype;
       itemDisplay.push(
         <Tooltip
-          key={100 + index}
+          key={itemtype}
           title={_.get(tooltips, itemtype, '(No description)')}
           placement="bottom"
           enterDelay={500}>
@@ -70,6 +70,7 @@ export default connect(
   dispatch => ({
     onVertexDrop: payload => {
       dispatch(removeVertex(payload));
+      dispatch(removeAllAssociations(payload));
       dispatch(clearText(payload));
     },
   }),
