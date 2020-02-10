@@ -4,7 +4,8 @@ import {connect} from 'react-redux';
 import {useDrag, DragPreviewImage} from 'react-dnd';
 import Chip from '@material-ui/core/Chip';
 import {titlize} from '@utils/helpers';
-import {modify, writeText} from '@data/reducers';
+import {writeText} from '@data/reducers';
+import {genCodeEdit} from '@utils/state';
 import {useStyles} from '@style/styling';
 
 export function DepotItem({itemProps, location, onClick}) {
@@ -18,7 +19,7 @@ export function DepotItem({itemProps, location, onClick}) {
   });
 
   const editfunc = text =>
-    writeText({location, uid: itemProps.uid, text: text});
+    writeText({location, uid: itemProps.uid, text: text['_editor']});
   return (
     <div ref={drag} style={{zIndex: 5}}>
       <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
@@ -36,7 +37,6 @@ export function DepotItem({itemProps, location, onClick}) {
 export default connect(
   state => ({location: state.context.location}),
   dispatch => ({
-    onClick: payload =>
-      dispatch(modify('context', {...payload, editing: true})),
+    onClick: payload => dispatch(genCodeEdit('libEdit', payload)),
   }),
 )(DepotItem);

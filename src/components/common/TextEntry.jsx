@@ -15,11 +15,11 @@ import 'ace-builds/src-noconflict/theme-monokai';
 
 export function PureTextEntry({open, context, dispatch}) {
   const classes = useStyles();
-  const [fieldText, setFieldText] = React.useState({});
   const {schema, edittext, editfunc} = context;
+  const editor = _.get(schema, 'editor', false);
+  const initTextState = editor ? {_editor: edittext} : {};
+  const [fieldText, setFieldText] = React.useState(initTextState);
 
-  let editor = _.get(schema, 'editor', 'false');
-  let currText = edittext;
   let itemDisplay = [];
   for (const keystr of Object.keys(_.get(schema, 'keys', []))) {
     let defProps = {};
@@ -47,19 +47,17 @@ export function PureTextEntry({open, context, dispatch}) {
         theme="monokai"
         defaultValue={edittext}
         onChange={(value, event) => {
-          currText = value;
+          fieldText['_editor'] = value;
         }}
       />,
     );
   }
 
-  // TODO Perhaps blend this better to allow both types of entry?
-  if (_.keys(fieldText).length > 0) currText = fieldText;
-
   const onCancel = () => dispatch(modify('context', {...notEditingState}));
   const onDone = () => {
-    dispatch(editfunc(currText));
+    dispatch(editfunc(fieldText));
     dispatch(modify('context', {...notEditingState}));
+    setFieldText({});
   };
   const title = _.get(schema, 'title', 'TextEntry');
 
@@ -70,6 +68,7 @@ export function PureTextEntry({open, context, dispatch}) {
       onClose={onCancel}
       onKeyPress={event => {
         if (!editor && event.key === 'Enter') onDone();
+        if (event.shiftKey && event.key === 'Enter') onDone();
       }}>
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>{itemDisplay}</DialogContent>

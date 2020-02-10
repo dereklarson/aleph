@@ -2,11 +2,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
-import {Paper, Typography, Tooltip} from '@material-ui/core';
+import {Chip, Paper, Typography, Tooltip} from '@material-ui/core';
 import _ from 'lodash';
 import DepotItem from './DepotItem';
 import {capitalizeFirstLetter} from '@utils/helpers';
 import {useStyles} from '@style/styling';
+import {genCodeEdit} from '@utils/state';
+import {addToLibrary} from '@data/reducers';
 import {removeVertex, removeAllAssociations, clearText} from '@data/reducers';
 
 const tooltips = {
@@ -14,11 +16,22 @@ const tooltips = {
   standard: 'Standard nodes can be added anywhere after base nodes',
 };
 
-export function PureDepot({location, onVertexDrop, library}) {
+export function PureDepot({location, onVertexDrop, onNew, library}) {
   const classes = useStyles();
   const libraryInput = _.sortBy(Object.values(library), 'type');
-  const itemDisplay = [];
   const dividers = {};
+
+  // Special entry for creating a new library item
+  const editfunc = text =>
+    addToLibrary({location, uid: text['uid'], text: text['_editor']});
+  const itemDisplay = [
+    <Chip
+      key="new"
+      label="(New)"
+      onClick={() => onNew({editfunc, edittext: ''})}
+    />,
+  ];
+
   libraryInput.forEach(function(item, index) {
     const itemtype = _.get(item, 'type', 'standard');
     if (!_.has(dividers, itemtype)) {
@@ -73,5 +86,6 @@ export default connect(
       dispatch(removeAllAssociations(payload));
       dispatch(clearText(payload));
     },
+    onNew: payload => dispatch(genCodeEdit('newLib', payload)),
   }),
 )(PureDepot);

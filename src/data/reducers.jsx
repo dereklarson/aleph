@@ -2,7 +2,7 @@
 // import undoable from 'redux-undo';
 import _ from 'lodash';
 import {vertexDataFromPaths} from '@utils/vertex';
-import {genSlice, stateLoc} from './tools';
+import {genSlice} from './tools';
 
 const configSlice = genSlice('config');
 const operationsSlice = genSlice('operations');
@@ -22,9 +22,16 @@ const libraryReducers = {
   writeText(state, {payload: {location, uid, text}}) {
     state[location][uid].text = text;
   },
+  addToLibrary(state, {payload: {location, uid, text}}) {
+    state[location][uid] = {
+      uid: uid,
+      type: 'entry',
+      text: text,
+    };
+  },
 };
 const librarySlice = genSlice('library', libraryReducers);
-export const {writeText} = librarySlice.actions;
+export const {writeText, addToLibrary} = librarySlice.actions;
 
 const corpusReducers = {
   loadDiagramCorpus(state, {payload: {location, uid, content}}) {

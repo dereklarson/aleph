@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
 import _ from 'lodash';
-import {addVertex, linkVertex} from '@data/reducers';
+import {addVertex, addAssociation, linkVertex} from '@data/reducers';
 import {useStyles} from '@style/styling';
 import {getAncestry} from '@utils/vertex';
 
@@ -20,7 +20,13 @@ export function ParentHandle({
   const [{highlighted}, drop] = useDrop({
     accept: ['DepotItem'],
     drop: item => {
-      onDrop(location, vertexId, item.uid);
+      onDrop({
+        location,
+        uid: item.uid,
+        association: item.uid,
+        parent: item.uid,
+        child: vertexId,
+      });
     },
     canDrop: (item, monitor) => {
       if (_.size(vertices[vertexId].parents) >= maxParents) {
@@ -46,9 +52,10 @@ export function ParentHandle({
 
 function actionDispatch(dispatch) {
   return {
-    onDrop: (location, child, association) => {
-      dispatch(addVertex({location, uid: association}));
-      dispatch(linkVertex({location, child, parent: association}));
+    onDrop: payload => {
+      dispatch(addVertex(payload));
+      dispatch(addAssociation(payload));
+      dispatch(linkVertex(payload));
     },
   };
 }
