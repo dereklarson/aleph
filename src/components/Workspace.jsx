@@ -1,5 +1,6 @@
 // @format
 import React from 'react';
+import {connect} from 'react-redux';
 import {Container, Grid} from '@material-ui/core';
 import Depot from '@depot/Depot';
 import Ticker from '@depot/Ticker';
@@ -7,7 +8,7 @@ import Diagram from '@diagram/Diagram';
 import {Credits} from '@common/Accessories';
 import {useStyles} from '@style/styling';
 
-export function Workspace() {
+export function PureWorkspace({location}) {
   const classes = useStyles();
 
   return (
@@ -29,4 +30,6 @@ export function Workspace() {
   );
 }
 
-export default Workspace;
+export default connect(state => ({
+  location: state.context.location,
+}))(PureWorkspace);
