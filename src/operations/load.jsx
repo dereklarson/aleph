@@ -136,6 +136,16 @@ export function loadCheckpoint(name) {
   };
 }
 
+export function saveLibrary(location, name) {
+  return function(dispatch, getState) {
+    console.log(`---Saving ${location} Library---`);
+    let state = getState();
+    let libraryElement = state.library[location][name];
+    dispatch(modify('context', {name}));
+    axios.post('/save/library', {location, name, state: libraryElement});
+  };
+}
+
 export function saveDiagram(location, name) {
   return function(dispatch, getState) {
     console.log(`---Saving ${location} Diagram---`);
@@ -143,11 +153,10 @@ export function saveDiagram(location, name) {
     let vertices = state.vertices[location];
     let associations = state.associations[location];
     let corpus = state.corpus[location];
-    console.log(vertices, corpus);
     dispatch(modify('context', {name}));
-    axios.post('/save_diagram', {
-      location: location,
-      name: name,
+    axios.post('/save/diagrams', {
+      location,
+      name,
       state: {vertices, associations, corpus},
     });
   };

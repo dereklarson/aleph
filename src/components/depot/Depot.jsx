@@ -9,6 +9,7 @@ import {capitalizeFirstLetter} from '@utils/helpers';
 import {useStyles} from '@style/styling';
 import {genCodeEdit} from '@utils/state';
 import {addToLibrary} from '@data/reducers';
+import {saveLibrary} from '@ops/load';
 import {removeVertex, removeAllAssociations, clearText} from '@data/reducers';
 
 const tooltips = {
@@ -22,8 +23,11 @@ export function PureDepot({location, onVertexDrop, onNew, library}) {
   const dividers = {};
 
   // Special entry for creating a new library item
-  const editfunc = text =>
-    addToLibrary({location, uid: text['uid'], text: text['_editor']});
+  // This has two dispatches, so we puth them behind a thunk
+  const editfunc = text => dispatch => {
+    dispatch(addToLibrary({location, uid: text['uid'], text: text['_editor']}));
+    dispatch(saveLibrary(location, text['uid']));
+  };
   const itemDisplay = [
     <Chip
       key="new"
