@@ -7,7 +7,6 @@ import thunk from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import {HotKeys} from 'react-hotkeys';
 import Interface from '@comp/Interface';
 import rootReducer from '@data/reducers';
 import {initState} from '@data/reference';
@@ -24,17 +23,11 @@ const store = configureStore({
 
 console.log("Initial State:", initState);
 
-const keyMap = {
-  DELETE_NODE: ['del', 'backspace'],
-};
-
 // Main render connects the redux store and DragNDrop providers
 render(
   <Provider store={store}>
     <DndProvider backend={HTML5Backend}>
-      <HotKeys keyMap={keyMap}>
         <Interface />
-      </HotKeys>
     </DndProvider>
   </Provider>,
   document.getElementById('root'),

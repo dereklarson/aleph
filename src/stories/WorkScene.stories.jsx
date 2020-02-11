@@ -1,9 +1,9 @@
 // @format
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
-import Workspace from '@comp/Workspace';
+import {PureWorkspace} from '@comp/Workspace';
 import {excitedState} from './testStates';
 
-const TestComponent = Workspace;
+const TestComponent = PureWorkspace;
 // Generate a Storybook entry based on the following key args (order, component, state)
 export default genStoryEntry(4, TestComponent, excitedState);
 
