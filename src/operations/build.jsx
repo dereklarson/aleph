@@ -1,45 +1,60 @@
 // @format
 import axios from 'axios';
 import _ from 'lodash';
-import {getLastLine, generateCorpus} from '@utils/helpers';
+import {getLastLine} from '@utils/helpers';
 import {blankOperations} from '@data/reference';
 import {modify} from '@data/reducers';
+import {getBuildData} from '@data/tools';
 
-export function prepareFocusedBuild() {
+export function build(cancel) {
   return async function(dispatch, getState) {
-    let state = getState();
-    let location = state.context.location;
-    let vertices = state.vertices[location];
-    let associations = state.associations[location];
-    let library = state.library[location];
-    let metadata = {
-      build_id: state.context.focus,
-      name: state.context.name,
-      testing: state.operations.testing,
-    };
-    let corpus = generateCorpus({
-      vertices,
-      associations,
-      library,
-      corpus: state.corpus[location],
-    });
-    console.log(corpus);
+    const state = getState();
+    const location = state.context.location;
+    let current_cache = state.cache.build;
+    let new_cache = {};
+    const {vertices, corpus, metadata} = getBuildData(state);
+
+    console.log(`---Building ${location} from Focus---`);
     if (location === 'docker') {
-      console.log('---Preparing docker build for current focus---');
-      axios
+      let build_orders = [];
+      await axios
         .post('/gen_build/docker', {vertices, corpus, metadata})
         .then(response => {
-          dispatch(modify('operations', response.data));
+          build_orders = response.data.build_orders;
         });
+      console.log('---Building Docker Image---');
+      for (const [index, step] of build_orders.entries()) {
+        if (cancel.current === true) {
+          cancel.current = false;
+          break;
+        }
+        dispatch(
+          modify('operations', {
+            build_orders,
+            tickertext: getLastLine(step.text),
+            percent: Math.floor((100 * index) / build_orders.length),
+            building: step.uid,
+          }),
+        );
+        if (_.has(current_cache, step.hash)) {
+          continue;
+        }
+        await axios
+          .post('/build/docker', {build_order: step})
+          .then(response => {
+            dispatch(modify('operations', response.data));
+          });
+        new_cache[step.hash] = true;
+        dispatch(modify('cache', {build: {...current_cache, ...new_cache}}));
+      }
+      dispatch(modify('operations', blankOperations));
     } else if (location === 'pipeline') {
-      console.log('---Building Pipeline from Focus---');
       let build_context = {};
       await axios
         .post('/gen_build/pipeline', {vertices, corpus, metadata})
         .then(response => {
           build_context = response.data.build_context;
         });
-      console.log(build_context);
       await axios
         .post(`/build/${location}`, {build_context: build_context})
         .then(response => {
@@ -64,34 +79,5 @@ export function runPipeline() {
         dispatch(modify('operations', response.data));
       });
     }
-  };
-}
-
-export function buildDocker(operations, cancel) {
-  console.log('---Building Docker Image---');
-  return async function(dispatch, getState) {
-    let state = getState();
-    let current_cache = state.cache.build;
-    let new_cache = {};
-    for (const [index, step] of operations.build_orders.entries()) {
-      if (cancel.current === true) {
-        cancel.current = false;
-        break;
-      }
-      const percent = Math.floor(
-        (100 * index) / operations.build_orders.length,
-      );
-      const tickertext = getLastLine(step.text);
-      dispatch(modify('operations', {tickertext, percent, building: step.uid}));
-      if (_.has(current_cache, step.hash)) {
-        continue;
-      }
-      await axios.post('/build/docker', {build_order: step}).then(response => {
-        dispatch(modify('operations', response.data));
-      });
-      new_cache[step.hash] = true;
-      dispatch(modify('cache', {build: {...current_cache, ...new_cache}}));
-    }
-    dispatch(modify('operations', blankOperations));
   };
 }

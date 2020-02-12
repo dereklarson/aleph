@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Button, Card, Chip, Paper, TextField} from '@material-ui/core';
 import {CardActionArea, CardActions, CardContent} from '@material-ui/core';
 import _ from 'lodash';
-import {prepareFocusedBuild} from '@ops/build';
+import {build} from '@ops/build';
 import {genCodeEdit} from '@utils/state';
 import {
   removeAssociation,
@@ -14,7 +14,8 @@ import {
   setText,
   clearText,
 } from '@data/reducers';
-import {createText, titlize, propsToStyle} from '@utils/helpers';
+import {createText} from '@data/tools';
+import {titlize, propsToStyle} from '@utils/helpers';
 import {useStyles} from '@style/styling';
 
 export function PureCardVertex({
@@ -29,10 +30,14 @@ export function PureCardVertex({
   uid,
   idlist,
   associations,
+  operations,
   styleProps,
 }) {
   const classes = useStyles();
-  const [texterr, setErr] = React.useState(false);
+  const [uidText, setUid] = React.useState(uid);
+  const [textErr, setErr] = React.useState(false);
+
+  const cancel = React.useRef(false);
 
   let chipDisplay = [];
   let libError = false;
@@ -54,9 +59,16 @@ export function PureCardVertex({
   let editfunc = () => 0;
   if (!libError) {
     edittext = createText({library, associations, corpus, uid});
-    editfunc = text => setText({location, uid: uid, text: text});
+    editfunc = text => setText({location, uid, text: text['_editor']});
   }
 
+  const onBuildClick = () => {
+    if (operations.building !== null) cancel.current = true;
+    else onBuild(cancel);
+  };
+
+  let buildTitle = operations.building ? 'Cancel' : 'Build';
+  let helperText = textErr ? 'Already in use' : '<Enter> to set';
   return (
     <Card
       style={propsToStyle(styleProps)}
@@ -64,17 +76,19 @@ export function PureCardVertex({
       <CardActionArea>
         <CardContent>
           <TextField
-            label="Node name"
+            label="Vertex name"
             defaultValue={uid}
-            error={texterr}
-            helperText={texterr ? 'Already in use' : '<Enter> to set'}
-            margin="normal"
+            error={textErr}
+            helperText={uid === uidText ? '' : helperText}
+            margin="dense"
+            size="small"
             onKeyPress={event => {
-              if (!texterr && event.key === 'Enter') {
+              if (!textErr && event.key === 'Enter') {
                 onChange({location, uid, newId: event.target.value});
               }
             }}
             onChange={event => {
+              setUid(event.target.value);
               setErr(idlist.includes(event.target.value));
             }}
           />
@@ -85,8 +99,8 @@ export function PureCardVertex({
         <Button size="small" onClick={() => onEditor({edittext, editfunc})}>
           Editor
         </Button>
-        <Button size="small" onClick={onBuild}>
-          Build
+        <Button size="small" onClick={onBuildClick}>
+          {buildTitle}
         </Button>
         <Button size="small" onClick={() => onClear({location, uid})}>
           Reset
@@ -108,7 +122,7 @@ function actionDispatch(dispatch, props) {
       dispatch(clearText(payload));
     },
     onEditor: payload => dispatch(genCodeEdit('nodeEdit', payload)),
-    onBuild: () => dispatch(prepareFocusedBuild()),
+    onBuild: cancel => dispatch(build(cancel)),
     onClear: payload => {
       dispatch(removeAllAssociations(payload));
       dispatch(clearText(payload));
@@ -118,6 +132,7 @@ function actionDispatch(dispatch, props) {
 
 export default connect(
   state => ({
+    operations: state.operations,
     location: state.context.location,
     library: state.library[state.context.location],
     corpus: state.corpus[state.context.location],

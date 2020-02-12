@@ -2,10 +2,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
-import {Chip, Paper, Typography, Tooltip} from '@material-ui/core';
+import {Button, Chip, Paper, Tooltip, Typography} from '@material-ui/core';
 import _ from 'lodash';
 import DepotItem from './DepotItem';
-import {capitalizeFirstLetter} from '@utils/helpers';
+import {titlize} from '@utils/helpers';
 import {useStyles} from '@style/styling';
 import {genCodeEdit} from '@utils/state';
 import {addToLibrary} from '@data/reducers';
@@ -20,6 +20,7 @@ const tooltips = {
 export function PureDepot({location, onVertexDrop, onNew, library}) {
   const classes = useStyles();
   const libraryInput = _.sortBy(Object.values(library), 'type');
+  const [open, setOpen] = React.useState({standard: true, beam: true});
   const dividers = {};
 
   // Special entry for creating a new library item
@@ -29,6 +30,9 @@ export function PureDepot({location, onVertexDrop, onNew, library}) {
     dispatch(saveLibrary(location, text['uid']));
   };
   const itemDisplay = [
+    <Typography key="title" variant="h6" component="h2">
+      Library
+    </Typography>,
     <Chip
       key="new"
       label="(New)"
@@ -36,23 +40,27 @@ export function PureDepot({location, onVertexDrop, onNew, library}) {
     />,
   ];
 
+  let typeOpen = false;
   libraryInput.forEach(function(item, index) {
     const itemtype = _.get(item, 'type', 'standard');
     if (!_.has(dividers, itemtype)) {
       dividers[itemtype] = itemtype;
+      typeOpen = _.get(open, itemtype, false);
+      let onClick = () => setOpen({...open, [itemtype]: !typeOpen});
+      let suffix = typeOpen ? '' : '...';
       itemDisplay.push(
         <Tooltip
           key={itemtype}
           title={_.get(tooltips, itemtype, '(No description)')}
           placement="bottom"
           enterDelay={500}>
-          <Typography variant="h6" component="h2">
-            {capitalizeFirstLetter(itemtype)}
-          </Typography>
+          <Button size="small" onClick={onClick}>
+            {titlize(itemtype + suffix)}
+          </Button>
         </Tooltip>,
       );
     }
-    itemDisplay.push(<DepotItem key={index} itemProps={item} />);
+    if (typeOpen) itemDisplay.push(<DepotItem key={index} itemProps={item} />);
   });
 
   const [{highlighted}, drop] = useDrop({

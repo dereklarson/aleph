@@ -1,5 +1,6 @@
 // @format
 import {createSlice} from '@reduxjs/toolkit';
+import _ from 'lodash';
 import {initState} from '@data/reference';
 
 export function genSlice(name, extraReducers = {}) {
@@ -16,10 +17,40 @@ export function genSlice(name, extraReducers = {}) {
   return slice;
 }
 
-export function stateLocnew(state, payload) {
-  return state[payload.location];
+export function createText({library, associations, corpus, uid}) {
+  if (_.has(corpus, uid)) return corpus[uid].text;
+  else {
+    let text = '';
+    associations.forEach(associationUid => {
+      text += library[associationUid].text;
+    });
+    return text;
+  }
 }
 
-export function stateLoc(state, payload) {
-  return state[payload.location][payload.uid];
+export function generateCorpus({baseCorpus, vertices, associations, library}) {
+  let output = {};
+  _.values(vertices).forEach(vertex => {
+    let uid = vertex.uid;
+    let localAssoc = associations[uid];
+    output[uid] = {
+      text: createText({library, associations: localAssoc, baseCorpus, uid}),
+    };
+  });
+  return output;
+}
+
+export function getBuildData(state) {
+  const location = state.context.location;
+  const vertices = state.vertices[location];
+  const associations = state.associations[location];
+  const library = state.library[location];
+  const baseCorpus = state.corpus[location];
+  const corpus = generateCorpus({baseCorpus, vertices, associations, library});
+  const metadata = {
+    build_id: state.context.focus,
+    name: state.context.name,
+    testing: state.operations.testing,
+  };
+  return {vertices, corpus, metadata};
 }
