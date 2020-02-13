@@ -38,10 +38,9 @@ export function genGreatLibrary(locations, namedict = {def: ['sample']}) {
 
 export const notEditingState = {
   editing: false,
-  editor: false,
   edittext: '',
   editfunc: null,
-  schema: {title: 'TextEntry'},
+  schema: {editor: false, title: 'TextEntry'},
 };
 
 const textEditScenarios = {

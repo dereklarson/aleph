@@ -16,9 +16,7 @@ import 'ace-builds/src-noconflict/theme-monokai';
 export function PureTextEntry({open, context, dispatch}) {
   const classes = useStyles();
   const {schema, edittext, editfunc} = context;
-  const editor = _.get(schema, 'editor', false);
-  const initTextState = editor ? {_editor: edittext} : {};
-  const [fieldText, setFieldText] = React.useState(initTextState);
+  const [fieldText, setFieldText] = React.useState({});
 
   let itemDisplay = [];
   for (const keystr of Object.keys(_.get(schema, 'keys', []))) {
@@ -38,6 +36,9 @@ export function PureTextEntry({open, context, dispatch}) {
       />,
     );
   }
+
+  const editor = _.get(schema, 'editor', false);
+  let aceText = edittext;
   if (editor) {
     itemDisplay.push(
       <AceEditor
@@ -47,7 +48,7 @@ export function PureTextEntry({open, context, dispatch}) {
         theme="monokai"
         defaultValue={edittext}
         onChange={(value, event) => {
-          fieldText['_editor'] = value;
+          aceText = value;
         }}
       />,
     );
@@ -55,9 +56,9 @@ export function PureTextEntry({open, context, dispatch}) {
 
   const onCancel = () => dispatch(modify('context', {...notEditingState}));
   const onDone = () => {
-    dispatch(editfunc(fieldText));
+    dispatch(editfunc({fieldText, aceText}));
     dispatch(modify('context', {...notEditingState}));
-    setFieldText({});
+    // setFieldText({});
   };
   const title = _.get(schema, 'title', 'TextEntry');
 
@@ -77,7 +78,7 @@ export function PureTextEntry({open, context, dispatch}) {
           Cancel
         </Button>
         <Button onClick={onDone} color="primary">
-          Done
+          Save
         </Button>
       </DialogActions>
     </Dialog>

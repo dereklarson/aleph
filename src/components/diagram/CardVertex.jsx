@@ -59,7 +59,8 @@ export function PureCardVertex({
   let editfunc = () => 0;
   if (!libError) {
     edittext = createText({library, associations, corpus, uid});
-    editfunc = text => setText({location, uid, text: text['_editor']});
+    editfunc = ({fieldText, aceText}) =>
+      setText({location, uid, text: aceText});
   }
 
   const onBuildClick = () => {

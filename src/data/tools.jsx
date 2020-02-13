@@ -34,7 +34,12 @@ export function generateCorpus({baseCorpus, vertices, associations, library}) {
     let uid = vertex.uid;
     let localAssoc = associations[uid];
     output[uid] = {
-      text: createText({library, associations: localAssoc, baseCorpus, uid}),
+      text: createText({
+        library,
+        associations: localAssoc,
+        corpus: baseCorpus,
+        uid,
+      }),
     };
   });
   return output;
