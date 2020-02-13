@@ -61,7 +61,7 @@ export function loadDiagram({location, content, uid}) {
     dispatch(loadDiagramVertices({location, content, uid}));
     dispatch(loadDiagramAssociations({location, content, uid}));
     dispatch(loadDiagramCorpus({location, content, uid}));
-    dispatch(modify('context', {uid}));
+    dispatch(modify('context', {name: uid}));
   };
 }
 
