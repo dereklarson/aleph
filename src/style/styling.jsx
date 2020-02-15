@@ -100,6 +100,12 @@ export const useStyles = makeStyles(theme => ({
     overflow: 'auto',
     flexDirection: 'column',
   },
+  table: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    padding: '4px',
+  },
   oofTooltip: {
     maxHeight: 100,
     maxWidth: 200,

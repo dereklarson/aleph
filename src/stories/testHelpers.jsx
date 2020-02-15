@@ -52,9 +52,9 @@ export function getTest(TestComponent, props) {
 
 // Generates a single storybook test
 export function getStoryGenerator(TestComponent, boxProps, testData) {
-  function genStory(testProps) {
+  function genStory(idx, testProps) {
     return (
-      <Divbox {...boxProps}>
+      <Divbox key={idx} {...boxProps}>
         <TestComponent {...testData} {...testProps} />
       </Divbox>
     );
@@ -71,8 +71,8 @@ export function getCollageGenerator(
   let genStory = getStoryGenerator(TestComponent, boxProps, testData);
   function genCollage(listOfTestProps) {
     const testDisplay = [];
-    for (const testProps of listOfTestProps.values()) {
-      testDisplay.push(genStory(testProps));
+    for (const [idx, testProps] of listOfTestProps.entries()) {
+      testDisplay.push(genStory(idx, testProps));
     }
     return <Divbox {...windowProps}> {testDisplay} </Divbox>;
   }

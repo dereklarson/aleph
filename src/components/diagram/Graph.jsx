@@ -8,6 +8,8 @@ function renderVertex(vertex, activity, className) {
   let type = 'node';
   if (activity.location === 'configuration') {
     type = 'conf';
+  } else if (activity.location === 'data') {
+    type = 'table';
   } else if (activity.focus === vertex.uid) {
     type = 'card';
   }

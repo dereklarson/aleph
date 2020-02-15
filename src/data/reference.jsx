@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 // We have five main categories of state data: context, ops, cache, config, and location
 // context: describes state of the display, such as what's visible now
-// ops: describes things that might happen in the background
+// ops: describes things that happen in the background, generally axios calls
 // cache: useful optimization data
 // config: broader settings like the organizational details
 // location: data associated with diagram-building based on the current location
@@ -60,15 +60,20 @@ export const blankState = {
   operations: _.cloneDeep(blankOperations),
   cache: _.cloneDeep(blankCache),
   config: _.cloneDeep(blankConfig),
+  datasets: {},
   ..._.cloneDeep(locationData),
 };
 
 const defaults = {def: ['ubuntu', 'sample']};
 // State we would first see if nothing else is loaded via Axios
-export const initState = {
+export const prodInitialState = {
   ..._.cloneDeep(blankState),
   library: genGreatLibrary(locations, defaults),
-  datasets: {},
+};
+
+export const devInitialState = {
+  ..._.cloneDeep(blankState),
+  library: genGreatLibrary(locations, defaults),
 };
 
 // State a tutorial will set prior to running
@@ -77,3 +82,12 @@ export const tutorialInitialState = {
   operations: _.cloneDeep(blankOperations),
   vertices: {},
 };
+
+function setInitialState(env) {
+  if (env === 'development') return devInitialState;
+  else return prodInitialState;
+}
+
+console.log('Mode:', process.env.NODE_ENV);
+export const initState = setInitialState(process.env.NODE_ENV);
+console.log('Initial State:', initState);

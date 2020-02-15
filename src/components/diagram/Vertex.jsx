@@ -13,6 +13,7 @@ import {
 import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigVertex from './ConfigVertex';
+import TableVertex from './TableVertex';
 import ChildHandle from './ChildHandle';
 import ParentHandle from './ParentHandle';
 import {getAncestry} from '@utils/vertex';
@@ -82,6 +83,7 @@ export function PureVertex({
     conf: ConfigVertex,
     node: NodeVertex,
     card: CardVertex,
+    table: TableVertex,
   };
   const CurrentComponent = components[type];
   const zIndex = type === 'card' ? 4 : 3;

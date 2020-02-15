@@ -61,10 +61,15 @@ function rescale(x, w, frac, draw, edge) {
   return Math.floor(50 * (draw - edge) + frac * ((1 - draw) * x - w / 2));
 }
 
-function calculateDagre(vertices) {
+function calculateDagre(vertices, style) {
+  style = {
+    rankdir: 'TB',
+    width: 8,
+    height: 20,
+  };
   // Basic Dagre Initialization
   var g = new dagre.graphlib.Graph();
-  g.setGraph({});
+  g.setGraph({rankdir: style.rankdir});
   g.setDefaultEdgeLabel(function() {
     return {};
   });
@@ -73,7 +78,7 @@ function calculateDagre(vertices) {
   _.values(vertices).forEach(vertex => {
     // TODO Alter this to do something special for Cards?
     if (vertex !== null) {
-      g.setNode(vertex.uid, {width: 8, height: 20});
+      g.setNode(vertex.uid, {width: style.width, height: style.height});
     }
   });
 

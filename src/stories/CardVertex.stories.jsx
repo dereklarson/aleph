@@ -3,6 +3,7 @@ import React from 'react';
 import {action} from '@storybook/addon-actions';
 import {text} from '@storybook/addon-knobs';
 import {genStoryEntry, getCollageGenerator} from './testHelpers';
+import Divbox from './Divbox';
 import {excitedState} from './testStates';
 import {PureCardVertex} from '@diagram/CardVertex';
 
@@ -12,6 +13,7 @@ export default genStoryEntry(10, TestComponent, excitedState);
 
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
+  // uid: 'Test name',
   uid: 'Test name',
   associations: ['react'],
   idlist: [],
@@ -20,6 +22,9 @@ export const testData = {
     onEditor: action('Editor'),
     onBuild: action('Build'),
     onClear: action('Clear'),
+  },
+  operations: {
+    building: false,
   },
   styleProps: {
     highlighted: false,
@@ -40,7 +45,9 @@ let genCollage = getCollageGenerator(
 );
 
 export const dynamic = () => (
-  <TestComponent {...testData} uid={text('uid', 'a')} />
+  <Divbox {...boxProps}>
+    <TestComponent {...testData} uid={text('uid', 'Alter this')} />
+  </Divbox>
 );
 export const names = () =>
   genCollage([

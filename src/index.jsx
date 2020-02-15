@@ -21,13 +21,11 @@ const store = configureStore({
   preloadedState: initState,
 });
 
-console.log("Initial State:", initState);
-
 // Main render connects the redux store and DragNDrop providers
 render(
   <Provider store={store}>
     <DndProvider backend={HTML5Backend}>
-        <Interface />
+      <Interface />
     </DndProvider>
   </Provider>,
   document.getElementById('root'),
