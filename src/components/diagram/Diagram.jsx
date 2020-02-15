@@ -35,7 +35,7 @@ export function PureDiagram({
   var verticesToDisplay = _.cloneDeep(vertices);
 
   // Add positional information for vertices and get arrow coordinates
-  var arrows = calculateDiagramPositions(verticesToDisplay, activity.dagre);
+  var arrows = calculateDiagramPositions(verticesToDisplay, location);
 
   var onClick = () => 0;
   if (activity.focus !== null) onClick = clearFocus;

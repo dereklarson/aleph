@@ -28,7 +28,10 @@ export function genLibrary(names) {
   }, {});
 }
 
-export function genGreatLibrary(locations, namedict = {def: ['sample']}) {
+export function genGreatLibrary(
+  locations,
+  namedict = {def: ['parent', 'child']},
+) {
   return locations.reduce((library, location) => {
     let names = _.get(namedict, location, _.get(namedict, 'def', []));
     library[location] = genLibrary(names);

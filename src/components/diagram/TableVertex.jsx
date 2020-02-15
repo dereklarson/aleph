@@ -23,11 +23,11 @@ export default function TableVertex({uid, associations, styleProps}) {
       <Table size="small" aria-label="customized table">
         <TableBody>
           {associations.map(row => (
-            <TableRow hover key={row.field}>
+            <TableRow hover key={row[0]}>
               <TableCell component="th" scope="row">
-                {row.field}
+                {row[0]}
               </TableCell>
-              <TableCell align="right">{row.datatype}</TableCell>
+              <TableCell align="right">{row[1]}</TableCell>
             </TableRow>
           ))}
         </TableBody>

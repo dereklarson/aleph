@@ -1,5 +1,5 @@
 // @format
-// import {vertexDataFromPaths} from '@utils/vertex';
+import {vertexDataFromPaths} from '@utils/vertex';
 import {genCoreData, genGreatLibrary} from '@utils/state';
 import _ from 'lodash';
 
@@ -11,7 +11,6 @@ import _ from 'lodash';
 // location: data associated with diagram-building based on the current location
 
 export const blankContext = {
-  dagre: true,
   theme: 'dark',
   focus: null,
   location: 'docker',
@@ -44,8 +43,7 @@ export const blankConfig = {
   },
 };
 
-const categories = {
-  // vertices: vertexDataFromPaths([['parent', 'child']]),
+const blankCategories = {
   vertices: {},
   associations: {},
   library: {},
@@ -53,27 +51,53 @@ const categories = {
   diagrams: {},
 };
 const locations = ['docker', 'pipeline', 'data', 'configuration'];
-const locationData = genCoreData(categories, locations, {});
+const blankLocationData = genCoreData(blankCategories, locations);
 
+// This is a complete, empty state representation
 export const blankState = {
   context: _.cloneDeep(blankContext),
   operations: _.cloneDeep(blankOperations),
   cache: _.cloneDeep(blankCache),
   config: _.cloneDeep(blankConfig),
   datasets: {},
-  ..._.cloneDeep(locationData),
+  ..._.cloneDeep(blankLocationData),
 };
 
-const defaults = {def: ['ubuntu', 'sample']};
 // State we would first see if nothing else is loaded via Axios
 export const prodInitialState = {
   ..._.cloneDeep(blankState),
-  library: genGreatLibrary(locations, defaults),
 };
 
+// For development, we want a 'production' state with a useful initialization
+// area we are working on, which is set here
+export const stagingInitialState = {
+  ..._.cloneDeep(blankState),
+  context: {...blankState.context, location: 'config'},
+};
+
+// When in full dev mode (no Flask server) we want some test data available
+
+const devCategories = {
+  ..._.cloneDeep(blankCategories),
+  vertices: vertexDataFromPaths([['parent', 'child']]),
+  associations: {parent: ['parent'], child: ['child', 'friend']},
+};
+
+const devLocationData = genCoreData(devCategories, locations);
 export const devInitialState = {
   ..._.cloneDeep(blankState),
-  library: genGreatLibrary(locations, defaults),
+  ...devLocationData,
+  library: genGreatLibrary(locations),
+  associations: {
+    ..._.cloneDeep(devLocationData.associations),
+    data: {
+      parent: [
+        ['tableId', 'int!'],
+        ['size', 'int'],
+        ['name', 'string'],
+      ],
+    },
+  },
 };
 
 // State a tutorial will set prior to running
@@ -85,6 +109,7 @@ export const tutorialInitialState = {
 
 function setInitialState(env) {
   if (env === 'development') return devInitialState;
+  else if (env === 'staging') return stagingInitialState;
   else return prodInitialState;
 }
 

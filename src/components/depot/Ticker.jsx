@@ -14,11 +14,9 @@ import {generateList} from '@utils/generateList';
 
 export function PureTicker({
   location,
-  dagre,
   operations,
   onClear,
   onLogs,
-  onDagre,
   onLoadLibrary,
 }) {
   const classes = useStyles();
@@ -26,7 +24,6 @@ export function PureTicker({
   // const [logOpen, openLog] = React.useState(false);
   const actionOptions = [
     ['show_logs', () => onLogs(operations.logs)],
-    ['toggle_dagre', () => onDagre(dagre)],
     ['refresh', () => onLoadLibrary(location)],
     ['clear_diagram', () => onClear(location)],
   ];
@@ -52,7 +49,6 @@ export function PureTicker({
 export default connect(
   state => ({
     location: state.context.location,
-    dagre: state.context.dagre,
     operations: state.operations,
   }),
   dispatch => ({
@@ -61,7 +57,6 @@ export default connect(
       dispatch(modify('associations', {[location]: {}}));
       dispatch(modify('corpus', {[location]: {}}));
     },
-    onDagre: dagre => dispatch(modify('context', {dagre: !dagre})),
     onLogs: text =>
       dispatch(genCodeEdit('logs', {edittext: text, editfunc: t => 0})),
     onLoadLibrary: location => dispatch(loadCore('library', location)),
