@@ -1,5 +1,5 @@
 // @format
-import _ from 'lodash';
+// import _ from 'lodash';
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
 import {excitedState, coveredState} from './testStates';
 import {PureDiagram} from '@diagram/Diagram';
