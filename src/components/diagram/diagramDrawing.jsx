@@ -1,11 +1,7 @@
 // @format
 import dagre from 'dagre';
 import _ from 'lodash';
-import {locationStyles} from './styleDiagram';
-
-function rescale(x, w, frac, draw, edge) {
-  return Math.floor(50 * (draw - edge) + frac * ((1 - draw) * x - w / 2));
-}
+import {locationStyles, rescale} from './styleDiagram';
 
 export function calculateDiagramPositions(vertices, location) {
   const style = _.get(locationStyles, location, locationStyles.default);
@@ -41,14 +37,15 @@ export function calculateDiagramPositions(vertices, location) {
 
   // Get some scale factors to convert positions to percentages, with some buffer
   // transition helps us start in the upper left and center out as vertices are added
-  const transition_scale = 0.7;
-  const transition = Math.min(1, _.size(vertices) / 10);
+  const dr = style.dagreRescaling;
+  const transition = Math.min(1, _.size(vertices) / dr.vertexCountFull);
+  const scaleFactor = (1 - transition) * dr.startingScale;
   const hScale = Math.min(1, 100 / g.graph().width);
   const vScale = Math.min(1, 100 / g.graph().height);
-  const hZoom = 0.2 + (1 - transition) * transition_scale;
-  const vZoom = 0.3 + (1 - transition) * transition_scale;
-  const h0 = 0 + (1 - transition) * transition_scale;
-  const v0 = 0.2 + (1 - transition) * transition_scale;
+  const hZoom = dr.hZoomBase + scaleFactor;
+  const vZoom = dr.vZoomBase + scaleFactor;
+  const h0 = dr.hOffsetBase + scaleFactor;
+  const v0 = dr.vOffsetBase + scaleFactor;
 
   // console.log('Graph: ' + hScale + ', ' + vScale);
 

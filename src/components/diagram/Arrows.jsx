@@ -1,22 +1,25 @@
 // @format
 import React from 'react';
+import _ from 'lodash';
 import {ArrowMarker, computePathstring} from './svgTools';
+import {locationStyles} from './styleDiagram';
 
-function renderArrow(arrow, index) {
+function renderArrow(arrow, index, style) {
   return (
     <path
       key={index}
-      d={computePathstring(arrow.start, arrow.end)}
-      style={{fill: 'none', stroke: 'black', strokeWidth: '0.5'}}
+      d={computePathstring(arrow.start, arrow.end, style.rankdir)}
+      style={style.arrowStyle}
       markerEnd="url(#triangle)"
     />
   );
 }
 
-export default function Arrows({arrows}) {
+export default function Arrows({location, arrows}) {
+  const style = _.get(locationStyles, location, locationStyles.default);
   const arrowDisplay = [];
   arrows.forEach(function(arrow, index) {
-    arrowDisplay.push(renderArrow(arrow, index));
+    arrowDisplay.push(renderArrow(arrow, index, style));
   });
 
   return (
