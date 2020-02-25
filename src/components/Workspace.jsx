@@ -14,8 +14,7 @@ export function PureWorkspace({location}) {
 
   return (
     <main className={classes.content}>
-      <div className={classes.appBarSpacer} />
-      <Container maxWidth="xl" className={classes.container}>
+      <Container maxWidth="xl">
         <Grid container spacing={1}>
           <Grid item xs={2}>
             <Ticker />

@@ -33,7 +33,7 @@ export const coveredState = {
     'gcp',
     'python',
   ]),
-  large_diagrams: {a: {}, b: {}, c: {}, d: {}, e: {}, f: {}},
+  large_diagrams: {abracadabramarzipan: {}, b: {}, c: {}, d: {}, e: {}, f: {}},
 };
 
 export const testOutput = {

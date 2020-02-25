@@ -53,6 +53,8 @@ export function PureDiagram({
   );
 }
 
+// We create this selector to ensure no infinite reloading due to having the
+// .map() call in our state mapping, which will always seem new to React.
 const getFocus = state => state.context.focus;
 const getLocation = state => state.context.location;
 const getBuildOrders = state => state.operations.build_orders;

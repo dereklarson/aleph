@@ -32,7 +32,7 @@ export const locationStyles = {
     dagreRescaling,
     arrowStyle,
     rankdir: 'LR',
-    width: 30,
+    width: 20,
     height: 30,
   }
 }

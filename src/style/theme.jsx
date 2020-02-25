@@ -10,6 +10,8 @@ export const darkTheme = createMuiTheme({
   palette: {type: 'dark', primary: purple},
 });
 
+console.log("Dark Theme:", darkTheme);
+
 export const testTheme = createMuiTheme({
   palette: {
     primary: {

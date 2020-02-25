@@ -22,6 +22,8 @@ const testData = {
 const boxProps = {squaresize: 1000};
 let genStory = getStoryGenerator(TestComponent, boxProps, testData);
 
+export const med_data = () =>
+  genStory({activity: {location: 'data', prepared: []}});
 export const solo = () => genStory({vertices: coveredState.solo_vertex});
 export const pair = () => genStory({vertices: coveredState.pair_vertices});
 export const small = () => genStory({vertices: coveredState.small_vertices});

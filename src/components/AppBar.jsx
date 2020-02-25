@@ -29,7 +29,8 @@ export function PureAppBar({config, context, dispatch}) {
 
   return (
     <AppBar className={classes.appBar}>
-      <Toolbar className={classes.toolbar} variant="dense">
+      {/* <Toolbar className={classes.toolbar} variant="dense"> */}
+      <Toolbar variant="dense">
         <Typography className={classes.title} variant="h6">
           {config.organization.name} - {titlize(context.location)}
         </Typography>

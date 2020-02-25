@@ -1,29 +1,23 @@
 // @format
 import {makeStyles} from '@material-ui/core/styles';
 
-const drawerWidth = 240;
+const devmode = process.env.NODE_ENV === 'production' ? false : true;
 
 export const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-  },
+  root: {},
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
   },
   title: {
     flexGrow: 1,
   },
   drawerPaper: {
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    whiteSpace: 'nowrap',
+    width: 240,
   },
   drawerPaperClose: {
     overflowX: 'hidden',
@@ -33,40 +27,27 @@ export const useStyles = makeStyles(theme => ({
     }),
     width: theme.spacing(7),
   },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
   content: {
     flexGrow: 1,
-    height: '100vh',
     overflow: 'auto',
-    paddingLeft: theme.spacing(4),
+    paddingLeft: theme.spacing(5), // Space between sidebar and workspace
+    paddingTop: theme.spacing(7), // Space between app bar and workspace
   },
   ticker: {
-    // color: 'textSecondary',
     textAlign: 'center',
     backgroundColor: theme.palette.grey[500],
   },
   chipDepot: {
     width: '100%',
-    zIndex: 1,
     border: '1px solid grey',
   },
-  badge: {},
-  box: {
-    alignItems: 'center',
-    textAlign: 'center',
-    backgroundColor: theme.palette.primary.light,
-    borderRadius: 24,
-    padding: '12px',
-    display: 'flex',
-    minHeight: 50,
-    maxWidth: 200,
+  listItem: {
+    overflow: 'auto', // Handles long user-generated names for saved diagrams
   },
-  childHandle: {
+  badge: {},
+  linkHandle: {
     borderRadius: 24,
-    height: '15px',
+    height: theme.spacing(3),
     opacity: 0.5,
     width: '100%',
     zIndex: 6,
@@ -85,7 +66,7 @@ export const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    // border: '1px dashed red',
+    border: devmode ? '1px dashed red' : '',
   },
   tickerActions: {
     display: 'flex',
@@ -104,7 +85,7 @@ export const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    padding: '4px',
+    padding: theme.spacing(1),
   },
   oofTooltip: {
     maxHeight: 100,
@@ -117,5 +98,15 @@ export const useStyles = makeStyles(theme => ({
   textField: {},
   editor: {
     minWidth: 700, // This will ensure ~88 characters a line on all screens
+  },
+  box: {
+    alignItems: 'center',
+    textAlign: 'center',
+    backgroundColor: theme.palette.primary.light,
+    borderRadius: 24,
+    padding: '12px',
+    display: 'flex',
+    minHeight: 50,
+    maxWidth: 200,
   },
 }));

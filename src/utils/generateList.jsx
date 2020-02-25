@@ -10,22 +10,26 @@ import {applyTooltip} from '@style/tooltips';
 import {titlize} from './helpers';
 import {useStyles} from '@style/styling';
 
+function StyledAvatar({item}) {
+  const classes = useStyles();
+  return <Avatar className={classes.avatar}>{item}</Avatar>;
+}
+
+function StyledListItemText(props) {
+  const classes = useStyles();
+  return <ListItemText className={classes.listItem} {...props} />;
+}
+
 function ListItemGen({name, onClick, defIcon}) {
   return (
     <ListItem button onClick={onClick}>
       <ListItemIcon>
         {_.get(iconSource, name, _.get(iconSource, defIcon))}
       </ListItemIcon>
-      <ListItemText primary={titlize(name)} />
+      <StyledListItemText primary={titlize(name)} />
     </ListItem>
   );
 }
-
-function StyledAvatar({item}) {
-  const classes = useStyles();
-  return <Avatar className={classes.avatar}>{item}</Avatar>;
-}
-
 function ListWithDeleteIcon({name, onClick, defIcon, onSecondary}) {
   let item = _.get(iconSource, name, _.get(iconSource, defIcon));
   return (
@@ -33,7 +37,7 @@ function ListWithDeleteIcon({name, onClick, defIcon, onSecondary}) {
       <ListItemAvatar>
         <StyledAvatar item={item} />
       </ListItemAvatar>
-      <ListItemText primary={titlize(name)} />
+      <StyledListItemText primary={titlize(name)} />
       <ListItemSecondaryAction>
         <IconButton edge="end" aria-label="delete" onClick={onSecondary}>
           <DeleteIcon />

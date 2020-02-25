@@ -38,10 +38,10 @@ export function PureInterface({themeName, editing, dispatch}) {
       <GlobalHotKeys keyMap={globalKeyMap} handlers={globalHandlers} />
       <div className={classes.root}>
         <CssBaseline />
-        <TextEntry open={editing} />
         <AppBar />
         <Sidebar />
         <Workspace />
+        <TextEntry open={editing} />
       </div>
     </ThemeProvider>
   );

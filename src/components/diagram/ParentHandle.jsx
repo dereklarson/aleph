@@ -44,7 +44,7 @@ export function ParentHandle({
   return (
     <div
       ref={drop}
-      className={classes.childHandle}
+      className={classes.linkHandle}
       style={{backgroundColor: highlighted ? '#a0aBa0' : null}}
     />
   );
