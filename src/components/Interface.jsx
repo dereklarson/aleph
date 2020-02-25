@@ -12,10 +12,10 @@ import {useStyles} from '@style/styling';
 import {themePicker} from '@style/theme';
 import {ActionCreators as UndoAC} from 'redux-undo';
 
-export function PureInterface({themeStr, editing, dispatch}) {
+export function PureInterface({themeName, editing, dispatch}) {
   const classes = useStyles();
 
-  const theme = themePicker[themeStr];
+  const theme = themePicker[themeName];
 
   const globalKeyMap = {
     UNDO: ['command+z'],
@@ -48,6 +48,6 @@ export function PureInterface({themeStr, editing, dispatch}) {
 }
 
 export default connect(state => ({
-  themeStr: state.context.theme,
+  themeName: state.context.themeName,
   editing: state.context.editing,
 }))(PureInterface);

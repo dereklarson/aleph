@@ -11,7 +11,7 @@ import _ from 'lodash';
 // location: data associated with diagram-building based on the current location
 
 export const blankContext = {
-  theme: 'dark',
+  themeName: 'dark',
   focus: null,
   location: 'docker',
   name: '',

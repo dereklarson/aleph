@@ -14,7 +14,7 @@ const TestComponent = PureInterface;
 export default genStoryEntry(1, TestComponent, excitedState);
 
 // testData should containing a baseline object of properties to pass into the component
-export const testData = {themeStr: 'dark', editing: false, dispatch: null};
+export const testData = {themeName: 'dark', editing: false, dispatch: null};
 // Produce a function 'genStory' that can generate a story from hand-tweaked properties
 const boxProps = {squaresize: 1200};
 let genStory = getStoryGenerator(TestComponent, boxProps, testData);
@@ -37,6 +37,6 @@ export const hotkeys = () => (
 );
 export const dynamic = () =>
   genStory({
-    themeStr: text('theme', 'dark'),
+    themeName: text('theme', 'dark'),
     editing: boolean('editing', false),
   });

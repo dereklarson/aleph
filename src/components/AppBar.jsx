@@ -19,29 +19,18 @@ export function PureAppBar({config, context, dispatch}) {
   // Performs loads on mount
   React.useEffect(onInitialLoad, []);
 
-  const [saved, setSaved] = React.useState(false);
-  const onSaveCheckpoint = () => {
-    setSaved(true);
-    dispatch(saveCheckpoint('user'));
-  };
-
-  const nextTheme = context.theme === 'light' ? 'dark' : 'light';
+  const nextTheme = context.themeName === 'light' ? 'dark' : 'light';
   const appBarOptions = [
-    ['set_theme', () => dispatch(modify('context', {theme: nextTheme}))],
-    ['save_checkpoint', onSaveCheckpoint],
-    ['load_checkpoint', () => dispatch(loadCheckpoint('user')), saved],
+    ['set_theme', () => dispatch(modify('context', {themeName: nextTheme}))],
+    ['save_checkpoint', () => dispatch(saveCheckpoint('user'))],
+    ['load_checkpoint', () => dispatch(loadCheckpoint('user'))],
     ['play_tutorial', () => dispatch(playTutorial('tutorial'))],
   ];
 
   return (
     <AppBar className={classes.appBar}>
-      <Toolbar className={classes.toolbar}>
-        <Typography
-          component="h1"
-          variant="h6"
-          color="inherit"
-          noWrap
-          className={classes.title}>
+      <Toolbar className={classes.toolbar} variant="dense">
+        <Typography className={classes.title} variant="h6">
           {config.organization.name} - {titlize(context.location)}
         </Typography>
         {generateList('button', appBarOptions)}

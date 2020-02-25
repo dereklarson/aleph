@@ -14,10 +14,13 @@ import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-monokai';
 
 export function PureTextEntry({open, context, dispatch}) {
-  const classes = useStyles();
   const {schema, edittext, editfunc} = context;
+  const title = _.get(schema, 'title', 'TextEntry');
+  const editor = _.get(schema, 'editor', false);
+  const classes = useStyles();
   const [fieldText, setFieldText] = React.useState({});
 
+  // We create a set of text fields based on the supplied schema
   let itemDisplay = [];
   for (const keystr of Object.keys(_.get(schema, 'keys', []))) {
     let defProps = {};
@@ -37,7 +40,7 @@ export function PureTextEntry({open, context, dispatch}) {
     );
   }
 
-  const editor = _.get(schema, 'editor', false);
+  // If the schema asks for an editor, we supply this last
   let aceText = edittext;
   if (editor) {
     itemDisplay.push(
@@ -58,9 +61,7 @@ export function PureTextEntry({open, context, dispatch}) {
   const onDone = () => {
     dispatch(editfunc({fieldText, aceText}));
     dispatch(modify('context', {...notEditingState}));
-    // setFieldText({});
   };
-  const title = _.get(schema, 'title', 'TextEntry');
 
   return (
     <Dialog
@@ -74,12 +75,8 @@ export function PureTextEntry({open, context, dispatch}) {
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>{itemDisplay}</DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={onDone} color="primary">
-          Save
-        </Button>
+        <Button onClick={onCancel}>Cancel</Button>
+        <Button onClick={onDone}>Save</Button>
       </DialogActions>
     </Dialog>
   );

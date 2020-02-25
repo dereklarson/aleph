@@ -17,7 +17,10 @@ const tooltipReference = {
 
 export function applyTooltip(child, key = null, title = 'no tooltip') {
   if (key !== null) {
+    // If the supplied title arg contains a pair of angle braces,
+    // these should be replaced by the supplied key
     title = title.replace('<>', key);
+    // Ultimately, use the reference tooltip if a key is supplied
     title = _.get(tooltipReference, key, title);
   }
   return (
