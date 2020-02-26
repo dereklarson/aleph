@@ -49,7 +49,6 @@ export const notEditingState = {
 const textEditScenarios = {
   // Each row contains the title and array of keys
   saveDiagram: ['Save the current diagram', ['savename']],
-  commit: ['Enter commit information', ['branch', 'commit_msg']],
   pushImages: ['Enter a match string', ['match']],
   fetchOrg: ['Enter Org info', ['name', 'uid', 'repository']],
 };
@@ -69,6 +68,7 @@ export function genTextEdit(name, editfunc) {
 
 const codeEditScenarios = {
   // Each row contains the title and a set of additional props
+  commit: ['Enter commit information', {keys: {branch: true}}],
   nodeEdit: ['Edit Node Code', {mode: 'python'}],
   libEdit: ['Edit Library Code', {mode: 'python'}],
   newLib: ['Create New Item', {keys: {uid: true}, mode: 'python'}],

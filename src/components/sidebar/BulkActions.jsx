@@ -7,23 +7,27 @@ import {loadCore, loadOrg, pushOrg, pushImages} from '@ops/load';
 import {saveDiagram} from '@ops/load';
 import {runPipeline} from '@ops/build';
 import {generateList} from '@utils/generateList';
-import {genTextEdit} from '@utils/state';
+import {genTextEdit, genCodeEdit} from '@utils/state';
 
 function BulkActions({organization, operations, location, dispatch}) {
-  const saveDiag = fieldText => saveDiagram(location, fieldText.savename);
+  const saveDiag = text => saveDiagram(location, text.fieldText.savename);
   const baseOptions = [
     ['save_diagram', () => dispatch(genTextEdit('saveDiagram', saveDiag))],
     ['refresh', () => dispatch(loadCore('diagrams', location))],
   ];
-  const orgSet = fieldText => modify('config', {organization: fieldText});
-  const orgCommit = fieldText => pushOrg(fieldText);
-  const imagePusher = fieldText => pushImages(organization, fieldText.match);
+  const orgSet = text => modify('config', {organization: text.fieldText});
+  const orgCommit = {
+    edittext: 'Insert Commit Msg',
+    editfunc: ({fieldText, aceText}) =>
+      pushOrg({branch: fieldText.branch, commit_msg: aceText}),
+  };
+  const imagePusher = text => pushImages(organization, text.fieldText.match);
   const testmode = operations.testing;
   const locationOptions = {
     configuration: [
       ['set_org', () => dispatch(genTextEdit('fetchOrg', orgSet))],
       ['load_org', () => dispatch(loadOrg(organization))],
-      ['push_org', () => dispatch(genTextEdit('commit', orgCommit))],
+      ['push_org', () => dispatch(genCodeEdit('commit', orgCommit))],
     ],
     data: [],
     docker: [

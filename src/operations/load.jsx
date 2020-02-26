@@ -91,7 +91,7 @@ export function loadDatasets() {
 
 export function loadInputs(config) {
   let org = _.cloneDeep(config.organization);
-  const savefunc = fieldText => modify('config', {organization: fieldText});
+  const savefunc = text => modify('config', {organization: text.fieldText});
   console.log('--- Performing Initial Data Load ---');
   return async function(dispatch, getState) {
     console.log('  -Loading Inputs-');
