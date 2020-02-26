@@ -1,7 +1,7 @@
 // @format
 import React from 'react';
 import {connect} from 'react-redux';
-import {AppBar, Toolbar, Typography} from '@material-ui/core';
+import {AppBar, Toolbar, Typography, Tooltip} from '@material-ui/core';
 // import _ from 'lodash';
 import {modify} from '@data/reducers';
 import {loadInputs, saveCheckpoint, loadCheckpoint} from '@ops/load';
@@ -29,11 +29,12 @@ export function PureAppBar({config, context, dispatch}) {
 
   return (
     <AppBar className={classes.appBar}>
-      {/* <Toolbar className={classes.toolbar} variant="dense"> */}
       <Toolbar variant="dense">
-        <Typography className={classes.title} variant="h6">
-          {config.organization.name} - {titlize(context.location)}
-        </Typography>
+        <Tooltip title={config.organization.repository} enterDelay={500}>
+          <Typography className={classes.title} variant="h6">
+            {config.organization.name} - {titlize(context.location)}
+          </Typography>
+        </Tooltip>
         {generateList('button', appBarOptions)}
       </Toolbar>
     </AppBar>

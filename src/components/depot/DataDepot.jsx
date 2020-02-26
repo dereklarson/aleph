@@ -12,7 +12,8 @@ const tooltips = {};
 export function PureDataDepot({location, datasets}) {
   const classes = useStyles();
   const dataInput = _.sortBy(Object.values(datasets), 'type');
-  const [open, setOpen] = React.useState({csv: true});
+  const [open, setOpen] = React.useState(false);
+  const [openType, setOpenType] = React.useState('csv');
   const dividers = {};
 
   const itemDisplay = [
@@ -20,27 +21,27 @@ export function PureDataDepot({location, datasets}) {
       Data
     </Typography>,
   ];
+
   dataInput.forEach(function(item, index) {
-    const itemtype = _.get(item, 'type', 'unknown');
-    let typeOpen = false;
-    if (!_.has(dividers, itemtype)) {
-      dividers[itemtype] = itemtype;
-      typeOpen = _.get(open, itemtype, false);
-      let onClick = () => setOpen({...open, [itemtype]: !typeOpen});
-      let suffix = typeOpen ? '' : '...';
+    const itemType = _.get(item, 'type', 'standard');
+    const isOpen = openType === itemType;
+    if (!_.has(dividers, itemType)) {
+      dividers[itemType] = itemType;
+      let onClick = () => setOpenType(isOpen ? '' : itemType);
+      let suffix = isOpen ? '' : '...';
       itemDisplay.push(
         <Tooltip
-          key={itemtype}
-          title={_.get(tooltips, itemtype, '(No description)')}
+          key={itemType}
+          title={_.get(tooltips, itemType, '(No description)')}
           placement="bottom"
           enterDelay={500}>
           <Button size="small" onClick={onClick}>
-            {titlize(itemtype + suffix)}
+            {titlize(itemType + suffix)}
           </Button>
         </Tooltip>,
       );
     }
-    if (typeOpen) itemDisplay.push(<DepotItem key={index} itemProps={item} />);
+    if (isOpen) itemDisplay.push(<DepotItem key={index} itemProps={item} />);
   });
 
   return (

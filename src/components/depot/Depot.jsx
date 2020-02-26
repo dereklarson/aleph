@@ -20,47 +20,9 @@ const tooltips = {
 export function PureDepot({location, onVertexDrop, onNew, library}) {
   const classes = useStyles();
   const libraryInput = _.sortBy(Object.values(library), 'type');
-  const [open, setOpen] = React.useState('standard');
+  const [open, setOpen] = React.useState(true);
+  const [openType, setOpenType] = React.useState('standard');
   const dividers = {};
-
-  // Special entry for creating a new library item
-  // This has two dispatches, so we puth them behind a thunk
-  const editfunc = ({fieldText, aceText}) => dispatch => {
-    dispatch(addToLibrary({location, uid: fieldText['uid'], text: aceText}));
-    dispatch(saveLibrary(location, fieldText['uid']));
-  };
-  const itemDisplay = [
-    <Typography key="title" variant="h6" component="h2">
-      Library
-    </Typography>,
-    <Chip
-      key="new"
-      label="(New)"
-      onClick={() => onNew({editfunc, edittext: ''})}
-    />,
-  ];
-
-  libraryInput.forEach(function(item, index) {
-    const itemtype = _.get(item, 'type', 'standard');
-    if (!_.has(dividers, itemtype)) {
-      dividers[itemtype] = itemtype;
-      let onClick = () => setOpen(open === itemtype ? '' : itemtype);
-      let suffix = open === itemtype ? '' : '...';
-      itemDisplay.push(
-        <Tooltip
-          key={itemtype}
-          title={_.get(tooltips, itemtype, '(No description)')}
-          placement="bottom"
-          enterDelay={500}>
-          <Button size="small" onClick={onClick}>
-            {titlize(itemtype + suffix)}
-          </Button>
-        </Tooltip>,
-      );
-    }
-    if (open === itemtype)
-      itemDisplay.push(<DepotItem key={index} itemProps={item} />);
-  });
 
   const [{highlighted}, drop] = useDrop({
     accept: 'Vertex',
@@ -69,6 +31,49 @@ export function PureDepot({location, onVertexDrop, onNew, library}) {
       highlighted: monitor.canDrop(),
     }),
   });
+
+  // Special entry for creating a new library item
+  // This has two dispatches, so we puth them behind a thunk
+  const editfunc = ({fieldText, aceText}) => dispatch => {
+    dispatch(addToLibrary({location, uid: fieldText['uid'], text: aceText}));
+    dispatch(saveLibrary(location, fieldText['uid']));
+  };
+  const itemDisplay = [
+    <Typography key="title" variant="h6" onClick={() => setOpen(!open)}>
+      Library
+    </Typography>,
+  ];
+
+  if (open) {
+    itemDisplay.push(
+      <Chip
+        key="new"
+        label="(New)"
+        onClick={() => onNew({editfunc, edittext: ''})}
+      />,
+    );
+    libraryInput.forEach(function(item, index) {
+      const itemType = _.get(item, 'type', 'standard');
+      const isOpen = openType === itemType;
+      if (!_.has(dividers, itemType)) {
+        dividers[itemType] = itemType;
+        let onClick = () => setOpenType(isOpen ? '' : itemType);
+        let suffix = isOpen ? '' : '...';
+        itemDisplay.push(
+          <Tooltip
+            key={itemType}
+            title={_.get(tooltips, itemType, '(No description)')}
+            placement="bottom"
+            enterDelay={500}>
+            <Button size="small" onClick={onClick}>
+              {titlize(itemType + suffix)}
+            </Button>
+          </Tooltip>,
+        );
+      }
+      if (isOpen) itemDisplay.push(<DepotItem key={index} itemProps={item} />);
+    });
+  }
 
   return (
     <div ref={drop}>
