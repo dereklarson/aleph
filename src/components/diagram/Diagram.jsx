@@ -8,8 +8,9 @@ import _ from 'lodash';
 import Arrows from './Arrows';
 import Graph from './Graph';
 import {calculateDiagramPositions} from './diagramDrawing';
-import {useStyles} from '@style/styling';
-import {modify, addVertex, addAssociation} from '@data/reducers';
+import {useStyles} from '@style/classes';
+import {modify} from '@data/reducers';
+import {addNewVertex} from '@data/combined';
 
 export function PureDiagram({
   location,
@@ -79,9 +80,6 @@ export default connect(
   }),
   dispatch => ({
     clearFocus: () => dispatch(modify('context', {focus: null})),
-    onDepotDrop: payload => {
-      dispatch(addVertex(payload));
-      dispatch(addAssociation(payload));
-    },
+    onDepotDrop: payload => dispatch(addNewVertex(payload)),
   }),
 )(PureDiagram);

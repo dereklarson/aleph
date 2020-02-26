@@ -5,7 +5,7 @@ import {Button, Paper, Tooltip, Typography} from '@material-ui/core';
 import _ from 'lodash';
 import DepotItem from './DepotItem';
 import {titlize} from '@utils/helpers';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 
 const tooltips = {};
 

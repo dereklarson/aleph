@@ -8,7 +8,7 @@ import Workspace from '@comp/Workspace';
 import Sidebar from '@sidebar/Sidebar';
 import TextEntry from '@common/TextEntry';
 import {GlobalHotKeys} from 'react-hotkeys';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 import {themePicker} from '@style/theme';
 import {ActionCreators as UndoAC} from 'redux-undo';
 

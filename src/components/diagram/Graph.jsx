@@ -2,7 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 import Vertex from './Vertex';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 
 function renderVertex(vertex, activity, className) {
   let type = 'node';

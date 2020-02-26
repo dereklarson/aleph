@@ -8,7 +8,7 @@ import {Paper} from '@material-ui/core';
 import 'react-sweet-progress/lib/style.css';
 import {genCodeEdit} from '@utils/state';
 import {modify} from '@data/reducers';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 import {loadCore} from '@ops/load';
 import {generateList} from '@utils/generateList';
 

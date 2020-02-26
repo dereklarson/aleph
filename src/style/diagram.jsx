@@ -7,7 +7,7 @@ export const dagreRescaling = {
   // A graph will transform linearly from 0 to 'vertex_count_full' vertices,
   // such that small graphs are located more towards the upper left
   vertexCountFull: 10,
-  startingScale: 0.7,
+  startingScale: 0.6,
   hZoomBase: 0.2,
   vZoomBase: 0.3,
   hOffsetBase: 0,

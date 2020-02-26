@@ -11,7 +11,7 @@ import DonutSmallIcon from '@material-ui/icons/DonutSmall';
 import clsx from 'clsx';
 import _ from 'lodash';
 import {propsToStyle} from '@utils/helpers';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 
 function genTTList(text, isOver) {
   let count = isOver ? 5 : 1;

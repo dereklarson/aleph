@@ -16,7 +16,7 @@ import {
 } from '@data/reducers';
 import {createText} from '@data/tools';
 import {titlize, propsToStyle} from '@utils/helpers';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 
 export function PureCardVertex({
   location,

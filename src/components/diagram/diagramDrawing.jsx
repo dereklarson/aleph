@@ -1,7 +1,7 @@
 // @format
 import dagre from 'dagre';
 import _ from 'lodash';
-import {locationStyles, rescale} from '@style/styleDiagram';
+import {locationStyles, rescale} from '@style/diagram';
 
 export function calculateDiagramPositions(vertices, location) {
   const style = _.get(locationStyles, location, locationStyles.default);

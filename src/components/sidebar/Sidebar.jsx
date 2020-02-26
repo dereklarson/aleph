@@ -6,7 +6,7 @@ import {Drawer, Divider, List, ListSubheader} from '@material-ui/core';
 import BulkActions from './BulkActions';
 import SavedDiagrams from './SavedDiagrams';
 import {generateList} from '@utils/generateList';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 import {modify} from '@data/reducers';
 
 // TODO add this back in

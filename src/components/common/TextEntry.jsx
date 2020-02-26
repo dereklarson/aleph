@@ -6,7 +6,7 @@ import {DialogActions, DialogTitle, DialogContent} from '@material-ui/core';
 import AceEditor from 'react-ace';
 import _ from 'lodash';
 import {modify} from '@data/reducers';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 import {notEditingState} from '@utils/state';
 
 import 'ace-builds/src-noconflict/mode-yaml';
@@ -74,10 +74,12 @@ export function PureTextEntry({open, context, dispatch}) {
       }}>
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>{itemDisplay}</DialogContent>
-      <DialogActions>
-        <Button onClick={onCancel}>Cancel</Button>
-        <Button onClick={onDone}>Save</Button>
-      </DialogActions>
+      {!schema.log && ( // For logging output, don't show action buttons
+        <DialogActions>
+          <Button onClick={onCancel}>Cancel</Button>
+          <Button onClick={onDone}>Save</Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 }

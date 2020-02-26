@@ -7,7 +7,7 @@ import DataDepot from '@depot/DataDepot';
 import Ticker from '@depot/Ticker';
 import Diagram from '@diagram/Diagram';
 import {Credits} from '@common/Accessories';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 
 export function PureWorkspace({location}) {
   const classes = useStyles();

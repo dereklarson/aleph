@@ -8,7 +8,7 @@ import _ from 'lodash';
 import {iconSource} from '@style/icons';
 import {applyTooltip} from '@style/tooltips';
 import {titlize} from './helpers';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 
 function StyledAvatar({item}) {
   const classes = useStyles();

@@ -43,7 +43,6 @@ export const notEditingState = {
   editing: false,
   edittext: '',
   editfunc: null,
-  schema: {editor: false, title: 'TextEntry'},
 };
 
 const textEditScenarios = {
@@ -68,11 +67,11 @@ export function genTextEdit(name, editfunc) {
 
 const codeEditScenarios = {
   // Each row contains the title and a set of additional props
-  commit: ['Enter commit information', {keys: {branch: true}}],
+  commit: ['Enter commit information', {keys: {branch: true}, mode: 'text'}],
   nodeEdit: ['Edit Node Code', {mode: 'python'}],
   libEdit: ['Edit Library Code', {mode: 'python'}],
   newLib: ['Create New Item', {keys: {uid: true}, mode: 'python'}],
-  logs: ['Logs', {mode: 'text'}],
+  logs: ['Logs', {log: true, mode: 'text'}],
 };
 
 export function genCodeEdit(name, {editfunc, edittext}) {

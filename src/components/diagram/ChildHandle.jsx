@@ -3,8 +3,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
 // import _ from 'lodash';
-import {addVertex, addAssociation, linkVertex} from '@data/reducers';
-import {useStyles} from '@style/styling';
+import {addNewVertex} from '@data/combined';
+import {useStyles} from '@style/classes';
 import {getAncestry} from '@utils/vertex';
 
 export function ChildHandle({
@@ -23,8 +23,8 @@ export function ChildHandle({
         location,
         uid: item.uid,
         association: item.uid,
-        parent: vertexId,
-        child: item.uid,
+        isParent: false,
+        linkId: vertexId,
       });
     },
     canDrop: (item, monitor) => {
@@ -49,16 +49,6 @@ export function ChildHandle({
   );
 }
 
-function actionDispatch(dispatch) {
-  return {
-    onDrop: payload => {
-      dispatch(addVertex(payload));
-      dispatch(addAssociation(payload));
-      dispatch(linkVertex(payload));
-    },
-  };
-}
-
 export default connect(
   state => ({
     location: state.context.location,
@@ -66,5 +56,5 @@ export default connect(
     associations: state.associations[state.context.location],
     // vertices: state.vertices.present[state.context.location],
   }),
-  actionDispatch,
+  dispatch => ({onDrop: payload => dispatch(addNewVertex(payload))}),
 )(ChildHandle);

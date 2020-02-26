@@ -3,7 +3,7 @@ import React from 'react';
 import {Table, TableBody, TableCell, Typography} from '@material-ui/core';
 import {Paper, TableContainer, TableRow} from '@material-ui/core';
 import {titlize} from '@utils/helpers';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 
 export default function TableVertex({uid, associations, styleProps}) {
   const nodelabel = titlize(uid);

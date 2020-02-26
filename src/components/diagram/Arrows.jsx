@@ -2,7 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 import {ArrowMarker, computePathstring} from './svgTools';
-import {locationStyles} from '@style/styleDiagram';
+import {locationStyles} from '@style/diagram';
 
 function renderArrow(arrow, index, style) {
   return (

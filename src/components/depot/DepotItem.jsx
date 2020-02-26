@@ -6,7 +6,7 @@ import Chip from '@material-ui/core/Chip';
 import {titlize} from '@utils/helpers';
 import {writeText} from '@data/reducers';
 import {genCodeEdit} from '@utils/state';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 
 export function DepotItem({itemProps, location, onClick}) {
   const classes = useStyles();

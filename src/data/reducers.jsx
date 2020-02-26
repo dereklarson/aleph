@@ -96,10 +96,6 @@ const vertexReducers = {
     }
   },
   addVertex(state, {payload: {location, uid}}) {
-    // TODO figure out function to "create first uid"
-    if (_.has(state[location], uid)) {
-      uid = uid + 'x';
-    }
     state[location][uid] = {
       uid: uid,
       children: {},

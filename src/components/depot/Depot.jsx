@@ -6,7 +6,7 @@ import {Button, Chip, Paper, Tooltip, Typography} from '@material-ui/core';
 import _ from 'lodash';
 import DepotItem from './DepotItem';
 import {titlize} from '@utils/helpers';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 import {genCodeEdit} from '@utils/state';
 import {addToLibrary} from '@data/reducers';
 import {saveLibrary} from '@ops/load';
@@ -20,7 +20,7 @@ const tooltips = {
 export function PureDepot({location, onVertexDrop, onNew, library}) {
   const classes = useStyles();
   const libraryInput = _.sortBy(Object.values(library), 'type');
-  const [open, setOpen] = React.useState({standard: true, beam: true});
+  const [open, setOpen] = React.useState('standard');
   const dividers = {};
 
   // Special entry for creating a new library item
@@ -40,14 +40,12 @@ export function PureDepot({location, onVertexDrop, onNew, library}) {
     />,
   ];
 
-  let typeOpen = false;
   libraryInput.forEach(function(item, index) {
     const itemtype = _.get(item, 'type', 'standard');
     if (!_.has(dividers, itemtype)) {
       dividers[itemtype] = itemtype;
-      typeOpen = _.get(open, itemtype, false);
-      let onClick = () => setOpen({...open, [itemtype]: !_.clone(typeOpen)});
-      let suffix = typeOpen ? '' : '...';
+      let onClick = () => setOpen(open === itemtype ? '' : itemtype);
+      let suffix = open === itemtype ? '' : '...';
       itemDisplay.push(
         <Tooltip
           key={itemtype}
@@ -60,7 +58,8 @@ export function PureDepot({location, onVertexDrop, onNew, library}) {
         </Tooltip>,
       );
     }
-    if (typeOpen) itemDisplay.push(<DepotItem key={index} itemProps={item} />);
+    if (open === itemtype)
+      itemDisplay.push(<DepotItem key={index} itemProps={item} />);
   });
 
   const [{highlighted}, drop] = useDrop({

@@ -8,7 +8,7 @@ import {loadInputs, saveCheckpoint, loadCheckpoint} from '@ops/load';
 import {generateList} from '@utils/generateList';
 import {playTutorial} from '@utils/tutorial';
 import {titlize} from '@utils/helpers';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 
 export function PureAppBar({config, context, dispatch}) {
   const classes = useStyles();

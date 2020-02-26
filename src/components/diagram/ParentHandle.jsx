@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
 import _ from 'lodash';
 import {addVertex, addAssociation, linkVertex} from '@data/reducers';
-import {useStyles} from '@style/styling';
+import {useStyles} from '@style/classes';
 import {getAncestry} from '@utils/vertex';
 
 export function ParentHandle({
