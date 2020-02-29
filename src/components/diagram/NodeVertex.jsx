@@ -7,11 +7,11 @@ import Fab from '@material-ui/core/Fab';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import DonutSmallIcon from '@material-ui/icons/DonutSmall';
 import clsx from 'clsx';
 import _ from 'lodash';
 import {propsToStyle} from '@utils/helpers';
 import {useStyles} from '@style/classes';
+import {iconSource} from '@style/icons';
 
 function genTTList(text, isOver) {
   let count = isOver ? 5 : 1;
@@ -27,12 +27,12 @@ function genTTList(text, isOver) {
   return <List dense={true}> {itemDisplay} </List>;
 }
 
-export function PureNodeVertex({uid, associations, styleProps, ops}) {
+export function PureNodeVertex({uid, libAssn, styleProps, ops}) {
   const classes = useStyles();
-  const icon = <DonutSmallIcon style={{padding: 3}} />;
   let ttText = _.get(ops.test_output, uid, '');
   let ttOpen = ops.testing && ttText.length > 0;
   let ttDiv = genTTList(ttText, styleProps.isOver);
+  const defIcon = _.get(iconSource, 'node');
   return (
     <Tooltip
       classes={{
@@ -49,11 +49,11 @@ export function PureNodeVertex({uid, associations, styleProps, ops}) {
         color="primary"
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
         className={classes.badge}
-        badgeContent={associations.length}>
+        badgeContent={libAssn.length}>
         <Fab
           variant="extended"
           style={propsToStyle({...styleProps, testing: ops.testing})}>
-          {icon} {uid}
+          {_.get(iconSource, libAssn[0] || '', defIcon)} {uid}
         </Fab>
       </Badge>
     </Tooltip>

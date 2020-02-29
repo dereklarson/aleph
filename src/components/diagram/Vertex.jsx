@@ -14,6 +14,7 @@ import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigVertex from './ConfigVertex';
 import TableVertex from './TableVertex';
+import CustomVertex from './CustomVertex';
 import ChildHandle from './ChildHandle';
 import ParentHandle from './ParentHandle';
 import {getAncestry} from '@utils/vertex';
@@ -23,18 +24,17 @@ export function PureVertex({
   vertices,
   associations,
   operations,
-  onClick,
-  dropActions,
   type,
   uid,
   parents,
   prepared,
+  dispatch,
 }) {
   // First define the Drag-n-Drop functionality
   const ref = React.useRef(null);
   let maxParents = location === 'docker' ? 1 : 3;
-  let localAssoc = _.get(associations, uid, []);
-  if (localAssoc.length > 0 && localAssoc[0] === 'ubuntu') {
+  let localLibAssn = _.get(associations.library, uid, []);
+  if (localLibAssn.length > 0 && localLibAssn[0] === 'ubuntu') {
     maxParents = 0;
   }
   const [{isDragging}, drag, preview] = useDrag({
@@ -47,11 +47,14 @@ export function PureVertex({
     accept: ['Vertex', 'DepotItem'],
     drop: (item, monitor) => {
       if (item.type === 'Vertex' && _.has(item.parents, uid)) {
-        dropActions.Unlink({location, child: item.uid, parent: uid});
+        dispatch(unlinkVertex({location, child: item.uid, parent: uid}));
       } else if (item.type === 'DepotItem' && !monitor.didDrop()) {
-        dropActions[item.type]({location, uid: uid, association: item.uid});
+        let payload = {location, uid, atype: 'library', association: item.uid};
+        console.log('payload', payload);
+        dispatch(addAssociation(payload));
+        dispatch(clearText(payload));
       } else if (item.type === 'Vertex') {
-        dropActions[item.type]({location, child: item.uid, parent: uid});
+        dispatch(linkVertex({location, child: item.uid, parent: uid}));
       }
     },
     canDrop: (item, monitor) => {
@@ -80,6 +83,7 @@ export function PureVertex({
     prepared: prepared.includes(uid),
   };
   const components = {
+    custom: CustomVertex,
     conf: ConfigVertex,
     node: NodeVertex,
     card: CardVertex,
@@ -99,12 +103,12 @@ export function PureVertex({
       <div
         onClick={event => {
           event.stopPropagation();
-          onClick(uid);
+          dispatch(modify('context', {focus: uid}));
         }}>
         <CurrentComponent
           uid={uid}
           idlist={_.keys(vertices)}
-          associations={localAssoc}
+          libAssn={localLibAssn}
           styleProps={styleProps}
         />
       </div>
@@ -115,27 +119,10 @@ export function PureVertex({
 
 // ======== DnD Handling ========
 
-function actionDispatch(dispatch) {
-  return {
-    onClick: uid => dispatch(modify('context', {focus: uid})),
-    dropActions: {
-      Vertex: payload => dispatch(linkVertex(payload)),
-      DepotItem: payload => {
-        dispatch(addAssociation(payload));
-        dispatch(clearText(payload));
-      },
-      Unlink: payload => dispatch(unlinkVertex(payload)),
-    },
-  };
-}
-
-export default connect(
-  (state, ownProps) => ({
-    location: state.context.location,
-    vertices: state.vertices[state.context.location],
-    associations: state.associations[state.context.location],
-    // vertices: state.vertices.present[state.context.location],
-    operations: state.operations,
-  }),
-  actionDispatch,
-)(PureVertex);
+export default connect((state, ownProps) => ({
+  location: state.context.location,
+  vertices: state.vertices[state.context.location],
+  associations: state.associations[state.context.location],
+  // vertices: state.vertices.present[state.context.location],
+  operations: state.operations,
+}))(PureVertex);

@@ -7,13 +7,7 @@ import {addNewVertex} from '@data/combined';
 import {useStyles} from '@style/classes';
 import {getAncestry} from '@utils/vertex';
 
-export function ChildHandle({
-  location,
-  vertexId,
-  vertices,
-  associations,
-  onDrop,
-}) {
+export function ChildHandle({location, vertexId, vertices, libAssn, onDrop}) {
   const classes = useStyles();
 
   const [{highlighted}, drop] = useDrop({
@@ -22,6 +16,7 @@ export function ChildHandle({
       onDrop({
         location,
         uid: item.uid,
+        atype: 'library',
         association: item.uid,
         isParent: false,
         linkId: vertexId,
@@ -32,7 +27,7 @@ export function ChildHandle({
       // if ( >= item.maxParents) {
       //   return false;
       // }
-      const anc_sec = getAncestry(vertices, associations, vertexId)[1];
+      const anc_sec = getAncestry(vertices, libAssn, vertexId)[1];
       return !anc_sec.includes(item.uid);
     },
     collect: monitor => ({
@@ -53,7 +48,7 @@ export default connect(
   state => ({
     location: state.context.location,
     vertices: state.vertices[state.context.location],
-    associations: state.associations[state.context.location],
+    libAssn: state.associations[state.context.location].library,
     // vertices: state.vertices.present[state.context.location],
   }),
   dispatch => ({onDrop: payload => dispatch(addNewVertex(payload))}),

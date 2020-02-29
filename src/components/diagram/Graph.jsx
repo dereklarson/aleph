@@ -5,8 +5,10 @@ import Vertex from './Vertex';
 import {useStyles} from '@style/classes';
 
 function renderVertex(vertex, activity, className) {
-  let type = 'node';
-  if (activity.location === 'configuration') {
+  let type = 'custom';
+  if (['docker', 'pipeline'].includes(activity.location)) {
+    type = 'node';
+  } else if (activity.location === 'configuration') {
     type = 'conf';
   } else if (activity.location === 'data') {
     type = 'table';

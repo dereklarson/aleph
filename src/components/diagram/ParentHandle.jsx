@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrop} from 'react-dnd';
 import _ from 'lodash';
-import {addVertex, addAssociation, linkVertex} from '@data/reducers';
+import {addNewVertex} from '@data/combined';
 import {useStyles} from '@style/classes';
 import {getAncestry} from '@utils/vertex';
 
@@ -12,7 +12,7 @@ export function ParentHandle({
   maxParents,
   vertexId,
   vertices,
-  associations,
+  libAssn,
   onDrop,
 }) {
   const classes = useStyles();
@@ -23,6 +23,7 @@ export function ParentHandle({
       onDrop({
         location,
         uid: item.uid,
+        atype: 'library',
         association: item.uid,
         parent: item.uid,
         child: vertexId,
@@ -32,7 +33,7 @@ export function ParentHandle({
       if (_.size(vertices[vertexId].parents) >= maxParents) {
         return false;
       } else {
-        const anc_sec = getAncestry(vertices, associations, vertexId)[1];
+        const anc_sec = getAncestry(vertices, libAssn, vertexId)[1];
         return !anc_sec.includes(item.uid);
       }
     },
@@ -50,22 +51,12 @@ export function ParentHandle({
   );
 }
 
-function actionDispatch(dispatch) {
-  return {
-    onDrop: payload => {
-      dispatch(addVertex(payload));
-      dispatch(addAssociation(payload));
-      dispatch(linkVertex(payload));
-    },
-  };
-}
-
 export default connect(
   state => ({
     location: state.context.location,
     vertices: state.vertices[state.context.location],
-    associations: state.associations[state.context.location],
+    libAssn: state.associations[state.context.location].library,
     // vertices: state.vertices.present[state.context.location],
   }),
-  actionDispatch,
+  dispatch => ({onDrop: payload => dispatch(addNewVertex(payload))}),
 )(ParentHandle);

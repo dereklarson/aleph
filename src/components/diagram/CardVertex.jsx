@@ -29,7 +29,7 @@ export function PureCardVertex({
   onChipDelete,
   uid,
   idlist,
-  associations,
+  libAssn,
   operations,
   styleProps,
 }) {
@@ -41,10 +41,11 @@ export function PureCardVertex({
 
   let chipDisplay = [];
   let libError = false;
-  for (const [index, association] of associations.entries()) {
+  for (const [index, association] of libAssn.entries()) {
     let libraryMissing = !_.has(library, association);
     libError = libError || libraryMissing;
-    const chipDelete = () => onChipDelete({location, uid, association});
+    const chipDelete = () =>
+      onChipDelete({location, uid, atype: 'library', association});
     chipDisplay.push(
       <Chip
         key={index}
@@ -58,7 +59,7 @@ export function PureCardVertex({
   let edittext = '';
   let editfunc = () => 0;
   if (!libError) {
-    edittext = createText({library, associations, corpus, uid});
+    edittext = createText({library, libAssn, corpus, uid});
     editfunc = ({fieldText, aceText}) =>
       setText({location, uid, text: aceText});
   }
