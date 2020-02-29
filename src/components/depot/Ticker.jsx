@@ -54,7 +54,7 @@ export default connect(
   dispatch => ({
     onClear: location => {
       dispatch(modify('vertices', {[location]: {}}));
-      dispatch(modify('associations', {[location]: {}}));
+      dispatch(modify('associations', {[location]: {library: {}, styles: {}}}));
       dispatch(modify('corpus', {[location]: {}}));
     },
     onLogs: text =>

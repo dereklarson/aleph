@@ -30,9 +30,10 @@ export function PureAppBar({config, context, dispatch}) {
   return (
     <AppBar className={classes.appBar}>
       <Toolbar variant="dense">
-        <Tooltip title={config.organization.repository} enterDelay={500}>
+        <Tooltip title={config.organization.repository || ''} enterDelay={500}>
           <Typography className={classes.title} variant="h6">
-            {config.organization.name} - {titlize(context.location)}
+            {config.organization.name} - {titlize(context.location)} -{' '}
+            {context.name}
           </Typography>
         </Tooltip>
         {generateList('button', appBarOptions)}

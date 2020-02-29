@@ -8,17 +8,13 @@ import SavedDiagrams from './SavedDiagrams';
 import {generateList} from '@utils/generateList';
 import {useStyles} from '@style/classes';
 import {modify} from '@data/reducers';
-
-// TODO add this back in
-// selected={location === config[0]}>
+import {locations} from '@data/reference';
 
 export function PureSidebar({onNavigate, location}) {
-  const sidebarOptions = [
-    ['configuration', () => onNavigate('configuration')],
-    ['docker', () => onNavigate('docker')],
-    ['pipeline', () => onNavigate('pipeline')],
-    ['data', () => onNavigate('data')],
-  ];
+  const sidebarOptions = [];
+  for (let loc of locations) {
+    sidebarOptions.push([loc, () => onNavigate(loc)]);
+  }
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -38,7 +34,7 @@ export function PureSidebar({onNavigate, location}) {
         {generateList(
           'list',
           sidebarOptions,
-          'def',
+          'locations',
           'Switch to the <> environment',
         )}
       </List>

@@ -22,7 +22,7 @@ export function PureTextEntry({open, context, dispatch}) {
 
   // We create a set of text fields based on the supplied schema
   let itemDisplay = [];
-  for (const keystr of Object.keys(_.get(schema, 'keys', []))) {
+  for (const [keystr, def] of Object.entries(_.get(schema, 'keys', {}))) {
     let defProps = {};
     // Autofocus on our first text entry field
     if (itemDisplay.length === 0) defProps['autoFocus'] = true;
@@ -31,6 +31,7 @@ export function PureTextEntry({open, context, dispatch}) {
         {...defProps}
         key={itemDisplay.length}
         className={classes.textField}
+        defaultValue={def}
         variant="outlined"
         label={keystr}
         onChange={event => {

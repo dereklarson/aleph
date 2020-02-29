@@ -25,7 +25,7 @@ export function addNewVertex({location, uid, association, isParent, linkId}) {
     let [parent, child] = isParent ? [uid, linkId] : [linkId, uid];
     console.log(parent, '->', child);
     dispatch(addVertex({location, uid}));
-    dispatch(addAssociation({location, uid, association}));
+    dispatch(addAssociation({location, uid, atype: 'library', association}));
     if (parent != null) dispatch(linkVertex({location, parent, child}));
   };
 }

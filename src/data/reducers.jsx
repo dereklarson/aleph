@@ -9,6 +9,7 @@ const operationsSlice = genSlice('operations');
 const cacheSlice = genSlice('cache');
 const contextSlice = genSlice('context');
 const datasetsSlice = genSlice('datasets');
+const stylesSlice = genSlice('styles');
 
 const diagramsReducers = {
   removeDiagram(state, {payload: {location, uid}}) {
@@ -22,10 +23,10 @@ const libraryReducers = {
   writeText(state, {payload: {location, uid, text}}) {
     state[location][uid].text = text;
   },
-  addToLibrary(state, {payload: {location, uid, text}}) {
+  addToLibrary(state, {payload: {location, uid, type, text}}) {
     state[location][uid] = {
       uid: uid,
-      type: 'entry',
+      type: type,
       text: text,
     };
   },
@@ -60,22 +61,31 @@ const associationsReducers = {
       Object.assign(state[location], content.associations);
     }
   },
-  addAssociation(state, {payload: {location, uid, association}}) {
-    if (!_.has(state[location], uid)) {
-      state[location][uid] = [];
+  addAssociation(state, {payload: {location, uid, atype, association}}) {
+    if (!_.has(state[location][atype], uid)) {
+      state[location][atype][uid] = [];
     }
-    state[location][uid].push(association);
+    state[location][atype][uid].push(association);
   },
-  removeAssociation(state, {payload: {location, uid, association}}) {
-    let index = state[location][uid].indexOf(association);
-    if (index >= 0) state[location][uid].splice(index, 1);
+  removeAssociation(state, {payload: {location, uid, atype, association}}) {
+    let index = state[location][atype][uid].indexOf(association);
+    if (index >= 0) state[location][atype][uid].splice(index, 1);
   },
   removeAllAssociations(state, {payload: {location, uid}}) {
-    state[location][uid] = [];
+    const assocTypes = ['library', 'styles'];
+    for (let atype of assocTypes) {
+      delete state[location][atype][uid];
+    }
   },
   relinkAssociations(state, {payload: {location, uid, newId}}) {
-    let associations = state[location][uid];
-    delete Object.assign(state[location], {[newId]: associations})[uid];
+    //TODO move this to a reference location?
+    const assocTypes = ['library', 'styles'];
+    for (let atype of assocTypes) {
+      let associations = state[location][atype][uid];
+      delete Object.assign(state[location][atype], {[newId]: associations})[
+        uid
+      ];
+    }
   },
 };
 const associationsSlice = genSlice('associations', associationsReducers);
@@ -158,6 +168,7 @@ const modifiers = {
   vertices: verticesSlice.actions.modify_vertices,
   associations: associationsSlice.actions.modify_associations,
   datasets: datasetsSlice.actions.modify_datasets,
+  styles: stylesSlice.actions.modify_styles,
 };
 export const modify = (name, payload) => modifiers[name](payload);
 
@@ -185,6 +196,7 @@ const rootReducer = combineReducers({
   vertices: verticesSlice.reducer,
   associations: associationsSlice.reducer,
   datasets: datasetsSlice.reducer,
+  styles: stylesSlice.reducer,
 });
 
 export default rootReducer;

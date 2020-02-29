@@ -17,11 +17,11 @@ export function genSlice(name, extraReducers = {}) {
   return slice;
 }
 
-export function createText({library, associations, corpus, uid}) {
+export function createText({library, libAssn, corpus, uid}) {
   if (_.has(corpus, uid)) return corpus[uid].text;
   else {
     let text = '';
-    associations.forEach(associationUid => {
+    libAssn.forEach(associationUid => {
       text += library[associationUid].text;
     });
     return text;

@@ -2,9 +2,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {List, ListSubheader} from '@material-ui/core';
+import _ from 'lodash';
 import {modify} from '@data/reducers';
-import {loadCore, loadOrg, pushOrg, pushImages} from '@ops/load';
-import {saveDiagram} from '@ops/load';
+import {saveDiagram, loadOrg, pushOrg, pushImages} from '@ops/load';
 import {runPipeline} from '@ops/build';
 import {generateList} from '@utils/generateList';
 import {genTextEdit, genCodeEdit} from '@utils/state';
@@ -13,7 +13,6 @@ function BulkActions({organization, operations, location, dispatch}) {
   const saveDiag = text => saveDiagram(location, text.fieldText.savename);
   const baseOptions = [
     ['save_diagram', () => dispatch(genTextEdit('saveDiagram', saveDiag))],
-    ['refresh', () => dispatch(loadCore('diagrams', location))],
   ];
   const orgSet = text => modify('config', {organization: text.fieldText});
   const orgCommit = {
@@ -39,7 +38,9 @@ function BulkActions({organization, operations, location, dispatch}) {
     ],
   };
 
-  const actionOptions = baseOptions.concat(locationOptions[location]);
+  const actionOptions = baseOptions.concat(
+    _.get(locationOptions, location, []),
+  );
   return (
     <List>
       <ListSubheader inset>Actions</ListSubheader>

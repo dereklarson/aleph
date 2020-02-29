@@ -2,16 +2,16 @@
 import _ from 'lodash';
 
 // Looks back through the vertex lineage to get all ancestors associated with it
-export function getAncestry(vertices, associations, vertexId) {
+export function getAncestry(vertices, libAssn, vertexId) {
   let currVertex = vertices[vertexId];
   let ancestors = [];
-  let currAssociations = _.clone(_.get(associations, vertexId, []));
+  let currAssociations = _.clone(_.get(libAssn, vertexId, []));
   let aIdx = 0;
   while (_.size(currVertex.parents) !== 0) {
     ancestors = ancestors.concat(_.keys(currVertex.parents));
     currVertex = vertices[ancestors[aIdx]];
     currAssociations = currAssociations.concat(
-      _.clone(_.get(associations, ancestors[aIdx], [])),
+      _.clone(_.get(libAssn, ancestors[aIdx], [])),
     );
     aIdx++;
   }

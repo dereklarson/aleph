@@ -10,11 +10,14 @@ import _ from 'lodash';
 // config: broader settings like the organizational details
 // location: data associated with diagram-building based on the current location
 
+// const locations = ['docker', 'pipeline', 'data', 'configuration'];
+export const locations = ['flow_diagram', 'docker'];
+
 export const blankContext = {
   themeName: 'dark',
   focus: null,
-  location: 'docker',
-  name: '',
+  location: locations[0],
+  name: 'new diagram',
   editing: false,
   schema: {title: 'Editing'},
   editfunc: () => 0,
@@ -45,12 +48,12 @@ export const blankConfig = {
 
 const blankCategories = {
   vertices: {},
-  associations: {},
+  associations: {library: [], styles: []},
   library: {},
+  styles: {},
   corpus: {},
   diagrams: {},
 };
-const locations = ['docker', 'pipeline', 'data', 'configuration'];
 const blankLocationData = genCoreData(blankCategories, locations);
 
 // This is a complete, empty state representation
@@ -80,7 +83,10 @@ export const stagingInitialState = {
 const devCategories = {
   ..._.cloneDeep(blankCategories),
   vertices: vertexDataFromPaths([['parent', 'child']]),
-  associations: {parent: ['parent'], child: ['child', 'friend']},
+  associations: {
+    library: {parent: ['parent'], child: ['child', 'friend']},
+    styles: {},
+  },
 };
 
 const devLocationData = genCoreData(devCategories, locations);
@@ -91,11 +97,14 @@ export const devInitialState = {
   associations: {
     ..._.cloneDeep(devLocationData.associations),
     data: {
-      parent: [
-        ['tableId', 'int!'],
-        ['size', 'int'],
-        ['name', 'string'],
-      ],
+      library: {
+        parent: [
+          ['tableId', 'int!'],
+          ['size', 'int'],
+          ['name', 'string'],
+        ],
+      },
+      styles: {},
     },
   },
 };

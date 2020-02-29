@@ -35,8 +35,8 @@ export function PureDepot({location, onVertexDrop, onNew, library}) {
   // Special entry for creating a new library item
   // This has two dispatches, so we puth them behind a thunk
   const editfunc = ({fieldText, aceText}) => dispatch => {
-    dispatch(addToLibrary({location, uid: fieldText['uid'], text: aceText}));
-    dispatch(saveLibrary(location, fieldText['uid']));
+    dispatch(addToLibrary({location, ...fieldText, text: aceText}));
+    dispatch(saveLibrary(location, fieldText.uid));
   };
   const itemDisplay = [
     <Typography key="title" variant="h6" onClick={() => setOpen(!open)}>

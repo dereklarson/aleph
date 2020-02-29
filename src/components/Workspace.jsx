@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Container, Grid} from '@material-ui/core';
 import Depot from '@depot/Depot';
-import DataDepot from '@depot/DataDepot';
+// import DataDepot from '@depot/DataDepot';
 import Ticker from '@depot/Ticker';
 import Diagram from '@diagram/Diagram';
 import {Credits} from '@common/Accessories';
@@ -18,7 +18,7 @@ export function PureWorkspace({location}) {
         <Grid container spacing={1}>
           <Grid item xs={2}>
             <Ticker />
-            <DataDepot />
+            {/* <DataDepot /> */}
             <Depot />
           </Grid>
           <Grid item xs={10}>

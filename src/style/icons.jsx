@@ -8,6 +8,7 @@ import HttpsIcon from '@material-ui/icons/Https';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 // Sidebar - locations
+import PlaceIcon from '@material-ui/icons/Place';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import DashboardIcon from '@material-ui/icons/Dashboard';
@@ -28,6 +29,8 @@ import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 import SubjectIcon from '@material-ui/icons/Subject';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import SettingsOverscanIcon from '@material-ui/icons/SettingsOverscan';
+// Vertices
+import DonutSmallIcon from '@material-ui/icons/DonutSmall';
 
 export const iconSource = {
   def: <HelpIcon />,
@@ -38,6 +41,7 @@ export const iconSource = {
   load_checkpoint: <CloudDownloadIcon />,
   save_checkpoint: <CloudUploadIcon />,
   // Sidebar - locations
+  locations: <PlaceIcon />,
   configuration: <ReceiptIcon />,
   data: <AccountBalanceIcon />,
   docker: <DashboardIcon />,
@@ -59,4 +63,6 @@ export const iconSource = {
   show_logs: <SubjectIcon />,
   clear_diagram: <DeleteOutlineIcon />,
   toggle_dagre: <SettingsOverscanIcon />,
+  // Vertices
+  node: <DonutSmallIcon style={{padding: 3}} />,
 };
