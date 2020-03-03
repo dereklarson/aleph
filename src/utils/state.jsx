@@ -70,7 +70,10 @@ const codeEditScenarios = {
   commit: ['Enter commit information', {keys: {branch: ''}, mode: 'text'}],
   nodeEdit: ['Edit Node Code', {mode: 'python'}],
   libEdit: ['Edit Library Code', {mode: 'python'}],
-  newLib: ['Create New Item', {keys: {uid: '', type: 'user'}, mode: 'python'}],
+  newDepot: [
+    'Create New Item',
+    {keys: {uid: '', location: 'library', type: 'user'}, mode: 'text'},
+  ],
   logs: ['Logs', {log: true, mode: 'text'}],
 };
 

@@ -25,7 +25,12 @@ export function PureDiagram({
     accept: 'DepotItem',
     drop: (item, monitor) => {
       if (!monitor.didDrop()) {
-        onDepotDrop({location, uid: item.uid, association: item.uid});
+        onDepotDrop({
+          location,
+          uid: item.uid,
+          atype: item.atype,
+          association: item.uid,
+        });
       }
     },
     collect: monitor => ({

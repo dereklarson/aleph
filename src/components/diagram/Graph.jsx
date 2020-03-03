@@ -6,14 +6,14 @@ import {useStyles} from '@style/classes';
 
 function renderVertex(vertex, activity, className) {
   let type = 'custom';
-  if (['docker', 'pipeline'].includes(activity.location)) {
+  if (activity.focus === vertex.uid) {
+    type = 'card';
+  } else if (['docker', 'pipeline'].includes(activity.location)) {
     type = 'node';
   } else if (activity.location === 'configuration') {
     type = 'conf';
   } else if (activity.location === 'data') {
     type = 'table';
-  } else if (activity.focus === vertex.uid) {
-    type = 'card';
   }
 
   const component = (

@@ -8,11 +8,11 @@ import {writeText} from '@data/reducers';
 import {genCodeEdit} from '@utils/state';
 import {useStyles} from '@style/classes';
 
-export function DepotItem({itemProps, location, onClick}) {
+export function DepotItem({itemProps, atype, location, onClick}) {
   const classes = useStyles();
 
   const [{isDragging}, drag, preview] = useDrag({
-    item: {type: 'DepotItem', uid: itemProps.uid},
+    item: {type: 'DepotItem', atype, uid: itemProps.uid},
     collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),

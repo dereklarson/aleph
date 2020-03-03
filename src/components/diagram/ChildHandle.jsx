@@ -16,7 +16,7 @@ export function ChildHandle({location, vertexId, vertices, libAssn, onDrop}) {
       onDrop({
         location,
         uid: item.uid,
-        atype: 'library',
+        atype: item.atype,
         association: item.uid,
         isParent: false,
         linkId: vertexId,

@@ -10,8 +10,8 @@ import {useStyles} from '@style/classes';
 export function PureStyleDepot({location, styleSettings}) {
   const classes = useStyles();
   const styleInput = _.sortBy(Object.values(styleSettings), 'type');
-  const [open, setOpen] = React.useState(false);
-  const [openType, setOpenType] = React.useState('csv');
+  const [open, setOpen] = React.useState(true);
+  const [openType, setOpenType] = React.useState('shape');
   const dividers = {};
 
   const itemDisplay = [
@@ -20,21 +20,26 @@ export function PureStyleDepot({location, styleSettings}) {
     </Typography>,
   ];
 
-  styleInput.forEach(function(item, index) {
-    const itemType = _.get(item, 'type', 'standard');
-    const isOpen = openType === itemType;
-    if (!_.has(dividers, itemType)) {
-      dividers[itemType] = itemType;
-      let onClick = () => setOpenType(isOpen ? '' : itemType);
-      let suffix = isOpen ? '' : '...';
-      itemDisplay.push(
-        <Button size="small" onClick={onClick}>
-          {titlize(itemType + suffix)}
-        </Button>,
-      );
-    }
-    if (isOpen) itemDisplay.push(<DepotItem key={index} itemProps={item} />);
-  });
+  if (open) {
+    styleInput.forEach(function(item, index) {
+      const itemType = _.get(item, 'type', 'standard');
+      const isOpen = openType === itemType;
+      if (!_.has(dividers, itemType)) {
+        dividers[itemType] = itemType;
+        let onClick = () => setOpenType(isOpen ? '' : itemType);
+        let suffix = isOpen ? '' : '...';
+        itemDisplay.push(
+          <Button key={itemType} size="small" onClick={onClick}>
+            {titlize(itemType + suffix)}
+          </Button>,
+        );
+      }
+      if (isOpen)
+        itemDisplay.push(
+          <DepotItem key={index} atype="styles" itemProps={item} />,
+        );
+    });
+  }
 
   return (
     <div>
@@ -45,5 +50,5 @@ export function PureStyleDepot({location, styleSettings}) {
 
 export default connect(state => ({
   location: state.context.location,
-  styleSettings: state.styles.location,
+  styleSettings: state.styles[state.context.location],
 }))(PureStyleDepot);

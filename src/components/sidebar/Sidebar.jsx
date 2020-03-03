@@ -27,7 +27,7 @@ export function PureSidebar({onNavigate, location}) {
       }}
       open={open}
       onMouseEnter={event => setOpen(true)}
-      onMouseLeave={ecent => setOpen(false)}>
+      onMouseLeave={event => setOpen(false)}>
       <Divider />
       <List>
         <ListSubheader inset> Locations </ListSubheader>

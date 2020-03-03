@@ -50,7 +50,12 @@ export const testOutput = {
 export const excitedState = {
   ...blankState,
   config: {organization: {name: 'Top Dog'}},
-  context: {...blankState.context, dagre: true, focus: 0},
+  context: {
+    ...blankState.context,
+    dagre: true,
+    location: 'docker',
+    focus: 'parent',
+  },
   operations: {
     ...blankState.operations,
     ...testOutput,

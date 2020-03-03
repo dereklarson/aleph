@@ -10,7 +10,7 @@ export default genStoryEntry(13, TestComponent, excitedState);
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
   uid: 'Test Node',
-  associations: [
+  libAssn: [
     ['total_calories', 'Int'],
     ['energy_density', 'Float'],
     ['Yurp', 'String!'],

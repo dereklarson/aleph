@@ -2,6 +2,7 @@
 import {makeStyles} from '@material-ui/core/styles';
 
 const devmode = process.env.NODE_ENV === 'production' ? false : true;
+console.log('Devmode:', devmode);
 
 export const useStyles = makeStyles(theme => ({
   root: {},

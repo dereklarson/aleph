@@ -10,7 +10,7 @@ export default genStoryEntry(11, TestComponent, excitedState);
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
   name: 'Test Node',
-  associations: ['react'],
+  libAssn: ['react'],
   id: 1,
   styleProps: {
     highlighted: false,

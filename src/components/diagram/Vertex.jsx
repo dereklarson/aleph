@@ -34,6 +34,7 @@ export function PureVertex({
   const ref = React.useRef(null);
   let maxParents = location === 'docker' ? 1 : 3;
   let localLibAssn = _.get(associations.library, uid, []);
+  let localStyleAssn = _.get(associations.styles, uid, []);
   if (localLibAssn.length > 0 && localLibAssn[0] === 'ubuntu') {
     maxParents = 0;
   }
@@ -49,7 +50,7 @@ export function PureVertex({
       if (item.type === 'Vertex' && _.has(item.parents, uid)) {
         dispatch(unlinkVertex({location, child: item.uid, parent: uid}));
       } else if (item.type === 'DepotItem' && !monitor.didDrop()) {
-        let payload = {location, uid, atype: 'library', association: item.uid};
+        let payload = {location, uid, atype: item.atype, association: item.uid};
         console.log('payload', payload);
         dispatch(addAssociation(payload));
         dispatch(clearText(payload));
@@ -109,6 +110,7 @@ export function PureVertex({
           uid={uid}
           idlist={_.keys(vertices)}
           libAssn={localLibAssn}
+          styleAssn={localStyleAssn}
           styleProps={styleProps}
         />
       </div>

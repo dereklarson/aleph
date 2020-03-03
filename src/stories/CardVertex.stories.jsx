@@ -15,14 +15,14 @@ export default genStoryEntry(10, TestComponent, excitedState);
 export const testData = {
   // uid: 'Test name',
   uid: 'Test name',
-  associations: ['react'],
+  libAssn: ['react'],
   idlist: [],
   library: {cornelius: 'Scipio', julius: 'Caesar', fabius: 'Cunctator'},
-  cardActions: {
-    onEditor: action('Editor'),
-    onBuild: action('Build'),
-    onClear: action('Clear'),
-  },
+  onEditor: action('Editor'),
+  onBuild: action('Build'),
+  onClear: action('Clear'),
+  onChipDelete: action('DeleteChip'),
+  onChange: action('onChange'),
   operations: {
     building: false,
   },

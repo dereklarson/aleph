@@ -1,6 +1,7 @@
 // @format
 import _ from 'lodash';
 import {addVertex, linkVertex, addAssociation} from '@data/reducers';
+import {removeVertex, removeAllAssociations, clearText} from '@data/reducers';
 
 function generateSequentialId(uid, existing) {
   while (_.has(existing, uid)) {
@@ -17,7 +18,14 @@ function generateSequentialId(uid, existing) {
   return uid;
 }
 
-export function addNewVertex({location, uid, association, isParent, linkId}) {
+export function addNewVertex({
+  location,
+  uid,
+  atype,
+  association,
+  isParent,
+  linkId,
+}) {
   return function(dispatch, getState) {
     console.log('addNewVertex:', location, uid, isParent, linkId);
     let vertices = getState().vertices[location];
@@ -25,7 +33,15 @@ export function addNewVertex({location, uid, association, isParent, linkId}) {
     let [parent, child] = isParent ? [uid, linkId] : [linkId, uid];
     console.log(parent, '->', child);
     dispatch(addVertex({location, uid}));
-    dispatch(addAssociation({location, uid, atype: 'library', association}));
+    dispatch(addAssociation({location, uid, atype, association}));
     if (parent != null) dispatch(linkVertex({location, parent, child}));
+  };
+}
+
+export function removeFullVertex({location, uid}) {
+  return function(dispatch, getState) {
+    dispatch(removeVertex({location, uid}));
+    dispatch(removeAllAssociations({location, uid}));
+    dispatch(clearText({location, uid}));
   };
 }

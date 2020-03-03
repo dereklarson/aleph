@@ -23,7 +23,7 @@ export function ParentHandle({
       onDrop({
         location,
         uid: item.uid,
-        atype: 'library',
+        atype: item.atype,
         association: item.uid,
         parent: item.uid,
         child: vertexId,
