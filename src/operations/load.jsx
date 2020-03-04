@@ -11,6 +11,38 @@ import {
 } from '@data/reducers';
 
 // All of these are thunked to give access to state and asynchronicity
+export function saveBattery({location, bank, uid}) {
+  return function(dispatch, getState) {
+    console.log(`---Saving ${location} ${bank}---`);
+    let state = getState();
+    const path_list = ['battery', location, bank];
+    const libraryElement = state.battery[location][bank][uid];
+    axios.post('/save/', {path_list, uid, state: libraryElement});
+  };
+}
+
+export function saveDiagram(location, uid) {
+  return function(dispatch, getState) {
+    console.log(`---Saving ${location} Diagram---`);
+    let state = getState();
+    const path_list = ['diagrams', location];
+    const savedState = {
+      vertices: state.vertices[location],
+      associations: state.associations[location],
+      corpus: state.corpus[location],
+    };
+    dispatch(modify('context', {name: uid}));
+    axios.post('/save/', {path_list, uid, state: savedState});
+  };
+}
+
+export function deleteSavedDiagram({location, uid}) {
+  return async function(dispatch) {
+    dispatch(removeDiagram({location, uid}));
+    const path_list = ['diagrams', location];
+    axios.post(`/delete/`, {path_list, uid});
+  };
+}
 
 export function loadOrg() {
   return function(dispatch, getState) {
@@ -40,15 +72,15 @@ export function pushOrg({branch, commit_msg}) {
   };
 }
 
-export function loadCore(source, location) {
+export function loadCore(source, locator) {
   return function(dispatch, getState) {
     let org = getState()['config']['organization'];
-    if (['pipeline', 'docker'].includes(location)) {
-      console.log(`---Loading ${location} ${source}---`);
-      axios.get(`/coreload/${source}/${location}/${org.uid}`).then(response => {
-        dispatch(modify(source, response.data));
-      });
-    }
+    console.log(`---Loading ${source} ${locator.join('/')}---`);
+    let path_list = [source, ...locator];
+    axios.post('/coreload/', {path_list, org: org.uid}).then(response => {
+      let payload = {...response.data, locator};
+      dispatch(modify(source, payload));
+    });
   };
 }
 
@@ -65,28 +97,12 @@ export function loadDiagram({location, content, uid}) {
   };
 }
 
-export function deleteSavedDiagram({location, uid}) {
-  return async function(dispatch) {
-    let source = 'diagrams';
-    dispatch(removeDiagram({location, uid}));
-    axios.get(`/delete/${source}/${location}/${uid}`);
-  };
-}
-
 function delay(millis) {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve('resolved');
     }, millis);
   });
-}
-
-export function loadDatasets() {
-  return function(dispatch) {
-    axios.get('/datasets').then(response => {
-      dispatch(modify('datasets', response.data));
-    });
-  };
 }
 
 export function loadInputs(config) {
@@ -105,11 +121,11 @@ export function loadInputs(config) {
     });
     console.log('  -Loading each source/location-');
     await Promise.all([
-      dispatch(loadCore('library', 'docker')),
-      dispatch(loadCore('library', 'pipeline')),
-      dispatch(loadCore('diagrams', 'docker')),
-      dispatch(loadCore('diagrams', 'pipeline')),
-      dispatch(loadDatasets()),
+      dispatch(loadCore('battery', ['docker', 'library'])),
+      dispatch(loadCore('battery', ['pipeline', 'library'])),
+      dispatch(loadCore('battery', ['pipeline', 'datasets'])),
+      dispatch(loadCore('diagrams', ['docker'])),
+      dispatch(loadCore('diagrams', ['pipeline'])),
       delay(1000),
     ]);
     console.log('  -Loading user checkpoint-');
@@ -132,32 +148,6 @@ export function loadCheckpoint(name) {
       dispatch(modify('vertices', response.data.vertices));
       dispatch(modify('associations', response.data.associations));
       dispatch(modify('corpus', response.data.corpus));
-    });
-  };
-}
-
-export function saveLibrary(location, name) {
-  return function(dispatch, getState) {
-    console.log(`---Saving ${location} Library---`);
-    let state = getState();
-    let libraryElement = state.library[location][name];
-    dispatch(modify('context', {name}));
-    axios.post('/save/library', {location, name, state: libraryElement});
-  };
-}
-
-export function saveDiagram(location, name) {
-  return function(dispatch, getState) {
-    console.log(`---Saving ${location} Diagram---`);
-    let state = getState();
-    let vertices = state.vertices[location];
-    let associations = state.associations[location];
-    let corpus = state.corpus[location];
-    dispatch(modify('context', {name}));
-    axios.post('/save/diagrams', {
-      location,
-      name,
-      state: {vertices, associations, corpus},
     });
   };
 }

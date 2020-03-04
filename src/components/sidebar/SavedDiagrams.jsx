@@ -9,7 +9,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 
 function SavedDiagrams({location, diagrams, dispatch}) {
   let items = [];
-  let onRefresh = () => dispatch(loadCore('diagrams', location));
+  let onRefresh = () => dispatch(loadCore('diagrams', [location]));
   for (const [uid, content] of Object.entries(diagrams)) {
     let onClick = () => dispatch(loadDiagram({location, content, uid}));
     let onDelete = () => dispatch(deleteSavedDiagram({location, uid}));

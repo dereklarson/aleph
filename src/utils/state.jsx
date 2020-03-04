@@ -13,32 +13,6 @@ export function genCoreData(categories, locations) {
   return output;
 }
 
-export function genLibrary(names) {
-  const librarySample = {
-    sample: {
-      uid: 'sample',
-      dependencies: [],
-      text: '#Functional text will be here\n',
-    },
-  };
-  return names.reduce((library, uid) => {
-    library[uid] = _.cloneDeep(librarySample.sample);
-    library[uid]['uid'] = uid;
-    return library;
-  }, {});
-}
-
-export function genGreatLibrary(
-  locations,
-  namedict = {def: ['parent', 'child']},
-) {
-  return locations.reduce((library, location) => {
-    let names = _.get(namedict, location, _.get(namedict, 'def', []));
-    library[location] = genLibrary(names);
-    return library;
-  }, {});
-}
-
 export const notEditingState = {
   editing: false,
   edittext: '',
@@ -72,7 +46,7 @@ const codeEditScenarios = {
   libEdit: ['Edit Library Code', {mode: 'python'}],
   newDepot: [
     'Create New Item',
-    {keys: {uid: '', location: 'library', type: 'user'}, mode: 'text'},
+    {keys: {uid: '', bank: 'library', type: 'user'}, mode: 'text'},
   ],
   logs: ['Logs', {log: true, mode: 'text'}],
 };

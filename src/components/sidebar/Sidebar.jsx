@@ -23,7 +23,7 @@ export function PureSidebar({onNavigate, location}) {
     <Drawer
       variant="permanent"
       classes={{
-        paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+        paper: clsx(classes.paperSidebar, !open && classes.paperSidebarClosed),
       }}
       open={open}
       onMouseEnter={event => setOpen(true)}

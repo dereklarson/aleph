@@ -32,6 +32,13 @@ export function titlize(string) {
   return output.trim();
 }
 
+export function objGen(array) {
+  return array.reduce((obj, item) => {
+    obj[item] = {};
+    return obj;
+  }, {});
+}
+
 export function getLastLine(string) {
   return string
     .trim()

@@ -26,7 +26,7 @@ export function PureBank({uid, location, inputs}) {
   ];
 
   if (open) {
-    bankInput.forEach(function(item, index) {
+    bankInput.forEach((item, index) => {
       const itemType = _.get(item, 'type', 'standard');
       const isOpen = openType === itemType;
       if (!_.has(dividers, itemType)) {
@@ -58,7 +58,7 @@ export function PureBank({uid, location, inputs}) {
         title="These are pre-created items with which you can compose your diagram"
         placement="bottom"
         enterDelay={500}>
-        <Paper className={classes.paper}>{itemDisplay}</Paper>
+        <Paper className={classes.paperList}>{itemDisplay}</Paper>
       </Tooltip>
     </div>
   );
@@ -66,5 +66,5 @@ export function PureBank({uid, location, inputs}) {
 
 export default connect((state, ownProps) => ({
   location: state.context.location,
-  inputs: state[ownProps.uid][state.context.location],
+  inputs: state.battery[state.context.location][ownProps.uid],
 }))(PureBank);

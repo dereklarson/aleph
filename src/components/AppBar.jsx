@@ -31,7 +31,7 @@ export function PureAppBar({config, context, dispatch}) {
     <AppBar className={classes.appBar}>
       <Toolbar variant="dense">
         <Tooltip title={config.organization.repository || ''} enterDelay={500}>
-          <Typography className={classes.title} variant="h6">
+          <Typography style={{flexGrow: 1}} variant="h6">
             {config.organization.name} - {titlize(context.location)} -{' '}
             {context.name}
           </Typography>

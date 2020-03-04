@@ -1,7 +1,9 @@
 // @format
 import _ from 'lodash';
 import {addVertex, linkVertex, addAssociation} from '@data/reducers';
-import {removeVertex, removeAllAssociations, clearText} from '@data/reducers';
+import {removeAssociation, removeAllAssociations} from '@data/reducers';
+import {removeVertex, renameVertex, clearText} from '@data/reducers';
+import {relinkAssociations} from '@data/reducers';
 
 function generateSequentialId(uid, existing) {
   while (_.has(existing, uid)) {
@@ -43,5 +45,27 @@ export function removeFullVertex({location, uid}) {
     dispatch(removeVertex({location, uid}));
     dispatch(removeAllAssociations({location, uid}));
     dispatch(clearText({location, uid}));
+  };
+}
+
+export function retitleVertex(payload) {
+  return function(dispatch, getState) {
+    dispatch(renameVertex(payload));
+    dispatch(relinkAssociations(payload));
+    dispatch(clearText(payload));
+  };
+}
+
+export function removeAssn(payload) {
+  return function(dispatch, getState) {
+    dispatch(removeAssociation(payload));
+    dispatch(clearText(payload));
+  };
+}
+
+export function removeAllAssns(payload) {
+  return function(dispatch, getState) {
+    dispatch(removeAllAssociations(payload));
+    dispatch(clearText(payload));
   };
 }

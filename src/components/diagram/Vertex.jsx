@@ -15,8 +15,7 @@ import NodeVertex from './NodeVertex';
 import ConfigVertex from './ConfigVertex';
 import TableVertex from './TableVertex';
 import CustomVertex from './CustomVertex';
-import ChildHandle from './ChildHandle';
-import ParentHandle from './ParentHandle';
+import Autolink from './Autolink';
 import {getAncestry} from '@utils/vertex';
 
 export function PureVertex({
@@ -99,7 +98,7 @@ export function PureVertex({
       style={{zIndex: zIndex}}
       onMouseLeave={() => setOver(false)}
       onMouseEnter={() => setOver(true)}>
-      <ParentHandle vertexId={uid} maxParents={maxParents} />
+      <Autolink relation="parent" vertexId={uid} maxParents={maxParents} />
       <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
       <div
         onClick={event => {
@@ -114,7 +113,7 @@ export function PureVertex({
           styleProps={styleProps}
         />
       </div>
-      <ChildHandle vertexId={uid} />
+      <Autolink relation="child" vertexId={uid} />
     </div>
   );
 }

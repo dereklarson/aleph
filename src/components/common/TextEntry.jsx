@@ -18,7 +18,7 @@ export function PureTextEntry({open, context, dispatch}) {
   const title = _.get(schema, 'title', 'TextEntry');
   const editor = _.get(schema, 'editor', false);
   const classes = useStyles();
-  const [fieldText, setFieldText] = React.useState({});
+  const [fieldText, setFieldText] = React.useState(_.get(schema, 'keys', {}));
 
   // We create a set of text fields based on the supplied schema
   let itemDisplay = [];

@@ -41,7 +41,7 @@ export function PureInterface({themeName, editing, dispatch}) {
         <AppBar />
         <Sidebar />
         <Workspace />
-        <TextEntry open={editing} />
+        {editing && <TextEntry open={editing} />}
       </div>
     </ThemeProvider>
   );

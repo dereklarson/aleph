@@ -7,11 +7,12 @@ import {Chip, Paper, Typography} from '@material-ui/core';
 import Bank from './Bank';
 import {useStyles} from '@style/classes';
 import {genCodeEdit} from '@utils/state';
-import {addToLibrary} from '@data/reducers';
+import {bankTypes} from '@data/reference';
+import {addToBattery} from '@data/reducers';
 import {removeFullVertex} from '@data/combined';
-import {saveLibrary} from '@ops/load';
+import {saveBattery} from '@ops/load';
 
-export function PureDepot({location, onVertexDrop, onNew, library}) {
+export function PureDepot({location, onVertexDrop, onNew}) {
   const classes = useStyles();
 
   const [{highlighted}, drop] = useDrop({
@@ -25,31 +26,32 @@ export function PureDepot({location, onVertexDrop, onNew, library}) {
   // Special entry for creating a new DepotItem
   // This has two dispatches, so we puth them behind a thunk
   const editfunc = ({fieldText, aceText}) => dispatch => {
-    dispatch(addToLibrary({location, ...fieldText, text: aceText}));
-    dispatch(saveLibrary(location, fieldText.uid));
+    dispatch(addToBattery({location, ...fieldText, text: aceText}));
+    dispatch(saveBattery({location, ...fieldText}));
   };
+
+  const bankDisplay = [];
+  bankTypes.forEach(item => {
+    bankDisplay.push(<Bank key={item} uid={item} />);
+  });
 
   return (
     <div ref={drop}>
       <Paper
-        className={classes.paper}
+        className={classes.paperList}
         style={{backgroundColor: highlighted ? '#FFA07A' : null}}>
         <Typography key="title" variant="h6">
           Depot
         </Typography>
         <Chip label="(New)" onClick={() => onNew({editfunc, edittext: ''})} />
-        <Bank uid="styles" />
-        <Bank uid="library" />
+        {bankDisplay}
       </Paper>
     </div>
   );
 }
 
 export default connect(
-  state => ({
-    location: state.context.location,
-    library: state.library[state.context.location],
-  }),
+  state => ({location: state.context.location}),
   dispatch => ({
     onVertexDrop: payload => dispatch(removeFullVertex(payload)),
     onNew: payload => dispatch(genCodeEdit('newDepot', payload)),

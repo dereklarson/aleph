@@ -8,6 +8,8 @@ import {Paper} from '@material-ui/core';
 import 'react-sweet-progress/lib/style.css';
 import {genCodeEdit} from '@utils/state';
 import {modify} from '@data/reducers';
+import {objGen} from '@utils/helpers';
+import {bankTypes} from '@data/reference';
 import {useStyles} from '@style/classes';
 import {loadCore} from '@ops/load';
 import {generateList} from '@utils/generateList';
@@ -54,11 +56,12 @@ export default connect(
   dispatch => ({
     onClear: location => {
       dispatch(modify('vertices', {[location]: {}}));
-      dispatch(modify('associations', {[location]: {library: {}, styles: {}}}));
+      dispatch(modify('associations', {[location]: objGen(bankTypes)}));
       dispatch(modify('corpus', {[location]: {}}));
     },
     onLogs: text =>
       dispatch(genCodeEdit('logs', {edittext: text, editfunc: t => 0})),
-    onLoadLibrary: location => dispatch(loadCore('library', location)),
+    onLoadLibrary: location =>
+      dispatch(loadCore('battery', [location, 'library'])),
   }),
 )(PureTicker);

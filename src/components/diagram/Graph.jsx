@@ -4,15 +4,15 @@ import _ from 'lodash';
 import Vertex from './Vertex';
 import {useStyles} from '@style/classes';
 
-function renderVertex(vertex, activity, className) {
+function renderVertex({location, focus, prepared}, vertex, className) {
   let type = 'custom';
-  if (activity.focus === vertex.uid) {
+  if (focus === vertex.uid) {
     type = 'card';
-  } else if (['docker', 'pipeline'].includes(activity.location)) {
+  } else if (['docker', 'pipeline'].includes(location)) {
     type = 'node';
-  } else if (activity.location === 'configuration') {
+  } else if (location === 'configuration') {
     type = 'conf';
-  } else if (activity.location === 'data') {
+  } else if (location === 'data') {
     type = 'table';
   }
 
@@ -21,7 +21,7 @@ function renderVertex(vertex, activity, className) {
       type={type}
       uid={vertex.uid}
       parents={vertex.parents}
-      prepared={activity.prepared}
+      prepared={prepared}
     />
   );
   return (
@@ -39,11 +39,11 @@ function renderVertex(vertex, activity, className) {
   );
 }
 
-export default function Graph({vertices, activity}) {
+export default function Graph(props) {
   const classes = useStyles();
   const vertexDisplay = [];
-  _.values(vertices).forEach(vertex => {
-    vertexDisplay.push(renderVertex(vertex, activity, classes.vertex));
+  _.values(props.vertices).forEach(vertex => {
+    vertexDisplay.push(renderVertex(props, vertex, classes.vertex));
   });
   return <div>{vertexDisplay}</div>;
 }

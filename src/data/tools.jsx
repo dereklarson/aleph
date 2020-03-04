@@ -10,7 +10,11 @@ export function genSlice(name, extraReducers = {}) {
     reducers: {
       ...extraReducers,
       [`modify_${name}`]: function(state, action) {
-        Object.assign(state, action.payload);
+        let {locator, ...payload} = action.payload;
+        if (locator == null) locator = [];
+        let stateLoc = state;
+        locator.forEach(loc => (stateLoc = stateLoc[loc]));
+        Object.assign(stateLoc, payload);
       },
     },
   });
@@ -22,7 +26,7 @@ export function createText({library, libAssn, corpus, uid}) {
   else {
     let text = '';
     libAssn.forEach(associationUid => {
-      text += library[associationUid].text;
+      text += _.get(library, associationUid, {text: ''}).text;
     });
     return text;
   }
@@ -32,14 +36,9 @@ export function generateCorpus({baseCorpus, vertices, associations, library}) {
   let output = {};
   _.values(vertices).forEach(vertex => {
     let uid = vertex.uid;
-    let localAssoc = associations[uid];
+    let libAssn = associations[uid];
     output[uid] = {
-      text: createText({
-        library,
-        associations: localAssoc,
-        corpus: baseCorpus,
-        uid,
-      }),
+      text: createText({library, libAssn, corpus: baseCorpus, uid}),
     };
   });
   return output;
@@ -48,8 +47,8 @@ export function generateCorpus({baseCorpus, vertices, associations, library}) {
 export function getBuildData(state) {
   const location = state.context.location;
   const vertices = state.vertices[location];
-  const associations = state.associations[location];
-  const library = state.library[location];
+  const associations = state.associations[location].library;
+  const library = state.battery[location].library;
   const baseCorpus = state.corpus[location];
   const corpus = generateCorpus({baseCorpus, vertices, associations, library});
   const metadata = {

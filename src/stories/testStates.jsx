@@ -1,7 +1,7 @@
 // @format
 import _ from 'lodash';
 import {vertexDataFromPaths} from '@utils/vertex';
-import {genLibrary} from '@utils/state';
+import {genLibrary} from '@data/dev';
 import {blankState} from '@data/reference';
 
 export const coveredState = {
@@ -52,7 +52,6 @@ export const excitedState = {
   config: {organization: {name: 'Top Dog'}},
   context: {
     ...blankState.context,
-    dagre: true,
     location: 'docker',
     focus: 'parent',
   },

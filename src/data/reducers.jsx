@@ -2,14 +2,13 @@
 // import undoable from 'redux-undo';
 import _ from 'lodash';
 import {vertexDataFromPaths} from '@utils/vertex';
+import {bankTypes} from '@data/reference';
 import {genSlice} from './tools';
 
 const configSlice = genSlice('config');
 const operationsSlice = genSlice('operations');
 const cacheSlice = genSlice('cache');
 const contextSlice = genSlice('context');
-const datasetsSlice = genSlice('datasets');
-const stylesSlice = genSlice('styles');
 
 const diagramsReducers = {
   removeDiagram(state, {payload: {location, uid}}) {
@@ -19,20 +18,20 @@ const diagramsReducers = {
 const diagramsSlice = genSlice('diagrams', diagramsReducers);
 export const {removeDiagram} = diagramsSlice.actions;
 
-const libraryReducers = {
-  writeText(state, {payload: {location, uid, text}}) {
-    state[location][uid].text = text;
+const batteryReducers = {
+  writeText(state, {payload: {location, bank, uid, text}}) {
+    state[location][bank][uid].text = text;
   },
-  addToLibrary(state, {payload: {location, uid, type, text}}) {
-    state[location][uid] = {
+  addToBattery(state, {payload: {location, bank, uid, type, text}}) {
+    state[location][bank][uid] = {
       uid: uid,
       type: type,
       text: text,
     };
   },
 };
-const librarySlice = genSlice('library', libraryReducers);
-export const {writeText, addToLibrary} = librarySlice.actions;
+const batterySlice = genSlice('battery', batteryReducers);
+export const {writeText, addToBattery} = batterySlice.actions;
 
 const corpusReducers = {
   loadDiagramCorpus(state, {payload: {location, uid, content}}) {
@@ -72,15 +71,12 @@ const associationsReducers = {
     if (index >= 0) state[location][atype][uid].splice(index, 1);
   },
   removeAllAssociations(state, {payload: {location, uid}}) {
-    const assocTypes = ['library', 'styles'];
-    for (let atype of assocTypes) {
+    for (let atype of bankTypes) {
       delete state[location][atype][uid];
     }
   },
   relinkAssociations(state, {payload: {location, uid, newId}}) {
-    //TODO move this to a reference location?
-    const assocTypes = ['library', 'styles'];
-    for (let atype of assocTypes) {
+    for (let atype of bankTypes) {
       let associations = state[location][atype][uid];
       delete Object.assign(state[location][atype], {[newId]: associations})[
         uid
@@ -162,13 +158,11 @@ const modifiers = {
   config: configSlice.actions.modify_config,
   context: contextSlice.actions.modify_context,
   operations: operationsSlice.actions.modify_operations,
-  library: librarySlice.actions.modify_library,
+  associations: associationsSlice.actions.modify_associations,
+  battery: batterySlice.actions.modify_battery,
   corpus: corpusSlice.actions.modify_corpus,
   diagrams: diagramsSlice.actions.modify_diagrams,
   vertices: verticesSlice.actions.modify_vertices,
-  associations: associationsSlice.actions.modify_associations,
-  datasets: datasetsSlice.actions.modify_datasets,
-  styles: stylesSlice.actions.modify_styles,
 };
 export const modify = (name, payload) => modifiers[name](payload);
 
@@ -190,13 +184,11 @@ const rootReducer = combineReducers({
   context: contextSlice.reducer,
   operations: operationsSlice.reducer,
   cache: cacheSlice.reducer,
+  associations: associationsSlice.reducer,
+  battery: batterySlice.reducer,
   corpus: corpusSlice.reducer,
   diagrams: diagramsSlice.reducer,
-  library: librarySlice.reducer,
   vertices: verticesSlice.reducer,
-  associations: associationsSlice.reducer,
-  datasets: datasetsSlice.reducer,
-  styles: stylesSlice.reducer,
 });
 
 export default rootReducer;

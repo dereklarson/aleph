@@ -7,7 +7,8 @@ import {addNewVertex} from '@data/combined';
 import {useStyles} from '@style/classes';
 import {getAncestry} from '@utils/vertex';
 
-export function ParentHandle({
+export function Autolink({
+  relation,
   location,
   maxParents,
   vertexId,
@@ -25,12 +26,19 @@ export function ParentHandle({
         uid: item.uid,
         atype: item.atype,
         association: item.uid,
-        parent: item.uid,
-        child: vertexId,
+        isParent: relation === 'parent',
+        linkId: vertexId,
       });
     },
     canDrop: (item, monitor) => {
-      if (_.size(vertices[vertexId].parents) >= maxParents) {
+      //TODO figure out how to get a maxParents from an association
+      // if ( >= item.maxParents) {
+      //   return false;
+      // }
+      if (
+        relation === 'parent' &&
+        _.size(vertices[vertexId].parents) >= maxParents
+      ) {
         return false;
       } else {
         const anc_sec = getAncestry(vertices, libAssn, vertexId)[1];
@@ -45,7 +53,7 @@ export function ParentHandle({
   return (
     <div
       ref={drop}
-      className={classes.linkHandle}
+      className={classes.autolink}
       style={{backgroundColor: highlighted ? '#a0aBa0' : null}}
     />
   );
@@ -59,4 +67,4 @@ export default connect(
     // vertices: state.vertices.present[state.context.location],
   }),
   dispatch => ({onDrop: payload => dispatch(addNewVertex(payload))}),
-)(ParentHandle);
+)(Autolink);

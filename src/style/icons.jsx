@@ -9,9 +9,10 @@ import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 // Sidebar - locations
 import PlaceIcon from '@material-ui/icons/Place';
-import ReceiptIcon from '@material-ui/icons/Receipt';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import DashboardIcon from '@material-ui/icons/Dashboard';
+import TableChartIcon from '@material-ui/icons/TableChart';
+// import DashboardIcon from '@material-ui/icons/Dashboard';
+import Crop32Icon from '@material-ui/icons/Crop32';
 import GrainIcon from '@material-ui/icons/Grain';
 // Sidebar - bulkActions
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
@@ -28,7 +29,7 @@ import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 // Ticker
 import SubjectIcon from '@material-ui/icons/Subject';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import SettingsOverscanIcon from '@material-ui/icons/SettingsOverscan';
+// import SettingsOverscanIcon from '@material-ui/icons/SettingsOverscan';
 // Vertices
 import DonutSmallIcon from '@material-ui/icons/DonutSmall';
 
@@ -42,9 +43,9 @@ export const iconSource = {
   save_checkpoint: <CloudUploadIcon />,
   // Sidebar - locations
   locations: <PlaceIcon />,
-  configuration: <ReceiptIcon />,
-  data: <AccountBalanceIcon />,
-  docker: <DashboardIcon />,
+  configuration: <AccountBalanceIcon />,
+  data: <TableChartIcon />,
+  docker: <Crop32Icon />,
   pipeline: <GrainIcon />,
   // Actions
   save_diagram: <LibraryBooksIcon />,
@@ -62,7 +63,6 @@ export const iconSource = {
   // Ticker
   show_logs: <SubjectIcon />,
   clear_diagram: <DeleteOutlineIcon />,
-  toggle_dagre: <SettingsOverscanIcon />,
   // Vertices
   node: <DonutSmallIcon style={{padding: 3}} />,
 };

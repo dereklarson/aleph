@@ -2,17 +2,13 @@
 import {makeStyles} from '@material-ui/core/styles';
 
 const devmode = process.env.NODE_ENV === 'production' ? false : true;
-console.log('Devmode:', devmode);
 
 export const useStyles = makeStyles(theme => ({
   root: {},
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
-  title: {
-    flexGrow: 1,
-  },
-  drawerPaper: {
+  paperSidebar: {
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -20,7 +16,7 @@ export const useStyles = makeStyles(theme => ({
     whiteSpace: 'nowrap',
     width: 240,
   },
-  drawerPaperClose: {
+  paperSidebarClosed: {
     overflowX: 'hidden',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
@@ -46,15 +42,12 @@ export const useStyles = makeStyles(theme => ({
     overflow: 'auto', // Handles long user-generated names for saved diagrams
   },
   badge: {},
-  linkHandle: {
+  autolink: {
     borderRadius: 24,
     height: theme.spacing(3),
     opacity: 0.5,
     width: '100%',
     zIndex: 6,
-  },
-  paperDrawing: {
-    position: 'relative', // Let's us use coordinates to draw the Diagram
   },
   avatar: {
     margin: theme.spacing(-0.5),
@@ -75,6 +68,12 @@ export const useStyles = makeStyles(theme => ({
     justifyContent: 'space-evenly',
     overflow: 'auto',
     padding: theme.spacing(1),
+  },
+  paperList: {
+    padding: theme.spacing(1),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
   },
   paper: {
     padding: theme.spacing(2),

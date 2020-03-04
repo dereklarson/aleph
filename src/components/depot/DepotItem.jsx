@@ -19,7 +19,7 @@ export function DepotItem({itemProps, atype, location, onClick}) {
   });
 
   const editfunc = ({fieldText, aceText}) =>
-    writeText({location, uid: itemProps.uid, text: aceText});
+    writeText({location, bank: atype, uid: itemProps.uid, text: aceText});
   return (
     <div ref={drag} style={{zIndex: 5}}>
       <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
