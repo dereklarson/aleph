@@ -5,7 +5,7 @@ import {Paper, TableContainer, TableRow} from '@material-ui/core';
 import {titlize} from '@utils/helpers';
 import {useStyles} from '@style/classes';
 
-export default function TableVertex({uid, libAssn, styleProps}) {
+export default function TableVertex({uid, libAssns, styleProps}) {
   const nodelabel = titlize(uid);
   const classes = useStyles();
 
@@ -22,7 +22,7 @@ export default function TableVertex({uid, libAssn, styleProps}) {
       </Paper>
       <Table size="small" aria-label="customized table">
         <TableBody>
-          {libAssn.map(row => (
+          {libAssns.map(row => (
             <TableRow hover key={row[0]}>
               <TableCell component="th" scope="row">
                 {row[0]}

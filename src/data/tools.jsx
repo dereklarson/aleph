@@ -21,11 +21,11 @@ export function genSlice(name, extraReducers = {}) {
   return slice;
 }
 
-export function createText({library, libAssn, corpus, uid}) {
+export function createText({library, libAssns, corpus, uid}) {
   if (_.has(corpus, uid)) return corpus[uid].text;
   else {
     let text = '';
-    libAssn.forEach(associationUid => {
+    libAssns.forEach(associationUid => {
       text += _.get(library, associationUid, {text: ''}).text;
     });
     return text;
@@ -36,9 +36,9 @@ export function generateCorpus({baseCorpus, vertices, associations, library}) {
   let output = {};
   _.values(vertices).forEach(vertex => {
     let uid = vertex.uid;
-    let libAssn = associations[uid];
+    let libAssns = associations[uid];
     output[uid] = {
-      text: createText({library, libAssn, corpus: baseCorpus, uid}),
+      text: createText({library, libAssns, corpus: baseCorpus, uid}),
     };
   });
   return output;

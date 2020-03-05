@@ -69,3 +69,10 @@ export function removeAllAssns(payload) {
     dispatch(clearText(payload));
   };
 }
+
+export function associate(payload) {
+  return function(dispatch, getState) {
+    dispatch(addAssociation(payload));
+    dispatch(clearText(payload));
+  };
+}

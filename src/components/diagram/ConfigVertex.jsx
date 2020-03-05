@@ -10,15 +10,15 @@ import _ from 'lodash';
 export function PureConfigVertex({
   uid,
   styles,
-  styleAssn,
-  libAssn,
+  styleAssns,
+  libAssns,
   styleProps,
 }) {
   const icon = <CallMergeIcon />;
   // const classes = useStyles();
 
   let customProps = {};
-  for (let style of styleAssn) {
+  for (let style of styleAssns) {
     customProps = JSON.parse(_.get(styles, style, {text: '{}'}).text);
   }
 

@@ -3,13 +3,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrag, useDrop, DragPreviewImage} from 'react-dnd';
 import _ from 'lodash';
-import {modify} from '@data/reducers';
-import {
-  addAssociation,
-  clearText,
-  linkVertex,
-  unlinkVertex,
-} from '@data/reducers';
+import {modify, linkVertex, unlinkVertex} from '@data/reducers';
+import {associate} from '@data/combined';
 import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
 import ConfigVertex from './ConfigVertex';
@@ -31,10 +26,11 @@ export function PureVertex({
 }) {
   // First define the Drag-n-Drop functionality
   const ref = React.useRef(null);
-  let maxParents = location === 'docker' ? 1 : 3;
-  let localLibAssn = _.get(associations.library, uid, []);
-  let localStyleAssn = _.get(associations.styles, uid, []);
-  if (localLibAssn.length > 0 && localLibAssn[0] === 'ubuntu') {
+  const maxParents = location === 'docker' ? 1 : 3;
+  const ancAssns = getAncestry(vertices, associations.library, uid)[1];
+  const localLibAssns = _.get(associations.library, uid, []);
+  const localStyleAssns = _.get(associations.styles, uid, []);
+  if (localLibAssns.length > 0 && localLibAssns[0] === 'ubuntu') {
     maxParents = 0;
   }
   const [{isDragging}, drag, preview] = useDrag({
@@ -48,13 +44,11 @@ export function PureVertex({
     drop: (item, monitor) => {
       if (item.type === 'Vertex' && _.has(item.parents, uid)) {
         dispatch(unlinkVertex({location, child: item.uid, parent: uid}));
-      } else if (item.type === 'DepotItem' && !monitor.didDrop()) {
-        let payload = {location, uid, atype: item.atype, association: item.uid};
-        console.log('payload', payload);
-        dispatch(addAssociation(payload));
-        dispatch(clearText(payload));
       } else if (item.type === 'Vertex') {
         dispatch(linkVertex({location, child: item.uid, parent: uid}));
+      } else if (item.type === 'DepotItem' && !monitor.didDrop()) {
+        let payload = {location, uid, atype: item.atype, association: item.uid};
+        dispatch(associate(payload));
       }
     },
     canDrop: (item, monitor) => {
@@ -64,8 +58,7 @@ export function PureVertex({
         if (_.size(item.parents) >= item.maxParents) return false;
         return true;
       } else if (item.type === 'DepotItem') {
-        const anc_sec = getAncestry(vertices, associations, uid)[1];
-        return !anc_sec.includes(item.uid);
+        return !ancAssns.includes(item.uid);
       }
       return true;
     },
@@ -98,7 +91,12 @@ export function PureVertex({
       style={{zIndex: zIndex}}
       onMouseLeave={() => setOver(false)}
       onMouseEnter={() => setOver(true)}>
-      <Autolink relation="parent" vertexId={uid} maxParents={maxParents} />
+      <Autolink
+        relation="parent"
+        ancAssns={ancAssns}
+        uid={uid}
+        maxParents={maxParents}
+      />
       <DragPreviewImage src="img/icon-plus-20.png" connect={preview} />
       <div
         onClick={event => {
@@ -108,12 +106,12 @@ export function PureVertex({
         <CurrentComponent
           uid={uid}
           idlist={_.keys(vertices)}
-          libAssn={localLibAssn}
-          styleAssn={localStyleAssn}
+          libAssns={localLibAssns}
+          styleAssns={localStyleAssns}
           styleProps={styleProps}
         />
       </div>
-      <Autolink relation="child" vertexId={uid} />
+      <Autolink relation="child" uid={uid} ancAssns={ancAssns} />
     </div>
   );
 }

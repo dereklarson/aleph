@@ -18,7 +18,7 @@ export function PureCardVertex({
   corpus,
   uid,
   idlist,
-  libAssn,
+  libAssns,
   operations,
   styleProps,
   dispatch,
@@ -30,7 +30,7 @@ export function PureCardVertex({
 
   let chipDisplay = [];
   let libError = false;
-  for (const [index, association] of libAssn.entries()) {
+  for (const [index, association] of libAssns.entries()) {
     let libraryMissing = !_.has(library, association);
     libError = libError || libraryMissing;
     const chipDelete = () =>
@@ -48,7 +48,7 @@ export function PureCardVertex({
   let edittext = '';
   let editfunc = () => 0;
   if (!libError) {
-    edittext = createText({library, libAssn, corpus, uid});
+    edittext = createText({library, libAssns, corpus, uid});
     editfunc = ({fieldText, aceText}) =>
       setText({location, uid, text: aceText});
   }

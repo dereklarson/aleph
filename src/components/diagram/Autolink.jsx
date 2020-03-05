@@ -8,13 +8,14 @@ import {useStyles} from '@style/classes';
 import {getAncestry} from '@utils/vertex';
 
 export function Autolink({
-  relation,
   location,
-  maxParents,
-  vertexId,
   vertices,
-  libAssn,
+  libAssns,
   onDrop,
+  relation,
+  uid,
+  maxParents,
+  ancAssns,
 }) {
   const classes = useStyles();
 
@@ -27,7 +28,7 @@ export function Autolink({
         atype: item.atype,
         association: item.uid,
         isParent: relation === 'parent',
-        linkId: vertexId,
+        linkId: uid,
       });
     },
     canDrop: (item, monitor) => {
@@ -37,12 +38,11 @@ export function Autolink({
       // }
       if (
         relation === 'parent' &&
-        _.size(vertices[vertexId].parents) >= maxParents
+        _.size(vertices[uid].parents) >= maxParents
       ) {
         return false;
       } else {
-        const anc_sec = getAncestry(vertices, libAssn, vertexId)[1];
-        return !anc_sec.includes(item.uid);
+        return !ancAssns.includes(item.uid);
       }
     },
     collect: monitor => ({
@@ -63,7 +63,7 @@ export default connect(
   state => ({
     location: state.context.location,
     vertices: state.vertices[state.context.location],
-    libAssn: state.associations[state.context.location].library,
+    libAssns: state.associations[state.context.location].library,
     // vertices: state.vertices.present[state.context.location],
   }),
   dispatch => ({onDrop: payload => dispatch(addNewVertex(payload))}),

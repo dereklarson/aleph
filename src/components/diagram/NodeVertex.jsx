@@ -27,7 +27,7 @@ function genTTList(text, isOver) {
   return <List dense={true}> {itemDisplay} </List>;
 }
 
-export function PureNodeVertex({uid, libAssn, styleProps, ops}) {
+export function PureNodeVertex({uid, libAssns, styleProps, ops}) {
   const classes = useStyles();
   let ttText = _.get(ops.test_output, uid, '');
   let ttOpen = ops.testing && ttText.length > 0;
@@ -49,11 +49,11 @@ export function PureNodeVertex({uid, libAssn, styleProps, ops}) {
         color="primary"
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
         className={classes.badge}
-        badgeContent={libAssn.length}>
+        badgeContent={libAssns.length}>
         <Fab
           variant="extended"
           style={propsToStyle({...styleProps, testing: ops.testing})}>
-          {_.get(iconSource, libAssn[0] || '', defIcon)} {uid}
+          {_.get(iconSource, libAssns[0] || '', defIcon)} {uid}
         </Fab>
       </Badge>
     </Tooltip>
