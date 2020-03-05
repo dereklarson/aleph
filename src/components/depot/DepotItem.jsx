@@ -3,6 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {useDrag, DragPreviewImage} from 'react-dnd';
 import Chip from '@material-ui/core/Chip';
+// import _ from 'lodash';
 import {titlize} from '@utils/helpers';
 import {writeText} from '@data/reducers';
 import {genCodeEdit} from '@utils/state';
@@ -12,7 +13,12 @@ export function DepotItem({itemProps, atype, location, onClick}) {
   const classes = useStyles();
 
   const [{isDragging}, drag, preview] = useDrag({
-    item: {type: 'DepotItem', atype, uid: itemProps.uid},
+    item: {
+      type: 'DepotItem',
+      atype,
+      uid: itemProps.uid,
+      deps: itemProps.dependencies,
+    },
     collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),

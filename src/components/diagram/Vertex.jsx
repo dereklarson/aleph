@@ -58,7 +58,10 @@ export function PureVertex({
         if (_.size(item.parents) >= item.maxParents) return false;
         return true;
       } else if (item.type === 'DepotItem') {
-        return !ancAssns.includes(item.uid);
+        console.log(item.deps);
+        if (ancAssns.includes(item.uid)) return false;
+        else if (!item.deps.every(v => ancAssns.includes(v))) return false;
+        else return true;
       }
       return true;
     },

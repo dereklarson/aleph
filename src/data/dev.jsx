@@ -40,14 +40,20 @@ export function genLibrary(names) {
       text: '#Functional text will be here\n',
     },
   };
+  let deps = [];
   return names.reduce((library, uid) => {
     library[uid] = _.cloneDeep(librarySample.sample);
     library[uid]['uid'] = uid;
+    library[uid].dependencies = _.clone(deps);
+    deps.push(uid);
     return library;
   }, {});
 }
 
-export function genBattery(locations, namedict = {def: ['parent', 'child']}) {
+export function genBattery(
+  locations,
+  namedict = {def: ['parent', 'child', 'gkid']},
+) {
   return locations.reduce((battery, location) => {
     let names = _.get(namedict, location, _.get(namedict, 'def', []));
     battery[location].datasets = {};
