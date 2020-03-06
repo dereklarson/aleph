@@ -3,7 +3,6 @@ import axios from 'axios';
 import _ from 'lodash';
 import {saveCheckpoint, loadCheckpoint} from '@ops/load';
 import {modify} from '@data/reducers';
-import {tutorialInitialState} from '@data/reference';
 import {sleep} from './helpers';
 
 export function playTutorial(tutorialName, cancel = {current: false}) {
@@ -17,9 +16,10 @@ export function playTutorial(tutorialName, cancel = {current: false}) {
       });
     console.log(steps);
     saveCheckpoint('system');
-    _.keys(tutorialInitialState).forEach(key => {
-      dispatch(modify(key, tutorialInitialState[key]));
-    });
+    // TODO fix this based on new state
+    // _.keys(tutorialInitialState).forEach(key => {
+    //   dispatch(modify(key, tutorialInitialState[key]));
+    // });
     for (const [index, step] of steps.entries()) {
       if (cancel.current === true) {
         cancel.current = false;

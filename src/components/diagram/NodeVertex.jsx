@@ -1,63 +1,55 @@
 // @format
 import React from 'react';
 import {connect} from 'react-redux';
-import Tooltip from '@material-ui/core/Tooltip';
-import Badge from '@material-ui/core/Badge';
-import Fab from '@material-ui/core/Fab';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import clsx from 'clsx';
+import {Box, Badge} from '@material-ui/core';
 import _ from 'lodash';
-import {propsToStyle} from '@utils/helpers';
+import {titlize, propsToStyle} from '@utils/helpers';
 import {useStyles} from '@style/classes';
 import {iconSource} from '@style/icons';
+import TestWrapper from './TestWrapper';
 
-function genTTList(text, isOver) {
-  let count = isOver ? 5 : 1;
-  let lines = text.split('\n').slice(0, count);
-  let itemDisplay = [];
-  lines.forEach((line, index) => {
-    itemDisplay.push(
-      <ListItem key={index}>
-        <ListItemText primary={line} />
-      </ListItem>,
-    );
-  });
-  return <List dense={true}> {itemDisplay} </List>;
-}
-
-export function PureNodeVertex({uid, libAssns, styleProps, ops}) {
+export function PureNodeVertex({
+  uid,
+  styles,
+  styleAssns,
+  libAssns,
+  styleProps,
+  ops,
+}) {
   const classes = useStyles();
-  let ttText = _.get(ops.test_output, uid, '');
-  let ttOpen = ops.testing && ttText.length > 0;
-  let ttDiv = genTTList(ttText, styleProps.isOver);
   const defIcon = _.get(iconSource, 'node');
+  const defStyle = JSON.parse(_.get(styles, 'node', {text: '{}'}).text);
+  let customProps = defStyle;
+  Object.assign(
+    customProps,
+    propsToStyle({...styleProps, testing: ops.testing}),
+  );
+  for (let style of styleAssns) {
+    Object.assign(
+      customProps,
+      JSON.parse(_.get(styles, style, {text: '{}'}).text),
+    );
+  }
+
   return (
-    <Tooltip
-      classes={{
-        tooltip: clsx(
-          classes.oofTooltip,
-          styleProps.isOver && classes.testTooltip,
-        ),
-      }}
-      arrow
-      placement="right-start"
-      open={ttOpen}
-      title={ttDiv}>
+    <TestWrapper uid={uid} ops={ops} styleProps={styleProps}>
       <Badge
         color="primary"
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
         className={classes.badge}
         badgeContent={libAssns.length}>
-        <Fab
-          variant="extended"
-          style={propsToStyle({...styleProps, testing: ops.testing})}>
-          {_.get(iconSource, libAssns[0] || '', defIcon)} {uid}
-        </Fab>
+        <div style={{position: 'relative'}}>
+          <Box key="shape" boxShadow="8" style={customProps} />
+          <Box key="text" className={classes.nodeText}>
+            {_.get(iconSource, libAssns[0] || '', defIcon)} {titlize(uid)}
+          </Box>
+        </div>
       </Badge>
-    </Tooltip>
+    </TestWrapper>
   );
 }
 
-export default connect(state => ({ops: state.operations}))(PureNodeVertex);
+export default connect(state => ({
+  ops: state.operations,
+  styles: state.battery[state.context.location].styles,
+}))(PureNodeVertex);

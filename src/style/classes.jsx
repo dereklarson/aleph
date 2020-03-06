@@ -99,24 +99,14 @@ export const useStyles = makeStyles(theme => ({
   editor: {
     minWidth: 700, // This will ensure ~88 characters a line on all screens
   },
-  node: {
-    alignItems: 'center',
-    textAlign: 'center',
-    backgroundColor: theme.palette.primary.light,
-    borderRadius: 24,
-    padding: '12px',
+  nodeText: {
+    position: 'absolute',
     display: 'flex',
-    minHeight: 50,
-    maxWidth: 200,
-  },
-  box: {
+    top: 0,
+    left: 0,
+    height: '100%',
+    width: '100%',
     alignItems: 'center',
-    textAlign: 'center',
-    backgroundColor: theme.palette.primary.light,
-    borderRadius: 24,
-    padding: '12px',
-    display: 'flex',
-    minHeight: 50,
-    maxWidth: 200,
+    justifyContent: 'center',
   },
 }));

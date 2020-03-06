@@ -11,22 +11,14 @@ import {modify} from '@data/reducers';
 import {objGen} from '@utils/helpers';
 import {bankTypes} from '@data/reference';
 import {useStyles} from '@style/classes';
-import {loadCore} from '@ops/load';
 import {generateList} from '@utils/generateList';
 
-export function PureTicker({
-  location,
-  operations,
-  onClear,
-  onLogs,
-  onLoadLibrary,
-}) {
+export function PureTicker({location, operations, onClear, onLogs}) {
   const classes = useStyles();
 
   // const [logOpen, openLog] = React.useState(false);
   const actionOptions = [
     ['show_logs', () => onLogs(operations.logs)],
-    ['refresh', () => onLoadLibrary(location)],
     ['clear_diagram', () => onClear(location)],
   ];
 
@@ -61,7 +53,5 @@ export default connect(
     },
     onLogs: text =>
       dispatch(genCodeEdit('logs', {edittext: text, editfunc: t => 0})),
-    onLoadLibrary: location =>
-      dispatch(loadCore('battery', [location, 'library'])),
   }),
 )(PureTicker);

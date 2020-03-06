@@ -5,7 +5,6 @@ import {useDrop} from 'react-dnd';
 import _ from 'lodash';
 import {addNewVertex} from '@data/combined';
 import {useStyles} from '@style/classes';
-import {getAncestry} from '@utils/vertex';
 
 export function Autolink({
   location,

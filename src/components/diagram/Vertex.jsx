@@ -26,10 +26,10 @@ export function PureVertex({
 }) {
   // First define the Drag-n-Drop functionality
   const ref = React.useRef(null);
-  const maxParents = location === 'docker' ? 1 : 3;
   const ancAssns = getAncestry(vertices, associations.library, uid)[1];
   const localLibAssns = _.get(associations.library, uid, []);
   const localStyleAssns = _.get(associations.styles, uid, []);
+  let maxParents = location === 'docker' ? 1 : 3;
   if (localLibAssns.length > 0 && localLibAssns[0] === 'ubuntu') {
     maxParents = 0;
   }
@@ -58,7 +58,6 @@ export function PureVertex({
         if (_.size(item.parents) >= item.maxParents) return false;
         return true;
       } else if (item.type === 'DepotItem') {
-        console.log(item.deps);
         if (ancAssns.includes(item.uid)) return false;
         else if (!item.deps.every(v => ancAssns.includes(v))) return false;
         else return true;

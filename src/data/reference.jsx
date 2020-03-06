@@ -1,8 +1,7 @@
 // @format
 import _ from 'lodash';
-import {vertexDataFromPaths} from '@utils/vertex';
 import {genCoreData} from '@utils/state';
-import {genBattery} from '@data/dev';
+import {globalData, globalDevData} from '@data/global';
 import {objGen} from '@utils/helpers';
 
 // We have five main categories of state data: context, ops, cache, config, and location
@@ -14,7 +13,16 @@ import {objGen} from '@utils/helpers';
 
 export const locations = ['configuration', 'docker', 'pipeline', 'data'];
 export const bankTypes = ['styles', 'library', 'datasets'];
-// export const locations = ['flow_diagram'];
+
+// This defines any further data structuring we need
+// objGen: takes a list and generates an object of blank objects with list as keys
+const categories = {
+  vertices: {},
+  associations: objGen(bankTypes),
+  battery: objGen(bankTypes),
+  corpus: {},
+  diagrams: {},
+};
 
 export const blankContext = {
   themeName: 'dark',
@@ -49,22 +57,13 @@ export const blankConfig = {
   },
 };
 
-const blankCategories = {
-  vertices: {},
-  associations: objGen(bankTypes),
-  battery: objGen(bankTypes),
-  corpus: {},
-  diagrams: {},
-};
-const blankLocationData = genCoreData(blankCategories, locations);
-
 // This is a complete, empty state representation
 export const blankState = {
   context: _.cloneDeep(blankContext),
   operations: _.cloneDeep(blankOperations),
   cache: _.cloneDeep(blankCache),
   config: _.cloneDeep(blankConfig),
-  ..._.cloneDeep(blankLocationData),
+  ...genCoreData(categories, locations, globalData),
 };
 
 // State we would first see if nothing else is loaded via Axios
@@ -75,34 +74,19 @@ export const prodInitialState = {
 // For development, we want a 'production' state with a useful initialization
 // area we are working on, which is set here
 export const stagingInitialState = {
-  ..._.cloneDeep(blankState),
+  ...prodInitialState,
   context: {...blankState.context, location: 'docker'},
 };
 
-// When in full dev mode (no Flask server) we want some test data available
-
-const devCategories = {
-  ..._.cloneDeep(blankCategories),
-  vertices: vertexDataFromPaths([['parent', 'child']]),
-  associations: {
-    library: {parent: ['parent'], child: ['child', 'friend']},
-    styles: {parent: ['blue_square'], child: ['green_triangle']},
-    datasets: {},
-  },
-};
-
-const devLocationData = genCoreData(devCategories, locations);
 export const devInitialState = {
-  ..._.cloneDeep(blankState),
-  ...devLocationData,
-  battery: genBattery(locations),
-};
-
-// State a tutorial will set prior to running
-export const tutorialInitialState = {
-  context: _.cloneDeep(blankContext),
-  operations: _.cloneDeep(blankOperations),
-  vertices: {},
+  ...prodInitialState,
+  ...genCoreData(categories, locations, globalDevData),
+  operations: {
+    ...blankOperations,
+    // building: null,
+    // build_orders: [],
+    test_output: {parent: 'yo\ndude'},
+  },
 };
 
 function setInitialState(env) {

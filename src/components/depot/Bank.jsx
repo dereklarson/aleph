@@ -1,18 +1,20 @@
 // @format
 import React from 'react';
 import {connect} from 'react-redux';
-import {Button, Paper, Tooltip, Typography} from '@material-ui/core';
+import {Button, Paper, Tooltip, IconButton} from '@material-ui/core';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import _ from 'lodash';
 import DepotItem from './DepotItem';
 import {titlize} from '@utils/helpers';
 import {useStyles} from '@style/classes';
+import {loadCore} from '@ops/load';
 
 const tooltips = {
   base: "Base items are starting points, OS's and public images",
   standard: 'Standard nodes can be added anywhere after base nodes',
 };
 
-export function PureBank({uid, location, inputs}) {
+export function PureBank({uid, location, inputs, onRefresh}) {
   const classes = useStyles();
   const bankInput = _.sortBy(Object.values(inputs), 'type');
   const [open, setOpen] = React.useState(true);
@@ -20,9 +22,17 @@ export function PureBank({uid, location, inputs}) {
   const dividers = {};
 
   const itemDisplay = [
-    <Typography key="title" variant="h6" onClick={() => setOpen(!open)}>
-      {titlize(uid)}
-    </Typography>,
+    <div className={classes.table}>
+      <Button key="title" onClick={() => setOpen(!open)}>
+        {titlize(uid)}
+      </Button>
+      <IconButton
+        key="refresh"
+        size="small"
+        onClick={() => onRefresh(location)}>
+        <RefreshIcon />
+      </IconButton>
+    </div>,
   ];
 
   if (open) {
@@ -64,7 +74,13 @@ export function PureBank({uid, location, inputs}) {
   );
 }
 
-export default connect((state, ownProps) => ({
-  location: state.context.location,
-  inputs: state.battery[state.context.location][ownProps.uid],
-}))(PureBank);
+export default connect(
+  (state, ownProps) => ({
+    location: state.context.location,
+    inputs: state.battery[state.context.location][ownProps.uid],
+  }),
+  dispatch => ({
+    onRefresh: (location, bank) =>
+      dispatch(loadCore('battery', [location, bank])),
+  }),
+)(PureBank);

@@ -2,11 +2,13 @@
 import _ from 'lodash';
 import {modify} from '@data/reducers';
 
-export function genCoreData(categories, locations) {
+export function genCoreData(categories, locations, globalData) {
   let output = {};
   for (const [category, def] of Object.entries(categories)) {
+    let global = _.get(globalData, category, {});
     output[category] = locations.reduce((data, name) => {
       data[name] = _.cloneDeep(def);
+      Object.assign(data[name], global);
       return data;
     }, {});
   }
