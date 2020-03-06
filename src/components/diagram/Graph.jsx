@@ -5,13 +5,14 @@ import Vertex from './Vertex';
 import {useStyles} from '@style/classes';
 
 function renderVertex({location, focus, prepared}, vertex, className) {
-  let type = 'custom';
+  let type = 'node';
   if (focus === vertex.uid) {
     type = 'card';
   } else if (['docker', 'pipeline'].includes(location)) {
     type = 'node';
   } else if (location === 'configuration') {
-    type = 'conf';
+    // type = 'conf';
+    type = 'node';
   } else if (location === 'data') {
     type = 'table';
   }

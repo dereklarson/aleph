@@ -5,7 +5,7 @@ import {Paper, TableContainer, TableRow} from '@material-ui/core';
 import {titlize} from '@utils/helpers';
 import {useStyles} from '@style/classes';
 
-export default function TableVertex({uid, libAssns, styleProps}) {
+export default function TableVertex({uid, libAssns, contextProps}) {
   const nodelabel = titlize(uid);
   const classes = useStyles();
 

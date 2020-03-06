@@ -22,14 +22,9 @@ export function PureBank({uid, location, inputs, onRefresh}) {
   const dividers = {};
 
   const itemDisplay = [
-    <div className={classes.table}>
-      <Button key="title" onClick={() => setOpen(!open)}>
-        {titlize(uid)}
-      </Button>
-      <IconButton
-        key="refresh"
-        size="small"
-        onClick={() => onRefresh(location)}>
+    <div key="title" className={classes.table}>
+      <Button onClick={() => setOpen(!open)}>{titlize(uid)}</Button>
+      <IconButton size="small" onClick={() => onRefresh(location)}>
         <RefreshIcon />
       </IconButton>
     </div>,
@@ -67,7 +62,7 @@ export function PureBank({uid, location, inputs, onRefresh}) {
       <Tooltip
         title="These are pre-created items with which you can compose your diagram"
         placement="bottom"
-        enterDelay={500}>
+        enterDelay={1500}>
         <Paper className={classes.paperList}>{itemDisplay}</Paper>
       </Tooltip>
     </div>

@@ -1,6 +1,5 @@
 // @format
 import React from 'react';
-import {connect} from 'react-redux';
 import Tooltip from '@material-ui/core/Tooltip';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -23,18 +22,18 @@ function genTTList(text, isOver) {
   return <List dense={true}> {itemDisplay} </List>;
 }
 
-export default function TestWrapper({uid, styleProps, ops, children}) {
+export default function TestWrapper({uid, contextProps, ops, children}) {
   const classes = useStyles();
   let ttText = _.get(ops.test_output, uid, '');
   let ttOpen = ops.testing && ttText.length > 0;
-  let ttDiv = genTTList(ttText, styleProps.isOver);
+  let ttDiv = genTTList(ttText, contextProps.isOver);
 
   return (
     <Tooltip
       classes={{
         tooltip: clsx(
           classes.oofTooltip,
-          styleProps.isOver && classes.testTooltip,
+          contextProps.isOver && classes.testTooltip,
         ),
       }}
       arrow

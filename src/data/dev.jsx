@@ -1,6 +1,5 @@
 // @format
 import _ from 'lodash';
-import {objGen} from '@utils/helpers';
 
 export function genLibrary(names) {
   const librarySample = {
@@ -15,6 +14,7 @@ export function genLibrary(names) {
     library[uid] = _.cloneDeep(librarySample.sample);
     library[uid]['uid'] = uid;
     library[uid].dependencies = _.clone(deps);
+    if (deps.length === 0) library[uid].type = 'base';
     deps.push(uid);
     return library;
   }, {});

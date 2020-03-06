@@ -10,19 +10,25 @@ import TestWrapper from './TestWrapper';
 
 export function PureNodeVertex({
   uid,
+  location,
   styles,
   styleAssns,
+  library,
   libAssns,
-  styleProps,
+  contextProps,
   ops,
 }) {
   const classes = useStyles();
-  const defIcon = _.get(iconSource, 'node');
+  const defIcon = _.get(
+    iconSource,
+    `${location}node`,
+    _.get(iconSource, 'node'),
+  );
   const defStyle = JSON.parse(_.get(styles, 'node', {text: '{}'}).text);
   let customProps = defStyle;
   Object.assign(
     customProps,
-    propsToStyle({...styleProps, testing: ops.testing}),
+    propsToStyle({...contextProps, testing: ops.testing}),
   );
   for (let style of styleAssns) {
     Object.assign(
@@ -31,8 +37,13 @@ export function PureNodeVertex({
     );
   }
 
+  let types = [];
+  libAssns.forEach(libId => types.push(_.get(library, libId, {type: ''}).type));
+  console.log(uid, types);
+  let icon = types.includes('base') ? iconSource.basenode : defIcon;
+
   return (
-    <TestWrapper uid={uid} ops={ops} styleProps={styleProps}>
+    <TestWrapper uid={uid} ops={ops} contextProps={contextProps}>
       <Badge
         color="primary"
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
@@ -41,7 +52,7 @@ export function PureNodeVertex({
         <div style={{position: 'relative'}}>
           <Box key="shape" boxShadow="8" style={customProps} />
           <Box key="text" className={classes.nodeText}>
-            {_.get(iconSource, libAssns[0] || '', defIcon)} {titlize(uid)}
+            {icon} {titlize(uid)}
           </Box>
         </div>
       </Badge>
@@ -50,6 +61,8 @@ export function PureNodeVertex({
 }
 
 export default connect(state => ({
+  location: state.context.location,
   ops: state.operations,
   styles: state.battery[state.context.location].styles,
+  library: state.battery[state.context.location].library,
 }))(PureNodeVertex);

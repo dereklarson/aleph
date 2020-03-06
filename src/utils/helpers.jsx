@@ -2,18 +2,20 @@
 import _ from 'lodash';
 
 export function propsToStyle(styleProps) {
-  return {
-    opacity: _.get(styleProps, 'isDragging') ? 0.5 : 1,
-    backgroundColor: _.get(styleProps, 'highlighted')
-      ? '#C9C9FF'
-      : _.get(styleProps, 'building')
-      ? 'green'
-      : _.get(styleProps, 'prepared')
-      ? 'lightgreen'
-      : _.get(styleProps, 'testing')
-      ? 'gray'
-      : null,
-  };
+  return _.omitBy(
+    {
+      opacity: _.get(styleProps, 'isDragging') ? 0.5 : 1,
+      border: _.get(styleProps, 'highlighted') ? '1px solid lightgreen' : null,
+      backgroundColor: _.get(styleProps, 'building')
+        ? 'green'
+        : _.get(styleProps, 'prepared')
+        ? 'lightgreen'
+        : _.get(styleProps, 'testing')
+        ? 'gray'
+        : null,
+    },
+    _.isNil,
+  );
 }
 
 export function capitalizeFirstLetter(string) {

@@ -32,6 +32,7 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 // import SettingsOverscanIcon from '@material-ui/icons/SettingsOverscan';
 // Vertices
 import DonutSmallIcon from '@material-ui/icons/DonutSmall';
+import CallMergeIcon from '@material-ui/icons/CallMerge';
 
 export const iconSource = {
   def: <HelpIcon />,
@@ -65,4 +66,6 @@ export const iconSource = {
   clear_diagram: <DeleteOutlineIcon />,
   // Vertices
   node: <DonutSmallIcon style={{padding: 3}} />,
+  dockernode: <CallMergeIcon />,
+  basenode: <Crop32Icon />,
 };

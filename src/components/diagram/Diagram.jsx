@@ -47,7 +47,7 @@ export function PureDiagram({
         onClick={onClick}
         style={{
           position: 'relative',
-          backgroundColor: highlighted ? '#E0FBE0' : null,
+          border: highlighted ? '1px solid lightgreen' : null,
         }}>
         <Arrows arrows={arrows} />
         <Graph vertices={verticesToDisplay} {...props} />

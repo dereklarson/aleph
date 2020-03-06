@@ -7,9 +7,8 @@ import {modify, linkVertex, unlinkVertex} from '@data/reducers';
 import {associate} from '@data/combined';
 import CardVertex from './CardVertex';
 import NodeVertex from './NodeVertex';
-import ConfigVertex from './ConfigVertex';
+// import ConfigVertex from './ConfigVertex';
 import TableVertex from './TableVertex';
-import CustomVertex from './CustomVertex';
 import Autolink from './Autolink';
 import {getAncestry} from '@utils/vertex';
 
@@ -70,7 +69,7 @@ export function PureVertex({
   });
   drag(drop(ref));
   const [isOver, setOver] = React.useState(false);
-  const styleProps = {
+  const contextProps = {
     building: operations.building === uid,
     isDragging: isDragging,
     highlighted: highlighted,
@@ -78,8 +77,7 @@ export function PureVertex({
     prepared: prepared.includes(uid),
   };
   const components = {
-    custom: CustomVertex,
-    conf: ConfigVertex,
+    // conf: ConfigVertex,
     node: NodeVertex,
     card: CardVertex,
     table: TableVertex,
@@ -110,7 +108,7 @@ export function PureVertex({
           idlist={_.keys(vertices)}
           libAssns={localLibAssns}
           styleAssns={localStyleAssns}
-          styleProps={styleProps}
+          contextProps={contextProps}
         />
       </div>
       <Autolink relation="child" uid={uid} ancAssns={ancAssns} />

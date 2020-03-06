@@ -39,7 +39,7 @@ export function PureDepot({location, onVertexDrop, onNew}) {
     <div ref={drop}>
       <Paper
         className={classes.paperList}
-        style={{backgroundColor: highlighted ? '#FFA07A' : null}}>
+        style={{border: highlighted ? '1px solid green' : null}}>
         <Typography key="title" variant="h6">
           Depot
         </Typography>

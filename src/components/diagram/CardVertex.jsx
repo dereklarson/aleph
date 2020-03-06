@@ -20,7 +20,7 @@ export function PureCardVertex({
   idlist,
   libAssns,
   operations,
-  styleProps,
+  contextProps,
   dispatch,
 }) {
   const classes = useStyles();
@@ -62,7 +62,7 @@ export function PureCardVertex({
   let helperText = textErr ? 'Already in use' : '<Enter> to set';
   return (
     <Card
-      style={propsToStyle(styleProps)}
+      style={propsToStyle(contextProps)}
       onClick={event => event.stopPropagation()}>
       <CardActionArea>
         <CardContent>
