@@ -14,7 +14,6 @@ export function playTutorial(tutorialName, cancel = {current: false}) {
       .then(response => {
         steps = steps.concat(response.data);
       });
-    console.log(steps);
     saveCheckpoint('system');
     // TODO fix this based on new state
     // _.keys(tutorialInitialState).forEach(key => {

@@ -15,18 +15,13 @@ export default genStoryEntry(10, TestComponent, excitedState);
 export const testData = {
   // uid: 'Test name',
   uid: 'Test name',
-  libAssn: ['react'],
+  libAssns: ['react'],
   idlist: [],
   library: {cornelius: 'Scipio', julius: 'Caesar', fabius: 'Cunctator'},
-  onEditor: action('Editor'),
-  onBuild: action('Build'),
-  onClear: action('Clear'),
-  onChipDelete: action('DeleteChip'),
-  onChange: action('onChange'),
   operations: {
     building: false,
   },
-  styleProps: {
+  contextProps: {
     highlighted: false,
     isDragging: false,
     building: false,
@@ -64,8 +59,8 @@ export const associations = () =>
   ]);
 export const states = () =>
   genCollage([
-    {styleProps: {isDragging: true}},
-    {styleProps: {highlighted: true}},
-    {styleProps: {building: true}},
-    {styleProps: {prepared: true}},
+    {contextProps: {isDragging: true}},
+    {contextProps: {highlighted: true}},
+    {contextProps: {building: true}},
+    {contextProps: {prepared: true}},
   ]);

@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import {vertexDataFromPaths} from '@utils/vertex';
 import {bankTypes} from '@data/reference';
-import {genSlice} from './tools';
+import {genSlice} from '@data/tools';
 
 const configSlice = genSlice('config');
 const operationsSlice = genSlice('operations');

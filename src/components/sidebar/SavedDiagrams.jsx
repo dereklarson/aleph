@@ -13,7 +13,7 @@ function SavedDiagrams({location, diagrams, dispatch}) {
   for (const [uid, content] of Object.entries(diagrams)) {
     let onClick = () => dispatch(loadDiagram({location, content, uid}));
     let onDelete = () => dispatch(deleteSavedDiagram({location, uid}));
-    items.push([uid, onClick, onDelete]);
+    items.push([uid, onClick, {onSecondary: onDelete}]);
   }
 
   return (

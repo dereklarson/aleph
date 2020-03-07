@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import {vertexDataFromPaths} from '@utils/vertex';
 import {genLibrary} from '@data/dev';
-import {blankState} from '@data/reference';
+import {devInitialState} from '@data/reference';
 
 export const coveredState = {
   building: null,
@@ -17,7 +17,7 @@ export const coveredState = {
     ['ubuntu', 'python', 'gcp', 'worker'],
   ]),
   large_vertices: vertexDataFromPaths([
-    ['ubuntu', 'python', 'React', 'flask', 'End1'],
+    ['ubuntu', 'python', 'React', 'flask', 'end1'],
     ['ubuntu', 'python', 'python_sci', 'gcp', 'jupyterLab', 'end2'],
     ['ubuntu', 'python', 'python_sci', 'gcp', 'modeler'],
     ['ubuntu', 'python', 'gcp', 'worker'],
@@ -48,15 +48,14 @@ export const testOutput = {
 };
 
 export const excitedState = {
-  ...blankState,
-  config: {organization: {name: 'Top Dog'}},
+  ...devInitialState,
   context: {
-    ...blankState.context,
+    ...devInitialState.context,
     location: 'docker',
     focus: 'parent',
   },
   operations: {
-    ...blankState.operations,
+    ...devInitialState.operations,
     ...testOutput,
     testing: true,
     tickertext: 'The most fabulous state in town',
@@ -65,6 +64,5 @@ export const excitedState = {
     build_orders: [{id: 1}],
   },
   vertices: {docker: _.cloneDeep(coveredState.large_vertices)},
-  library: {docker: _.cloneDeep(coveredState.medium_library)},
   diagrams: {docker: _.cloneDeep(coveredState.large_diagrams)},
 };

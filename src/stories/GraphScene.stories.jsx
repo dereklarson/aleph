@@ -9,24 +9,22 @@ export default genStoryEntry(7, TestComponent, excitedState);
 
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
-  vertices: [
-    {
+  focus: 'child',
+  location: 'docker',
+  prepared: [1],
+  vertices: {
+    parent: {
       uid: 'parent',
-      children: {focus_child: true},
+      children: {child: true},
       parents: {},
       position: {x: 0, y: 0, height: 10, width: 10},
     },
-    {
-      uid: 'focus_child',
+    child: {
+      uid: 'child',
       children: {},
       parents: {parent: true},
       position: {x: 10, y: 10, height: 10, width: 10},
     },
-  ],
-  activity: {
-    focus: 1,
-    location: 'docker',
-    prepared: [1],
   },
 };
 

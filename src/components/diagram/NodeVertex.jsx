@@ -39,7 +39,6 @@ export function PureNodeVertex({
 
   let types = [];
   libAssns.forEach(libId => types.push(_.get(library, libId, {type: ''}).type));
-  console.log(uid, types);
   let icon = types.includes('base') ? iconSource.basenode : defIcon;
 
   return (

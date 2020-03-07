@@ -29,6 +29,9 @@ import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 // Ticker
 import SubjectIcon from '@material-ui/icons/Subject';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+// Bank types
+import StorefrontIcon from '@material-ui/icons/Storefront';
+import AllOutIcon from '@material-ui/icons/AllOut';
 // import SettingsOverscanIcon from '@material-ui/icons/SettingsOverscan';
 // Vertices
 import DonutSmallIcon from '@material-ui/icons/DonutSmall';
@@ -64,6 +67,10 @@ export const iconSource = {
   // Ticker
   show_logs: <SubjectIcon />,
   clear_diagram: <DeleteOutlineIcon />,
+  // Bank types
+  datasets: <TableChartIcon />,
+  library: <StorefrontIcon />,
+  styles: <AllOutIcon />,
   // Vertices
   node: <DonutSmallIcon style={{padding: 3}} />,
   dockernode: <CallMergeIcon />,

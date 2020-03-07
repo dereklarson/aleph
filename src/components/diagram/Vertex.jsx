@@ -120,7 +120,6 @@ export function PureVertex({
 
 export default connect((state, ownProps) => ({
   location: state.context.location,
-  vertices: state.vertices[state.context.location],
   associations: state.associations[state.context.location],
   // vertices: state.vertices.present[state.context.location],
   operations: state.operations,

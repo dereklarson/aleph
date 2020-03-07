@@ -14,13 +14,12 @@ import {addNewVertex} from '@data/combined';
 export function PureDiagram({
   clearFocus,
   onDepotDrop,
-  location,
   vertices,
+  location,
   focus,
   buildOrders,
 }) {
   // const classes = useStyles();
-
   const [{highlighted}, drop] = useDrop({
     accept: 'DepotItem',
     drop: (item, monitor) => {

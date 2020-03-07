@@ -1,6 +1,5 @@
 // @format
 import _ from 'lodash';
-import {genCoreData} from '@utils/state';
 import {globalData, globalDevData} from '@data/global';
 import {objGen} from '@utils/helpers';
 
@@ -57,6 +56,19 @@ export const blankConfig = {
   },
 };
 
+function genCoreData(categories, locations, globalData) {
+  let output = {};
+  for (const [category, def] of Object.entries(categories)) {
+    let global = _.get(globalData, category, {});
+    output[category] = locations.reduce((data, name) => {
+      data[name] = _.cloneDeep(def);
+      Object.assign(data[name], global);
+      return data;
+    }, {});
+  }
+  return output;
+}
+
 // This is a complete, empty state representation
 export const blankState = {
   context: _.cloneDeep(blankContext),
@@ -81,6 +93,7 @@ export const stagingInitialState = {
 export const devInitialState = {
   ...prodInitialState,
   ...genCoreData(categories, locations, globalDevData),
+  config: {organization: {name: 'Development Server'}},
   operations: {
     ...blankOperations,
     // building: null,

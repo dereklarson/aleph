@@ -4,7 +4,11 @@ import _ from 'lodash';
 import Vertex from './Vertex';
 import {useStyles} from '@style/classes';
 
-function renderVertex({location, focus, prepared}, vertex, className) {
+function renderVertex(
+  {vertices, location, focus, prepared},
+  vertex,
+  className,
+) {
   let type = 'node';
   if (focus === vertex.uid) {
     type = 'card';
@@ -19,6 +23,7 @@ function renderVertex({location, focus, prepared}, vertex, className) {
 
   const component = (
     <Vertex
+      vertices={vertices}
       type={type}
       uid={vertex.uid}
       parents={vertex.parents}

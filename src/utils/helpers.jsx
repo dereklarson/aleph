@@ -34,9 +34,9 @@ export function titlize(string) {
   return output.trim();
 }
 
-export function objGen(array) {
+export function objGen(array, def = {}) {
   return array.reduce((obj, item) => {
-    obj[item] = {};
+    obj[item] = _.clone(def);
     return obj;
   }, {});
 }

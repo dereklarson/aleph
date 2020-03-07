@@ -11,19 +11,16 @@ export default genStoryEntry(6, TestComponent, excitedState);
 // testData should containing a baseline object of properties to pass into the component
 const testData = {
   vertices: coveredState.medium_vertices,
-  activity: {
-    focus: null,
-    location: 'docker',
-    prepared: [],
-  },
+  focus: null,
+  location: 'docker',
+  buildOrders: [],
 };
 
 // Produce a function 'genStory' that can generate a story from hand-tweaked properties
 const boxProps = {squaresize: 1000};
 let genStory = getStoryGenerator(TestComponent, boxProps, testData);
 
-export const med_data = () =>
-  genStory({activity: {location: 'data', prepared: []}});
+export const med_data = () => genStory({location: 'data'});
 export const solo = () => genStory({vertices: coveredState.solo_vertex});
 export const pair = () => genStory({vertices: coveredState.pair_vertices});
 export const small = () => genStory({vertices: coveredState.small_vertices});

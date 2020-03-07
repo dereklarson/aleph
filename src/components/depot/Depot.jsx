@@ -5,15 +5,19 @@ import {useDrop} from 'react-dnd';
 import {Chip, Paper, Typography} from '@material-ui/core';
 // import _ from 'lodash';
 import Bank from './Bank';
+import {bankTypes} from '@data/reference';
+import {objGen} from '@utils/helpers';
 import {useStyles} from '@style/classes';
 import {genCodeEdit} from '@utils/state';
-import {bankTypes} from '@data/reference';
 import {addToBattery} from '@data/reducers';
 import {removeFullVertex} from '@data/combined';
 import {saveBattery} from '@ops/load';
+import {generateList} from '@utils/generateList';
 
 export function PureDepot({location, onVertexDrop, onNew}) {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(objGen(bankTypes, true));
+  const onOpen = item => () => setOpen({...open, [item]: !open[item]});
 
   const [{highlighted}, drop] = useDrop({
     accept: 'Vertex',
@@ -30,9 +34,11 @@ export function PureDepot({location, onVertexDrop, onNew}) {
     dispatch(saveBattery({location, ...fieldText}));
   };
 
+  const actionOptions = [];
   const bankDisplay = [];
   bankTypes.forEach(item => {
-    bankDisplay.push(<Bank key={item} uid={item} />);
+    actionOptions.push([item, onOpen(item)]);
+    if (open[item]) bankDisplay.push(<Bank key={item} uid={item} />);
   });
 
   return (
@@ -40,10 +46,14 @@ export function PureDepot({location, onVertexDrop, onNew}) {
       <Paper
         className={classes.paperList}
         style={{border: highlighted ? '1px solid green' : null}}>
-        <Typography key="title" variant="h6">
-          Depot
-        </Typography>
-        <Chip label="(New)" onClick={() => onNew({editfunc, edittext: ''})} />
+        <div key="title" className={classes.table}>
+          <Typography variant="h6"> Depot </Typography>
+          {generateList('button', actionOptions)}
+        </div>
+        <Chip
+          label="(New Item)"
+          onClick={() => onNew({editfunc, edittext: ''})}
+        />
         {bankDisplay}
       </Paper>
     </div>

@@ -1,6 +1,6 @@
 // @format
 import {genStoryEntry, getStoryGenerator} from './testHelpers';
-import {coveredState, excitedState} from './testStates';
+import {excitedState} from './testStates';
 import {PureSidebar} from '@sidebar/Sidebar';
 
 const TestComponent = PureSidebar;

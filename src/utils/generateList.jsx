@@ -47,9 +47,11 @@ function ListWithDeleteIcon({name, onClick, defIcon, onSecondary}) {
   );
 }
 
-function IconButtonGen({name, onClick, defIcon}) {
+function IconButtonGen({name, onClick, off, dark, defIcon}) {
+  let props = {disabled: !!off};
   return (
-    <IconButton color="inherit" onClick={onClick}>
+    <IconButton {...props} onClick={onClick}>
+      {/* <IconButton color="inherit" {...props} onClick={onClick}> */}
       {_.get(iconSource, name, _.get(iconSource, defIcon))}
     </IconButton>
   );
@@ -74,8 +76,7 @@ export function generateList(kind, options, listIcon = 'def', ttBase = '') {
   let itemDisplay = [];
   options.forEach(function(config, index) {
     let props = {name: config[0], onClick: config[1], defIcon: listIcon};
-    if (config.length >= 3) props['onSecondary'] = config[2];
-    else props['onSecondary'] = () => 0;
+    if (config.length >= 3) props = {...props, ...config[2]};
     itemDisplay.push(
       <div key={index}>
         {applyTooltip(kinds[kind](props), config[0], ttBase)}

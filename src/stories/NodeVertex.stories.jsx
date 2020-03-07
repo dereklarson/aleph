@@ -11,8 +11,12 @@ export default genStoryEntry(12, TestComponent, excitedState);
 // testData should containing a baseline object of properties to pass into the component
 export const testData = {
   uid: 'test_node',
-  libAssn: ['react'],
-  styleProps: {
+  location: 'docker',
+  styles: excitedState.battery.docker.styles,
+  styleAssns: ['node'],
+  library: excitedState.battery.docker.library,
+  libAssns: ['react'],
+  contextProps: {
     highlighted: false,
     isDragging: false,
     building: false,
@@ -48,13 +52,13 @@ export const associations = () =>
   ]);
 export const states = () =>
   genCollage([
-    {uid: 'dragging', styleProps: {isDragging: true}},
-    {uid: 'highlighed', styleProps: {highlighted: true}},
-    {uid: 'building', styleProps: {building: true}},
-    {uid: 'prepared', styleProps: {prepared: true}},
+    {uid: 'dragging', contextProps: {isDragging: true}},
+    {uid: 'highlighed', contextProps: {highlighted: true}},
+    {uid: 'building', contextProps: {building: true}},
+    {uid: 'prepared', contextProps: {prepared: true}},
     {
       uid: 'testing',
       ops: {testing: true, test_output: {testing: 'abc'}},
-      styleProps: {isOver: true},
+      contextProps: {isOver: true},
     },
   ]);
