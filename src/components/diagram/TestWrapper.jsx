@@ -22,10 +22,10 @@ function genTTList(text, isOver) {
   return <List dense={true}> {itemDisplay} </List>;
 }
 
-export default function TestWrapper({uid, contextProps, ops, children}) {
+export default function TestWrapper({uid, contextProps, env, children}) {
   const classes = useStyles();
-  let ttText = _.get(ops.test_output, uid, '');
-  let ttOpen = ops.testing && ttText.length > 0;
+  let ttText = _.get(env.test_output, uid, '');
+  let ttOpen = env.testing && ttText.length > 0;
   let ttDiv = genTTList(ttText, contextProps.isOver);
 
   return (

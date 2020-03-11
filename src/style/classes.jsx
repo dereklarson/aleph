@@ -70,6 +70,7 @@ export const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
   },
   paperList: {
+    border: '1px solid gray',
     padding: theme.spacing(1),
     display: 'flex',
     overflow: 'auto',
@@ -85,7 +86,7 @@ export const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    padding: theme.spacing(1),
+    padding: theme.spacing(0),
   },
   oofTooltip: {
     maxHeight: 100,

@@ -23,7 +23,7 @@ export const testData = {
     prepared: false,
     isOver: false,
   },
-  ops: {testing: true, test_output: {}},
+  env: {testing: true, test_output: {}},
 };
 
 // Produce a function 'genStory' that can generate a story from hand-tweaked properties

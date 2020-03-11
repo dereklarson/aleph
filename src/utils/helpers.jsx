@@ -11,7 +11,7 @@ export function propsToStyle(styleProps) {
         : _.get(styleProps, 'prepared')
         ? 'lightgreen'
         : _.get(styleProps, 'testing')
-        ? 'gray'
+        ? 'blue'
         : null,
     },
     _.isNil,
@@ -36,7 +36,7 @@ export function titlize(string) {
 
 export function objGen(array, def = {}) {
   return array.reduce((obj, item) => {
-    obj[item] = _.clone(def);
+    obj[item] = _.cloneDeep(def);
     return obj;
   }, {});
 }

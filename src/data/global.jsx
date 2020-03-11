@@ -25,6 +25,9 @@ export const globalDevData = {
     styles: {parent: ['node'], child: ['store']},
     datasets: {},
   },
+  environment: {
+    test_output: {parent: 'yo\ndude'},
+  },
   vertices: vertexDataFromPaths([['parent', 'child']]),
   battery: {
     library: genLibrary(['parent', 'child', 'gkid']),

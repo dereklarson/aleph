@@ -16,7 +16,7 @@ export function PureNodeVertex({
   library,
   libAssns,
   contextProps,
-  ops,
+  env,
 }) {
   const classes = useStyles();
   const defIcon = _.get(
@@ -26,23 +26,23 @@ export function PureNodeVertex({
   );
   const defStyle = JSON.parse(_.get(styles, 'node', {text: '{}'}).text);
   let customProps = defStyle;
-  Object.assign(
-    customProps,
-    propsToStyle({...contextProps, testing: ops.testing}),
-  );
   for (let style of styleAssns) {
     Object.assign(
       customProps,
       JSON.parse(_.get(styles, style, {text: '{}'}).text),
     );
   }
+  Object.assign(
+    customProps,
+    propsToStyle({...contextProps, testing: env.testing}),
+  );
 
   let types = [];
   libAssns.forEach(libId => types.push(_.get(library, libId, {type: ''}).type));
   let icon = types.includes('base') ? iconSource.basenode : defIcon;
 
   return (
-    <TestWrapper uid={uid} ops={ops} contextProps={contextProps}>
+    <TestWrapper uid={uid} env={env} contextProps={contextProps}>
       <Badge
         color="primary"
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
@@ -61,7 +61,7 @@ export function PureNodeVertex({
 
 export default connect(state => ({
   location: state.context.location,
-  ops: state.operations,
+  env: state.environment[state.context.location],
   styles: state.battery[state.context.location].styles,
   library: state.battery[state.context.location].library,
 }))(PureNodeVertex);

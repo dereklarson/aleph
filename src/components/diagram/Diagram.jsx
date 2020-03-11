@@ -15,6 +15,7 @@ export function PureDiagram({
   clearFocus,
   onDepotDrop,
   vertices,
+  libAssns,
   location,
   focus,
   buildOrders,
@@ -36,9 +37,14 @@ export function PureDiagram({
   var arrows = calculateDiagramPositions(verticesToDisplay, location);
 
   var onClick = () => 0;
-  if (focus !== null) onClick = clearFocus;
+  if (focus !== null) onClick = () => clearFocus(location);
 
-  let props = {location, focus, prepared: buildOrders.map(({uid}) => uid)};
+  let props = {
+    libAssns,
+    location,
+    focus,
+    prepared: buildOrders.map(({uid}) => uid),
+  };
 
   return (
     <div ref={drop}>
@@ -60,11 +66,13 @@ export default connect(
     location: state.context.location,
     vertices: state.vertices[state.context.location],
     // vertices: state.vertices.present[state.context.location],
-    focus: state.context.focus,
+    libAssns: state.associations[state.context.location].library,
+    focus: state.environment[state.context.location].focus,
     buildOrders: state.operations.build_orders,
   }),
   dispatch => ({
-    clearFocus: () => dispatch(modify('context', {focus: null})),
+    clearFocus: location =>
+      dispatch(modify('environment', {locator: [location], focus: null})),
     onDepotDrop: payload => dispatch(addNewVertex(payload)),
   }),
 )(PureDiagram);

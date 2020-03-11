@@ -10,7 +10,7 @@ import {playTutorial} from '@utils/tutorial';
 import {titlize} from '@utils/helpers';
 import {useStyles} from '@style/classes';
 
-export function PureAppBar({config, context, dispatch}) {
+export function PureAppBar({config, context, environment, dispatch}) {
   const classes = useStyles();
   const onInitialLoad = () => {
     dispatch(loadInputs(config));
@@ -19,9 +19,9 @@ export function PureAppBar({config, context, dispatch}) {
   // Performs loads on mount
   React.useEffect(onInitialLoad, []);
 
-  const nextTheme = context.themeName === 'light' ? 'dark' : 'light';
+  const nextTheme = config.themeName === 'light' ? 'dark' : 'light';
   const appBarOptions = [
-    ['set_theme', () => dispatch(modify('context', {themeName: nextTheme}))],
+    ['set_theme', () => dispatch(modify('config', {themeName: nextTheme}))],
     ['save_checkpoint', () => dispatch(saveCheckpoint('user'))],
     ['load_checkpoint', () => dispatch(loadCheckpoint('user'))],
     ['play_tutorial', () => dispatch(playTutorial('tutorial'))],
@@ -33,7 +33,7 @@ export function PureAppBar({config, context, dispatch}) {
         <Tooltip title={config.organization.repository || ''} enterDelay={500}>
           <Typography style={{flexGrow: 1}} variant="h6">
             {config.organization.name} - {titlize(context.location)} -{' '}
-            {context.name}
+            {environment.envName}
           </Typography>
         </Tooltip>
         {generateList('button', appBarOptions)}
@@ -45,4 +45,5 @@ export function PureAppBar({config, context, dispatch}) {
 export default connect(state => ({
   config: state.config,
   context: state.context,
+  environment: state.environment[state.context.location],
 }))(PureAppBar);

@@ -3,9 +3,11 @@ import React from 'react';
 import _ from 'lodash';
 import Vertex from './Vertex';
 import {useStyles} from '@style/classes';
+import {getAllLineages} from '@utils/vertex';
 
 function renderVertex(
   {vertices, location, focus, prepared},
+  ancestry,
   vertex,
   className,
 ) {
@@ -26,6 +28,7 @@ function renderVertex(
       vertices={vertices}
       type={type}
       uid={vertex.uid}
+      ancestry={ancestry}
       parents={vertex.parents}
       prepared={prepared}
     />
@@ -48,8 +51,12 @@ function renderVertex(
 export default function Graph(props) {
   const classes = useStyles();
   const vertexDisplay = [];
+
+  let lineages = getAllLineages(props.vertices, props.libAssns);
+
   _.values(props.vertices).forEach(vertex => {
-    vertexDisplay.push(renderVertex(props, vertex, classes.vertex));
+    let ancestry = lineages[vertex.uid];
+    vertexDisplay.push(renderVertex(props, ancestry, vertex, classes.vertex));
   });
   return <div>{vertexDisplay}</div>;
 }

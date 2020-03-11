@@ -21,9 +21,10 @@ export function PureBank({uid, location, inputs, onRefresh}) {
   const [openType, setOpenType] = React.useState('standard');
   const dividers = {};
 
+  let title = uid + (open ? ' (-)' : ' (+)');
   const itemDisplay = [
     <div key="title" className={classes.table}>
-      <Button onClick={() => setOpen(!open)}>{titlize(uid)}</Button>
+      <Button onClick={() => setOpen(!open)}>{titlize(title)}</Button>
       <IconButton size="small" onClick={() => onRefresh(location)}>
         <RefreshIcon />
       </IconButton>

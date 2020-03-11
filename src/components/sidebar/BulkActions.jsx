@@ -9,7 +9,7 @@ import {runPipeline} from '@ops/build';
 import {generateList} from '@utils/generateList';
 import {genTextEdit, genCodeEdit} from '@utils/state';
 
-function BulkActions({organization, operations, location, dispatch}) {
+function BulkActions({organization, environment, location, dispatch}) {
   const saveDiag = text => saveDiagram(location, text.fieldText.savename);
   const baseOptions = [
     ['save_diagram', () => dispatch(genTextEdit('saveDiagram', saveDiag))],
@@ -21,7 +21,7 @@ function BulkActions({organization, operations, location, dispatch}) {
       pushOrg({branch: fieldText.branch, commit_msg: aceText}),
   };
   const imagePusher = text => pushImages(organization, text.fieldText.match);
-  const testmode = operations.testing;
+  const testmode = environment.testing;
   const locationOptions = {
     configuration: [
       ['set_org', () => dispatch(genTextEdit('fetchOrg', orgSet))],
@@ -33,7 +33,13 @@ function BulkActions({organization, operations, location, dispatch}) {
       ['push_images', () => dispatch(genTextEdit('pushImages', imagePusher))],
     ],
     pipeline: [
-      ['test_mode', () => dispatch(modify('operations', {testing: !testmode}))],
+      [
+        'test_mode',
+        () =>
+          dispatch(
+            modify('environment', {locator: [location], testing: !testmode}),
+          ),
+      ],
       ['run_pipeline', () => dispatch(runPipeline())],
     ],
   };
@@ -50,7 +56,7 @@ function BulkActions({organization, operations, location, dispatch}) {
 }
 
 export default connect(state => ({
-  operations: state.operations,
+  environment: state.environment[state.context.location],
   organization: state.config.organization,
   location: state.context.location,
 }))(BulkActions);

@@ -52,12 +52,10 @@ export const excitedState = {
   context: {
     ...devInitialState.context,
     location: 'docker',
-    focus: 'parent',
   },
   operations: {
     ...devInitialState.operations,
     ...testOutput,
-    testing: true,
     tickertext: 'The most fabulous state in town',
     percent: 80,
     building: 2,

@@ -31,7 +31,7 @@ export function saveDiagram(location, uid) {
       associations: state.associations[location],
       corpus: state.corpus[location],
     };
-    dispatch(modify('context', {name: uid}));
+    dispatch(modify('environment', {locator: [location], envName: uid}));
     axios.post('/save/', {path_list, uid, state: savedState});
   };
 }
@@ -93,7 +93,7 @@ export function loadDiagram({location, content, uid}) {
     dispatch(loadDiagramVertices({location, content, uid}));
     dispatch(loadDiagramAssociations({location, content, uid}));
     dispatch(loadDiagramCorpus({location, content, uid}));
-    dispatch(modify('context', {name: uid}));
+    dispatch(modify('environment', {locator: [location], envName: uid}));
   };
 }
 

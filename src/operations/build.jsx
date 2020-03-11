@@ -74,7 +74,7 @@ export function runPipeline() {
     let state = getState();
     let location = state.context.location;
     let metadata = {
-      name: state.context.name,
+      name: state.environment[location].envName,
     };
     if (location === 'pipeline') {
       console.log('---Running Pipeline---');

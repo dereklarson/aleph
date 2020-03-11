@@ -9,6 +9,7 @@ const configSlice = genSlice('config');
 const operationsSlice = genSlice('operations');
 const cacheSlice = genSlice('cache');
 const contextSlice = genSlice('context');
+const environmentSlice = genSlice('environment');
 
 const diagramsReducers = {
   removeDiagram(state, {payload: {location, uid}}) {
@@ -162,6 +163,7 @@ const modifiers = {
   battery: batterySlice.actions.modify_battery,
   corpus: corpusSlice.actions.modify_corpus,
   diagrams: diagramsSlice.actions.modify_diagrams,
+  environment: environmentSlice.actions.modify_environment,
   vertices: verticesSlice.actions.modify_vertices,
 };
 export const modify = (name, payload) => modifiers[name](payload);
@@ -188,6 +190,7 @@ const rootReducer = combineReducers({
   battery: batterySlice.reducer,
   corpus: corpusSlice.reducer,
   diagrams: diagramsSlice.reducer,
+  environment: environmentSlice.reducer,
   vertices: verticesSlice.reducer,
 });
 

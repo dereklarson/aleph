@@ -19,13 +19,15 @@ export function PureVertex({
   operations,
   type,
   uid,
+  ancestry,
   parents,
   prepared,
   dispatch,
 }) {
   // First define the Drag-n-Drop functionality
   const ref = React.useRef(null);
-  const ancAssns = getAncestry(vertices, associations.library, uid)[1];
+  console.log('Ancestry of', uid, ancestry);
+  const [ancVs, ancAssns] = getAncestry(vertices, associations.library, uid);
   const localLibAssns = _.get(associations.library, uid, []);
   const localStyleAssns = _.get(associations.styles, uid, []);
   let maxParents = location === 'docker' ? 1 : 3;
@@ -57,7 +59,7 @@ export function PureVertex({
         if (_.size(item.parents) >= item.maxParents) return false;
         return true;
       } else if (item.type === 'DepotItem') {
-        if (ancAssns.includes(item.uid)) return false;
+        if (ancestry.ancAssns.includes(item.uid)) return false;
         else if (!item.deps.every(v => ancAssns.includes(v))) return false;
         else return true;
       }
@@ -101,7 +103,7 @@ export function PureVertex({
       <div
         onClick={event => {
           event.stopPropagation();
-          dispatch(modify('context', {focus: uid}));
+          dispatch(modify('environment', {locator: [location], focus: uid}));
         }}>
         <CurrentComponent
           uid={uid}

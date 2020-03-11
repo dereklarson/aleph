@@ -21,16 +21,21 @@ const categories = {
   battery: objGen(bankTypes),
   corpus: {},
   diagrams: {},
+  environment: {
+    focus: null,
+    testing: false,
+    envName: 'new_diagram',
+    test_output: {},
+  },
 };
 
 export const blankContext = {
-  themeName: 'dark',
-  focus: null,
   location: locations[0],
-  name: 'new diagram',
   editing: false,
   schema: {title: 'Editing'},
   editfunc: () => 0,
+  focus: null,
+  name: 'new diagram',
 };
 
 export const blankOperations = {
@@ -38,8 +43,6 @@ export const blankOperations = {
   percent: 100,
   building: null,
   build_orders: [],
-  testing: false,
-  test_output: {},
   stdout: '',
 };
 
@@ -48,6 +51,7 @@ export const blankCache = {
 };
 
 export const blankConfig = {
+  themeName: 'dark',
   organization: {
     name: '<Org Name>',
     repository: null,
@@ -93,12 +97,9 @@ export const stagingInitialState = {
 export const devInitialState = {
   ...prodInitialState,
   ...genCoreData(categories, locations, globalDevData),
-  config: {organization: {name: 'Development Server'}},
-  operations: {
-    ...blankOperations,
-    // building: null,
-    // build_orders: [],
-    test_output: {parent: 'yo\ndude'},
+  config: {
+    ...blankConfig,
+    organization: {name: 'Development Server'},
   },
 };
 

@@ -52,9 +52,9 @@ export function getBuildData(state) {
   const baseCorpus = state.corpus[location];
   const corpus = generateCorpus({baseCorpus, vertices, associations, library});
   const metadata = {
-    build_id: state.context.focus,
-    name: state.context.name,
-    testing: state.operations.testing,
+    build_id: state.environment[state.context.location].focus,
+    name: state.environment[state.context.location].envName,
+    testing: state.environment[state.context.location].testing,
   };
   return {vertices, corpus, metadata};
 }

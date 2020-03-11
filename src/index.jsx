@@ -12,7 +12,7 @@ import rootReducer from '@data/reducers';
 import {initState} from '@data/reference';
 
 const logger = createLogger({
-  collapsed: (getState, action) => action.type === 'context/modify_context',
+  collapsed: (getState, action) => action.type === 'context/modify_environment',
 });
 
 const store = configureStore({

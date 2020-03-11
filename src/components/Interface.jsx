@@ -48,6 +48,6 @@ export function PureInterface({themeName, editing, dispatch}) {
 }
 
 export default connect(state => ({
-  themeName: state.context.themeName,
+  themeName: state.config.themeName,
   editing: state.context.editing,
 }))(PureInterface);
