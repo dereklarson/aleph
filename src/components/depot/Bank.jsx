@@ -25,7 +25,7 @@ export function PureBank({uid, location, inputs, onRefresh}) {
   const itemDisplay = [
     <div key="title" className={classes.table}>
       <Button onClick={() => setOpen(!open)}>{titlize(title)}</Button>
-      <IconButton size="small" onClick={() => onRefresh(location)}>
+      <IconButton size="small" onClick={() => onRefresh(location, uid)}>
         <RefreshIcon />
       </IconButton>
     </div>,
