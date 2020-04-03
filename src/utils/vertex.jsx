@@ -30,7 +30,6 @@ export function sweepDirectedGraph(lineages, vertices, libAssns, relation) {
 
   // Sweep from roots to leaves, adding children to stack
   while (queue.length !== 0) {
-    console.log('Queue: ', queue);
     let currId = queue.pop();
     //Propagate information through to next relations
     _.each(vertices[currId][relation], (logic, childId) => {

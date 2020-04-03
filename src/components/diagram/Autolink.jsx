@@ -41,7 +41,7 @@ export function Autolink({
       ) {
         return false;
       } else {
-        return !ancAssns.includes(item.uid);
+        return !ancAssns.has(item.uid);
       }
     },
     collect: monitor => ({

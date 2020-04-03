@@ -1,7 +1,7 @@
 // @format
 import dagre from 'dagre';
 import _ from 'lodash';
-import {locationStyles, rescale, rescale_2} from '@style/diagram';
+import {locationStyles, rescale} from '@style/diagram';
 
 export function calculateDiagramPositions(vertices, location) {
   const style = _.get(locationStyles, location, locationStyles.default);
@@ -48,8 +48,8 @@ export function calculateDiagramPositions(vertices, location) {
     let ul_x = Math.floor(g.node(v).x - g.node(v).width / 2);
     let ul_y = Math.floor(g.node(v).y - g.node(v).height / 2);
     vertices[v]['position'] = {
-      x: rescale_2(ul_x, hScale, padding),
-      y: rescale_2(ul_y, vScale, padding),
+      x: rescale(ul_x, hScale, padding),
+      y: rescale(ul_y, vScale, padding),
       width: style.width,
       height: style.height,
     };
@@ -64,12 +64,12 @@ export function calculateDiagramPositions(vertices, location) {
     const end = g.edge(edge).points[2];
     arrows.push({
       start: {
-        x: rescale_2(start.x, hScale, padding) + style.width / 2,
-        y: rescale_2(start.y, vScale, padding) + 0.8 * style.height,
+        x: rescale(start.x, hScale, padding) + style.width / 2,
+        y: rescale(start.y, vScale, padding) + 0.8 * style.height,
       },
       end: {
-        x: rescale_2(end.x, hScale, padding) + style.width / 2,
-        y: rescale_2(end.y, vScale, padding) - 0.1 * style.height,
+        x: rescale(end.x, hScale, padding) + style.width / 2,
+        y: rescale(end.y, vScale, padding) - 0.1 * style.height,
       },
     });
   });

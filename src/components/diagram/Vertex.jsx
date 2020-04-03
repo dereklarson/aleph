@@ -10,7 +10,6 @@ import NodeVertex from './NodeVertex';
 // import ConfigVertex from './ConfigVertex';
 import TableVertex from './TableVertex';
 import Autolink from './Autolink';
-import {getAncestry} from '@utils/vertex';
 
 export function PureVertex({
   location,
@@ -26,8 +25,6 @@ export function PureVertex({
 }) {
   // First define the Drag-n-Drop functionality
   const ref = React.useRef(null);
-  console.log('Ancestry of', uid, ancestry);
-  const [ancVs, ancAssns] = getAncestry(vertices, associations.library, uid);
   const localLibAssns = _.get(associations.library, uid, []);
   const localStyleAssns = _.get(associations.styles, uid, []);
   let maxParents = location === 'docker' ? 1 : 3;
@@ -59,8 +56,8 @@ export function PureVertex({
         if (_.size(item.parents) >= item.maxParents) return false;
         return true;
       } else if (item.type === 'DepotItem') {
-        if (ancestry.ancAssns.includes(item.uid)) return false;
-        else if (!item.deps.every(v => ancAssns.includes(v))) return false;
+        if (ancestry.ancAssns.has(item.uid)) return false;
+        else if (!item.deps.every(v => ancestry.ancAssns.has(v))) return false;
         else return true;
       }
       return true;
@@ -95,7 +92,7 @@ export function PureVertex({
       onMouseEnter={() => setOver(true)}>
       <Autolink
         relation="parent"
-        ancAssns={ancAssns}
+        ancAssns={ancestry.ancAssns}
         uid={uid}
         maxParents={maxParents}
       />
@@ -113,7 +110,7 @@ export function PureVertex({
           contextProps={contextProps}
         />
       </div>
-      <Autolink relation="child" uid={uid} ancAssns={ancAssns} />
+      <Autolink relation="child" uid={uid} ancAssns={ancestry.ancAssns} />
     </div>
   );
 }
