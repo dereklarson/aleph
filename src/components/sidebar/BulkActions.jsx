@@ -29,6 +29,7 @@ function BulkActions({organization, environment, location, dispatch}) {
       ['push_org', () => dispatch(genCodeEdit('commit', orgCommit))],
     ],
     data: [],
+    dash: [],
     docker: [
       ['push_images', () => dispatch(genTextEdit('pushImages', imagePusher))],
     ],

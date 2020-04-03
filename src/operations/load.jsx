@@ -124,8 +124,10 @@ export function loadInputs(config) {
       dispatch(loadCore('battery', ['docker', 'library'])),
       dispatch(loadCore('battery', ['pipeline', 'library'])),
       dispatch(loadCore('battery', ['pipeline', 'datasets'])),
+      dispatch(loadCore('battery', ['dash', 'library'])),
       dispatch(loadCore('diagrams', ['docker'])),
       dispatch(loadCore('diagrams', ['pipeline'])),
+      dispatch(loadCore('diagrams', ['dash'])),
       delay(1000),
     ]);
     console.log('  -Loading user checkpoint-');

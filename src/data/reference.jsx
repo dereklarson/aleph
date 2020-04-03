@@ -10,7 +10,7 @@ import {objGen} from '@utils/helpers';
 // config: broader settings like the organizational details
 // location: data associated with diagram-building based on the current location
 
-export const locations = ['configuration', 'docker', 'pipeline', 'data'];
+export const locations = ['configuration', 'docker', 'pipeline', 'data', 'dash'];
 export const bankTypes = ['styles', 'library', 'datasets'];
 
 // This defines any further data structuring we need

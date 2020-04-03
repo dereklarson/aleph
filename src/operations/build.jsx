@@ -52,19 +52,34 @@ export function build(cancel) {
       dispatch(modify('operations', {percent: 0}));
       let build_context = {};
       await axios
-        .post('/gen_build/pipeline', {vertices, corpus, metadata})
+        .post(`/gen_build/${location}`, {vertices, corpus, metadata})
         .then(response => {
           build_context = response.data.build_context;
         });
       dispatch(modify('operations', {percent: 50}));
       await axios
-        .post(`/build/${location}`, {build_context: build_context})
+        .post(`/build/${location}`, {build_context, metadata})
+        .then(response => {
+          console.log('...built');
+        });
+      dispatch(modify('operations', {percent: 100}));
+    } else if (location === 'dash') {
+      dispatch(modify('operations', {percent: 0}));
+      let build_context = {};
+      await axios
+        .post(`/gen_build/${location}`, {vertices, corpus, metadata})
+        .then(response => {
+          build_context = response.data.build_context;
+        });
+      dispatch(modify('operations', {percent: 50}));
+      await axios
+        .post(`/build/${location}`, {build_context, metadata})
         .then(response => {
           console.log('...built');
         });
       dispatch(modify('operations', {percent: 100}));
     } else {
-      console.log('Only docker and pipeline builds supported');
+      console.log('Only dash, docker and pipeline builds supported');
     }
   };
 }

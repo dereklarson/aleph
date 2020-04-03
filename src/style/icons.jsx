@@ -11,7 +11,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import PlaceIcon from '@material-ui/icons/Place';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import TableChartIcon from '@material-ui/icons/TableChart';
-// import DashboardIcon from '@material-ui/icons/Dashboard';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import Crop32Icon from '@material-ui/icons/Crop32';
 import GrainIcon from '@material-ui/icons/Grain';
 // Sidebar - bulkActions
@@ -49,6 +49,7 @@ export const iconSource = {
   locations: <PlaceIcon />,
   configuration: <AccountBalanceIcon />,
   data: <TableChartIcon />,
+  dash: <DashboardIcon />,
   docker: <Crop32Icon />,
   pipeline: <GrainIcon />,
   // Actions

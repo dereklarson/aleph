@@ -14,7 +14,7 @@ function renderVertex(
   let type = 'node';
   if (focus === vertex.uid) {
     type = 'card';
-  } else if (['docker', 'pipeline'].includes(location)) {
+  } else if (['data', 'docker', 'pipeline'].includes(location)) {
     type = 'node';
   } else if (location === 'configuration') {
     // type = 'conf';
