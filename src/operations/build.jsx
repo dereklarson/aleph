@@ -48,22 +48,7 @@ export function build(cancel) {
         dispatch(modify('cache', {build: {...current_cache, ...new_cache}}));
       }
       dispatch(modify('operations', blankOperations));
-    } else if (location === 'pipeline') {
-      dispatch(modify('operations', {percent: 0}));
-      let build_context = {};
-      await axios
-        .post(`/gen_build/${location}`, {vertices, corpus, metadata})
-        .then(response => {
-          build_context = response.data.build_context;
-        });
-      dispatch(modify('operations', {percent: 50}));
-      await axios
-        .post(`/build/${location}`, {build_context, metadata})
-        .then(response => {
-          console.log('...built');
-        });
-      dispatch(modify('operations', {percent: 100}));
-    } else if (location === 'dash') {
+    } else if (['pipeline', 'dash'].includes(location)) {
       dispatch(modify('operations', {percent: 0}));
       let build_context = {};
       await axios
