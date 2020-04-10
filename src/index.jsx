@@ -11,8 +11,14 @@ import Interface from '@comp/Interface';
 import rootReducer from '@data/reducers';
 import {initState} from '@data/reference';
 
+// Conditional importing for mock support
+if (process.env.NODE_ENV === 'development') {
+  console.log('Importing dev packages: devmock');
+  import('@ops/devmock').then(() => 0);
+}
+
 const logger = createLogger({
-  collapsed: (getState, action) => action.type === 'context/modify_environment',
+  collapsed: (getState, action) => action.type.includes('modify'),
 });
 
 const store = configureStore({

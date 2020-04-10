@@ -26,6 +26,7 @@ export function build(cancel) {
       for (const [index, step] of build_orders.entries()) {
         if (cancel.current === true) {
           cancel.current = false;
+          console.log('Canceling Build before step id:', step.uid);
           break;
         }
         dispatch(
@@ -42,6 +43,15 @@ export function build(cancel) {
         await axios
           .post('/build/docker', {build_order: step})
           .then(response => {
+            if (response.data.code > 0) {
+              console.log(
+                'Canceling',
+                step.uid,
+                'b.c. error',
+                response.data.code,
+              );
+              cancel.current = true;
+            }
             dispatch(modify('operations', response.data));
           });
         new_cache[step.hash] = true;

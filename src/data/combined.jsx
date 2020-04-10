@@ -29,11 +29,9 @@ export function addNewVertex({
   linkId,
 }) {
   return function(dispatch, getState) {
-    console.log('addNewVertex:', location, uid, isParent, linkId);
     let vertices = getState().vertices[location];
     uid = generateSequentialId(uid, vertices);
     let [parent, child] = isParent ? [uid, linkId] : [linkId, uid];
-    console.log(parent, '->', child);
     dispatch(addVertex({location, uid}));
     dispatch(addAssociation({location, uid, atype, association}));
     if (parent != null) dispatch(linkVertex({location, parent, child}));

@@ -13,7 +13,6 @@ export function computePathstring(start, end, rankdir = 'TB') {
     control = `C${start.x},${averageY} ${end.x},${averageY}`;
   else if (rankdir === 'LR') {
     control = `C${averageX},${start.y} ${averageX},${end.y}`;
-    console.log(control);
   }
   return [source, control, sink].join(' ');
 }

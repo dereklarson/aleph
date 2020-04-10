@@ -10,7 +10,13 @@ import {objGen} from '@utils/helpers';
 // config: broader settings like the organizational details
 // location: data associated with diagram-building based on the current location
 
-export const locations = ['configuration', 'docker', 'pipeline', 'data', 'dash'];
+export const locations = [
+  'configuration',
+  'docker',
+  'pipeline',
+  'data',
+  'dash',
+];
 export const bankTypes = ['styles', 'library', 'datasets'];
 
 // This defines any further data structuring we need
@@ -105,7 +111,9 @@ export const devInitialState = {
 
 function setInitialState(env) {
   if (env === 'development') return devInitialState;
-  else return stagingInitialState;
+  else {
+    return stagingInitialState;
+  }
   // else return prodInitialState;
 }
 
