@@ -30,7 +30,6 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "redux-undo": "^1.0.0",
-    "reselect": "^4.0.0",
     "typeface-roboto": "0.0.75",
     "typescript": "^3.7.5"
   },
