@@ -14,7 +14,7 @@ import {initState} from '@data/reference';
 // Conditional importing for mock support
 if (process.env.NODE_ENV === 'development') {
   console.log('Importing dev packages: devmock');
-  import('@ops/devmock').then(() => 0);
+  // import('@ops/devmock').then(() => 0);
 }
 
 const logger = createLogger({

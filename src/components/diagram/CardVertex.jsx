@@ -1,16 +1,17 @@
 // @format
-import React from 'react';
-import {connect} from 'react-redux';
-import {Button, Card, Chip, Paper, TextField} from '@material-ui/core';
-import {CardActionArea, CardActions, CardContent} from '@material-ui/core';
-import _ from 'lodash';
-import {build} from '@ops/build';
-import {genCodeEdit} from '@utils/state';
-import {removeAssn, removeAllAssns, retitleVertex} from '@data/combined';
-import {setText} from '@data/reducers';
-import {createText} from '@data/tools';
-import {titlize, propsToStyle} from '@utils/helpers';
-import {useStyles} from '@style/classes';
+import React from "react";
+import axios from "axios";
+import { connect } from "react-redux";
+import { Button, Card, Chip, Paper, TextField } from "@material-ui/core";
+import { CardActionArea, CardActions, CardContent } from "@material-ui/core";
+import _ from "lodash";
+import { build, build2 } from "@ops/build";
+import { genCodeEdit } from "@utils/state";
+import { removeAssn, removeAllAssns, retitleVertex } from "@data/combined";
+import { setText } from "@data/reducers";
+import { createText } from "@data/tools";
+import { titlize, propsToStyle } from "@utils/helpers";
+import { useStyles } from "@style/classes";
 
 export function PureCardVertex({
   location,
@@ -21,7 +22,7 @@ export function PureCardVertex({
   libAssns,
   operations,
   contextProps,
-  dispatch,
+  dispatch
 }) {
   const classes = useStyles();
   const [uidText, setUid] = React.useState(uid);
@@ -34,49 +35,58 @@ export function PureCardVertex({
     let libraryMissing = !_.has(library, association);
     libError = libError || libraryMissing;
     const chipDelete = () =>
-      dispatch(removeAssn({location, uid, atype: 'library', association}));
+      dispatch(removeAssn({ location, uid, atype: "library", association }));
     chipDisplay.push(
       <Chip
         key={index}
         label={titlize(association)}
-        color={libraryMissing ? 'secondary' : 'default'}
+        color={libraryMissing ? "secondary" : "default"}
         onDelete={chipDelete}
-      />,
+      />
     );
   }
 
-  let edittext = '';
+  let edittext = "";
   let editfunc = () => 0;
   if (!libError) {
-    edittext = createText({library, libAssns, corpus, uid});
-    editfunc = ({fieldText, aceText}) =>
-      setText({location, uid, text: aceText});
+    edittext = createText({ library, libAssns, corpus, uid });
+    editfunc = ({ fieldText, aceText }) =>
+      setText({ location, uid, text: aceText });
   }
 
   const onBuildClick = () => {
-    if (operations.building !== null) cancel.current = true;
-    else dispatch(build(cancel));
+    if (operations.building !== null) {
+      cancel.current = true;
+      axios.post("/cancel", { location });
+    } else dispatch(build(cancel));
   };
 
-  let buildTitle = operations.building ? 'Cancel' : 'Build';
-  let helperText = textErr ? 'Already in use' : '<Enter> to set';
+  const onBuild2Click = () => {
+    if (operations.building !== null) cancel.current = true;
+    else dispatch(build2(cancel));
+  };
+
+  let buildTitle = operations.building ? "Cancel" : "Build";
+  let build2Title = operations.building ? "Cancel" : "Build2";
+  let helperText = textErr ? "Already in use" : "<Enter> to set";
   return (
     <Card
       style={propsToStyle(contextProps)}
-      onClick={event => event.stopPropagation()}>
+      onClick={event => event.stopPropagation()}
+    >
       <CardActionArea>
         <CardContent>
           <TextField
             label="Vertex name"
             defaultValue={uid}
             error={textErr}
-            helperText={uid === uidText ? '' : helperText}
+            helperText={uid === uidText ? "" : helperText}
             margin="dense"
             size="small"
             onKeyPress={event => {
-              if (!textErr && event.key === 'Enter') {
+              if (!textErr && event.key === "Enter") {
                 dispatch(
-                  retitleVertex({location, uid, newId: event.target.value}),
+                  retitleVertex({ location, uid, newId: event.target.value })
                 );
               }
             }}
@@ -92,16 +102,21 @@ export function PureCardVertex({
         <Button
           size="small"
           onClick={() =>
-            dispatch(genCodeEdit('nodeEdit', {edittext, editfunc}))
-          }>
+            dispatch(genCodeEdit("nodeEdit", { edittext, editfunc }))
+          }
+        >
           Editor
         </Button>
         <Button size="small" onClick={onBuildClick}>
           {buildTitle}
         </Button>
+        <Button size="small" onClick={onBuild2Click}>
+          {build2Title}
+        </Button>
         <Button
           size="small"
-          onClick={() => dispatch(removeAllAssns({location, uid}))}>
+          onClick={() => dispatch(removeAllAssns({ location, uid }))}
+        >
           Reset
         </Button>
       </CardActions>
@@ -113,5 +128,5 @@ export default connect(state => ({
   operations: state.operations,
   location: state.context.location,
   library: state.battery[state.context.location].library,
-  corpus: state.corpus[state.context.location],
+  corpus: state.corpus[state.context.location]
 }))(PureCardVertex);

@@ -1,7 +1,7 @@
 // @format
-import _ from 'lodash';
-import {globalData, globalDevData} from '@data/global';
-import {objGen} from '@utils/helpers';
+import _ from "lodash";
+import { globalData, globalDevData } from "@data/global";
+import { objGen } from "@utils/helpers";
 
 // We have five main categories of state data: context, ops, cache, config, and location
 // context: describes state of the display, such as what's visible now
@@ -11,13 +11,13 @@ import {objGen} from '@utils/helpers';
 // location: data associated with diagram-building based on the current location
 
 export const locations = [
-  'configuration',
-  'docker',
-  'pipeline',
-  'data',
-  'dash',
+  "configuration",
+  "docker",
+  "pipeline",
+  "data",
+  "dash"
 ];
-export const bankTypes = ['styles', 'library', 'datasets'];
+export const bankTypes = ["styles", "library", "datasets"];
 
 // This defines any further data structuring we need
 // objGen: takes a list and generates an object of blank objects with list as keys
@@ -30,40 +30,40 @@ const categories = {
   environment: {
     focus: null,
     testing: false,
-    envName: 'new_diagram',
-    test_output: {},
-  },
+    envName: "new_diagram",
+    test_output: {}
+  }
 };
 
 export const blankContext = {
   location: locations[0],
   editing: false,
-  schema: {title: 'Editing'},
+  schema: { title: "Editing" },
   editfunc: () => 0,
   focus: null,
-  name: 'new diagram',
+  name: "new diagram"
 };
 
 export const blankOperations = {
-  tickertext: 'Ticker',
+  tickertext: "Ticker",
   percent: 100,
   building: null,
   build_orders: [],
-  stdout: '',
+  stdout: ""
 };
 
 export const blankCache = {
-  build: [],
+  build: []
 };
 
 export const blankConfig = {
-  themeName: 'dark',
+  themeName: "dark",
   organization: {
-    name: '<Org Name>',
+    name: "<Org Name>",
     repository: null,
-    uid: '',
-    local: null,
-  },
+    uid: "",
+    local: null
+  }
 };
 
 function genCoreData(categories, locations, globalData) {
@@ -85,38 +85,38 @@ export const blankState = {
   operations: _.cloneDeep(blankOperations),
   cache: _.cloneDeep(blankCache),
   config: _.cloneDeep(blankConfig),
-  ...genCoreData(categories, locations, globalData),
+  ...genCoreData(categories, locations, globalData)
 };
 
 // State we would first see if nothing else is loaded via Axios
 export const prodInitialState = {
-  ..._.cloneDeep(blankState),
+  ..._.cloneDeep(blankState)
 };
 
 // For development, we want a 'production' state with a useful initialization
 // area we are working on, which is set here
 export const stagingInitialState = {
   ...prodInitialState,
-  context: {...blankState.context, location: 'docker'},
+  context: { ...blankState.context, location: "docker" }
 };
 
 export const devInitialState = {
-  ...prodInitialState,
+  ...stagingInitialState,
   ...genCoreData(categories, locations, globalDevData),
   config: {
     ...blankConfig,
-    organization: {name: 'Development Server'},
-  },
+    organization: { name: "Development Server" }
+  }
 };
 
 function setInitialState(env) {
-  if (env === 'development') return devInitialState;
+  if (env === "development") return devInitialState;
   else {
     return stagingInitialState;
   }
   // else return prodInitialState;
 }
 
-console.log('Mode:', process.env.NODE_ENV);
+console.log("Mode:", process.env.NODE_ENV);
 export const initState = setInitialState(process.env.NODE_ENV);
-console.log('Initial State:', initState);
+console.log("Initial State:", initState);
