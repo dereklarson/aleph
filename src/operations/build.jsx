@@ -3,7 +3,7 @@ import axios from "axios";
 // import openSocket from "socket.io-client";
 import _ from "lodash";
 import { getLastLine } from "@utils/helpers";
-import { blankOperations } from "@data/reference";
+// import { blankOperations } from "@data/reference";
 import { modify } from "@data/reducers";
 import { getBuildData } from "@data/tools";
 
@@ -12,8 +12,10 @@ export function build(cancel) {
     const state = getState();
     const location = state.context.location;
     const { vertices, corpus, metadata } = getBuildData(state);
-    console.log(`---Building ${location} from Focus---`);
     let build_context = {};
+    console.log(`---Building ${location} from Focus---`);
+    // First supply the diagram data to our Python backend which can generate
+    // a context which contains the information needed to build the desired output
     await axios
       .post(`/gen_build/${location}`, { vertices, corpus, metadata })
       .then(response => {
@@ -22,6 +24,8 @@ export function build(cancel) {
     if (location === "docker") {
       console.log("---Building Docker Image---");
       for (const stage_context of build_context.build_orders) {
+        // As building progresses, we update the Ticker component
+        // This has a one-line text field and a progress bar
         dispatch(
           modify("operations", {
             build_orders: build_context.build_orders,
@@ -30,12 +34,14 @@ export function build(cancel) {
             percent: 0
           })
         );
+        // Capture user initiated cancel requests (docker builds can be lengthy)
         if (cancel.current === true) {
           cancel.current = false;
           console.log("Canceling Build before id:", stage_context.uid);
           break;
         }
         console.log("Sending:", stage_context, metadata);
+        // Use SSE to track build progress. 
         var eventSource = new EventSource("/buildmsg");
         eventSource.onmessage = function(msg) {
           let data = JSON.parse(msg.data);
@@ -46,10 +52,14 @@ export function build(cancel) {
             })
           );
         };
-        await axios.post("/build/docker", {
-          build_context: stage_context,
-          metadata
-        });
+        await axios
+          .post("/build/docker", {
+            build_context: stage_context,
+            metadata
+          })
+          .then(response => {
+            dispatch(modify("operations", response.data));
+          });
         eventSource.close();
       }
     } else if (["pipeline", "dash"].includes(location)) {
@@ -62,7 +72,7 @@ export function build(cancel) {
     } else {
       console.log("Only dash, docker and pipeline builds supported");
     }
-    dispatch(modify("operations", blankOperations));
+    dispatch(modify("operations", {building: null, build_orders: []}));
   };
 }
 
@@ -119,7 +129,6 @@ export function build2(cancel) {
           modify("cache", { build: { ...current_cache, ...new_cache } })
         );
       }
-      dispatch(modify("operations", blankOperations));
     } else if (["pipeline", "dash"].includes(location)) {
       dispatch(modify("operations", { percent: 0 }));
       let build_context = {};

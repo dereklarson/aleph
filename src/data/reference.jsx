@@ -49,7 +49,7 @@ export const blankOperations = {
   percent: 100,
   building: null,
   build_orders: [],
-  stdout: ""
+  logs: ""
 };
 
 export const blankCache = {
