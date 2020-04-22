@@ -7,45 +7,66 @@ import { blankOperations } from "@data/reference";
 import { modify } from "@data/reducers";
 import { getBuildData } from "@data/tools";
 
-export function build2(cancel) {
+export function build(cancel) {
   return async function(dispatch, getState) {
     const state = getState();
     const location = state.context.location;
     const { vertices, corpus, metadata } = getBuildData(state);
-
     console.log(`---Building ${location} from Focus---`);
-    let build_orders = [];
+    let build_context = {};
     await axios
-      // .post("/gen_build/docker", { vertices, corpus, metadata })
-      .post("/gen_build2/docker", {
-        vertices,
-        corpus,
-        metadata
-      })
+      .post(`/gen_build/${location}`, { vertices, corpus, metadata })
       .then(response => {
-        build_orders = response.data.build_orders;
+        build_context = response.data.build_context;
       });
-    console.log("---Building Docker Image---");
-    for (const build_context of build_orders) {
-      dispatch(
-        modify("operations", {
-          tickertext: build_context.uid,
-          building: build_context.uid
-        })
-      );
-      if (cancel.current === true) {
-        cancel.current = false;
-        console.log("Canceling Build before id:", build_context.uid);
-        break;
+    if (location === "docker") {
+      console.log("---Building Docker Image---");
+      for (const stage_context of build_context.build_orders) {
+        dispatch(
+          modify("operations", {
+            build_orders: build_context.build_orders,
+            tickertext: "Building: " + stage_context.uid,
+            building: stage_context.uid,
+            percent: 0
+          })
+        );
+        if (cancel.current === true) {
+          cancel.current = false;
+          console.log("Canceling Build before id:", stage_context.uid);
+          break;
+        }
+        console.log("Sending:", stage_context, metadata);
+        var eventSource = new EventSource("/buildmsg");
+        eventSource.onmessage = function(msg) {
+          let data = JSON.parse(msg.data);
+          dispatch(
+            modify("operations", {
+              tickertext: data.text,
+              percent: Math.floor(100 * data.completion)
+            })
+          );
+        };
+        await axios.post("/build/docker", {
+          build_context: stage_context,
+          metadata
+        });
+        eventSource.close();
       }
-      console.log("Sending:", build_context, metadata);
-      await axios.post("/build2/docker", { build_context, metadata });
+    } else if (["pipeline", "dash"].includes(location)) {
+      await axios
+        .post(`/build/${location}`, { build_context, metadata })
+        .then(response => {
+          console.log("...built");
+        });
+      dispatch(modify("operations", { percent: 100 }));
+    } else {
+      console.log("Only dash, docker and pipeline builds supported");
     }
     dispatch(modify("operations", blankOperations));
   };
 }
 
-export function build(cancel) {
+export function build2(cancel) {
   return async function(dispatch, getState) {
     const state = getState();
     const location = state.context.location;
