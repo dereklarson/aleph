@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { Button, Card, Chip, Paper, TextField } from "@material-ui/core";
 import { CardActionArea, CardActions, CardContent } from "@material-ui/core";
 import _ from "lodash";
-import { build, build2 } from "@ops/build";
+import { build } from "@ops/build";
 import { genCodeEdit } from "@utils/state";
 import { removeAssn, removeAllAssns, retitleVertex } from "@data/combined";
 import { setText } from "@data/reducers";
@@ -61,13 +61,7 @@ export function PureCardVertex({
     } else dispatch(build(cancel));
   };
 
-  const onBuild2Click = () => {
-    if (operations.building !== null) cancel.current = true;
-    else dispatch(build2(cancel));
-  };
-
   let buildTitle = operations.building ? "Cancel" : "Build";
-  let build2Title = operations.building ? "Cancel" : "Build2";
   let helperText = textErr ? "Already in use" : "<Enter> to set";
   return (
     <Card
@@ -109,9 +103,6 @@ export function PureCardVertex({
         </Button>
         <Button size="small" onClick={onBuildClick}>
           {buildTitle}
-        </Button>
-        <Button size="small" onClick={onBuild2Click}>
-          {build2Title}
         </Button>
         <Button
           size="small"
