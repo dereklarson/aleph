@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { List, ListSubheader } from "@material-ui/core";
 import _ from "lodash";
 import { modify } from "@data/reducers";
-import { saveDiagram, loadOrg, pushOrg, pushImages } from "@ops/load";
+import { saveDiagram, loadOrg, pushOrg, docker } from "@ops/load";
 import { runPipeline } from "@ops/build";
 import { generateList } from "@utils/generateList";
 import { genTextEdit, genCodeEdit } from "@utils/state";
@@ -20,7 +20,7 @@ function BulkActions({ organization, environment, location, dispatch }) {
     editfunc: ({ fieldText, aceText }) =>
       pushOrg({ branch: fieldText.branch, commit_msg: aceText })
   };
-  const imagePusher = text => pushImages(organization, text.fieldText.match);
+  const imagePusher = text => docker("push", text.fieldText.match);
   const testmode = environment.testing;
   const locationOptions = {
     configuration: [

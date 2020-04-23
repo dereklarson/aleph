@@ -146,30 +146,23 @@ export function loadCheckpoint(name) {
   return function(dispatch) {
     console.log("---Loading Full State Checkpoint---");
     axios.get(`/checkpoint/load/${name}`).then(response => {
-      dispatch(modify("vertices", response.data.vertices));
-      dispatch(modify("associations", response.data.associations));
-      dispatch(modify("corpus", response.data.corpus));
+      for (let category of [
+        "vertices",
+        "associations",
+        "corpus",
+        "environment"
+      ]) {
+        dispatch(modify(category, response.data[category]));
+      }
     });
   };
 }
 
-export function getImages() {
-  return function(dispatch) {
-    console.log(`---Loading Docker Images---`);
-    axios.get("/docker/list").then(response => {
+export function docker(operation, match_string) {
+  return async function(dispatch) {
+    console.log(`---${operation} Docker Images---`);
+    axios.post(`/docker/${operation}`, { match_string }).then(response => {
       dispatch(modify("operations", response.data));
     });
-  };
-}
-
-// Thunked: will return function taking dispatch
-export function pushImages(organization, match_string) {
-  return async function(dispatch, getState) {
-    console.log("---Pushing Docker images ---");
-    axios
-      .post("/docker/push", { organization, match_string })
-      .then(response => {
-        dispatch(modify("operations", response.data));
-      });
   };
 }
