@@ -1,31 +1,31 @@
 // @format
-import React from 'react';
-import {connect} from 'react-redux';
-import {Button, TextField, Dialog} from '@material-ui/core';
-import {DialogActions, DialogTitle, DialogContent} from '@material-ui/core';
-import AceEditor from 'react-ace';
-import _ from 'lodash';
-import {modify} from '@data/reducers';
-import {useStyles} from '@style/classes';
-import {notEditingState} from '@utils/state';
+import React from "react";
+import { connect } from "react-redux";
+import { Button, TextField, Dialog } from "@material-ui/core";
+import { DialogActions, DialogTitle, DialogContent } from "@material-ui/core";
+import AceEditor from "react-ace";
+import _ from "lodash";
+import { modify } from "@data/reducers";
+import { useStyles } from "@style/classes";
+import { notEditingState } from "@utils/state";
 
-import 'ace-builds/src-noconflict/mode-yaml';
-import 'ace-builds/src-noconflict/mode-python';
-import 'ace-builds/src-noconflict/theme-monokai';
+import "ace-builds/src-noconflict/mode-yaml";
+import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/theme-monokai";
 
-export function PureTextEntry({open, context, dispatch}) {
-  const {schema, edittext, editfunc} = context;
-  const title = _.get(schema, 'title', 'TextEntry');
-  const editor = _.get(schema, 'editor', false);
+export function PureTextEntry({ open, context, dispatch }) {
+  const { schema, edittext, editfunc } = context;
+  const title = _.get(schema, "title", "TextEntry");
+  const editor = _.get(schema, "editor", false);
   const classes = useStyles();
-  const [fieldText, setFieldText] = React.useState(_.get(schema, 'keys', {}));
+  const [fieldText, setFieldText] = React.useState(_.get(schema, "keys", {}));
 
   // We create a set of text fields based on the supplied schema
   let itemDisplay = [];
-  for (const [keystr, def] of Object.entries(_.get(schema, 'keys', {}))) {
+  for (const [keystr, def] of Object.entries(_.get(schema, "keys", {}))) {
     let defProps = {};
     // Autofocus on our first text entry field
-    if (itemDisplay.length === 0) defProps['autoFocus'] = true;
+    if (itemDisplay.length === 0) defProps["autoFocus"] = true;
     itemDisplay.push(
       <TextField
         {...defProps}
@@ -35,9 +35,9 @@ export function PureTextEntry({open, context, dispatch}) {
         variant="outlined"
         label={keystr}
         onChange={event => {
-          setFieldText({...fieldText, [keystr]: event.target.value});
+          setFieldText({ ...fieldText, [keystr]: event.target.value });
         }}
-      />,
+      />
     );
   }
 
@@ -48,31 +48,32 @@ export function PureTextEntry({open, context, dispatch}) {
       <AceEditor
         key="codeEdit"
         className={classes.editor}
-        mode={_.get(schema, 'mode', 'yaml')}
+        mode={_.get(schema, "mode", "yaml")}
         theme="monokai"
         defaultValue={edittext}
         onChange={(value, event) => {
           aceText = value;
         }}
-      />,
+      />
     );
   }
 
-  const onCancel = () => dispatch(modify('context', {...notEditingState}));
+  const onCancel = () => dispatch(modify("context", { ...notEditingState }));
   const onDone = () => {
-    dispatch(editfunc({fieldText, aceText}));
-    dispatch(modify('context', {...notEditingState}));
+    dispatch(editfunc({ fieldText, aceText }));
+    dispatch(modify("context", { ...notEditingState }));
   };
 
   return (
     <Dialog
-      maxWidth={'lg'}
+      maxWidth={"lg"}
       open={open}
       onClose={onCancel}
       onKeyPress={event => {
-        if (!editor && event.key === 'Enter') onDone();
-        if (event.shiftKey && event.key === 'Enter') onDone();
-      }}>
+        if (!editor && event.key === "Enter") onDone();
+        else if (event.shiftKey && event.key === "Enter") onDone();
+      }}
+    >
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>{itemDisplay}</DialogContent>
       {!schema.log && ( // For logging output, don't show action buttons
@@ -85,4 +86,4 @@ export function PureTextEntry({open, context, dispatch}) {
   );
 }
 
-export default connect(state => ({context: state.context}))(PureTextEntry);
+export default connect(state => ({ context: state.context }))(PureTextEntry);
