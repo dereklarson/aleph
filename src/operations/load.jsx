@@ -169,7 +169,7 @@ export function pushImages(organization, match_string) {
     axios
       .post("/docker/push", { organization, match_string })
       .then(response => {
-        dispatch(modify("context", response.data));
+        dispatch(modify("operations", response.data));
       });
   };
 }

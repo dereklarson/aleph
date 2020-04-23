@@ -13,28 +13,28 @@ export const dagreRescaling = {
   // such that small graphs are located more towards the upper left
   vertexCountFull: 10,
   h0: 0.8,
-  v0: 0.6,
+  v0: 0.6
 };
 
 export const arrowStyle = {
-  fill: 'none',
-  stroke: 'black',
-  strokeWidth: '0.5',
+  fill: "none",
+  stroke: "black",
+  strokeWidth: "0.5"
 };
 
 export const locationStyles = {
   default: {
     dagreRescaling,
     arrowStyle,
-    rankdir: 'TB',
+    rankdir: "TB",
     width: 12,
-    height: 5,
+    height: 5
   },
   data: {
     dagreRescaling,
     arrowStyle,
-    rankdir: 'LR',
+    rankdir: "LR",
     width: 20,
-    height: 30,
-  },
+    height: 30
+  }
 };
