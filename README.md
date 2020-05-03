@@ -12,7 +12,7 @@ Dependencies: Node (TODO install link)
 
 * Clone the repository and `cd` into the directory
 * Run `npm install` (populates your `node_modules/` based on `package.json`)
-* Run `npm run start` to initiate the dev server`
+* Run `npm run start` to initiate the dev server
 
 ## Structure
 
@@ -24,6 +24,6 @@ Dependencies: Node (TODO install link)
   * `public` contains the boilerplate from CRA
   * `archive` has deprecated code lazily kept around for a limited duration
 * Standalone files
-  * config-overrides.js` used by react-app-rewired to allow path shortcuts
+  * `config-overrides.js` used by react-app-rewired to allow path shortcuts
     * e.g. @diagram for src/components/diagram  
   * TODO  `jsx_style.md` covers style
