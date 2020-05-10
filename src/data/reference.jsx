@@ -39,9 +39,7 @@ export const blankContext = {
   location: locations[0],
   editing: false,
   schema: { title: "Editing" },
-  editfunc: () => 0,
-  focus: null,
-  name: "new diagram"
+  editfunc: () => 0
 };
 
 export const blankOperations = {
