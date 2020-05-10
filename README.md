@@ -24,6 +24,8 @@ Dependencies: Node (TODO install link)
   * `public` contains the boilerplate from CRA
   * `archive` has deprecated code lazily kept around for a limited duration
 * Standalone files
+  * The config file for Node: `package.json`
+    * A proxy line has been added at port 3333 for serving requests during development
   * `config-overrides.js` used by react-app-rewired to allow path shortcuts
     * e.g. @diagram for src/components/diagram  
   * TODO  `jsx_style.md` covers style
