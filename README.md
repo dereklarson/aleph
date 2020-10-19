@@ -1,4 +1,4 @@
-# Interface - A React Diagramming UI
+# Aleph - A React Diagramming UI
 
 
 ### *Currently, a prototype app for controlling diagrammable processes*
